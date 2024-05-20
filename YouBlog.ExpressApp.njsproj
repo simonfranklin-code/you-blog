@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>YouBlog.ExpressApp</Name>
+    <RootNamespace>YouBlog.ExpressApp</RootNamespace>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+    <LaunchUrl>blog-post/digital-marketing-guru</LaunchUrl>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>e4f98b5a-b193-4754-aca0-2bab94b4fe0d</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>app.js</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <NodejsPort>3000</NodejsPort>
+    <StartWebBrowser>True</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="app.js" />
+    <Content Include="controllers\addCommentReplyFormController.js" />
+    <Content Include="controllers\commentRepliesController.js" />
+    <Content Include="routes\addBlogPostCommentReplyRoutes.js" />
+    <Content Include="routes\blogPostCommentRepliesRoutes.js" />
+    <Content Include="public\javascripts\site.js" />
+    <Content Include="routes\blogPostCommentsRoutes.js" />
+    <Content Include="controllers\blogPostController.js" />
+    <Content Include="controllers\commentsController.js" />
+    <Content Include="controllers\userController.js" />
+    <Content Include="public\assets\mobirise\css\mbr-additional.css" />
+    <Content Include="public\assets\witsec-search\search.js" />
+    <Content Include="public\assets\witsec-search\search.json" />
+    <Content Include="public\Digital-Marketing-Guru.db" />
+    <Content Include="public\favicon.ico" />
+    <Content Include="routes\blog-post.js" />
+    <Content Include="routes\blogPostRoutes.js" />
+    <Content Include="routes\userRoutes.js" />
+    <Content Include="routes\users.js" />
+    <Content Include="package.json" />
+    <Content Include="public\stylesheets\main.css" />
+    <Content Include="README.md" />
+    <Content Include="validation\validator.js" />
+    <Content Include="views\blog-post.pug" />
+    <Content Include="views\comments.pug" />
+    <Content Include="views\index.pug" />
+    <Content Include="views\layout.pug" />
+    <Content Include="views\error.pug" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="controllers\" />
+    <Folder Include="validation\" />
+    <Folder Include="public\" />
+    <Folder Include="public\assets\" />
+    <Folder Include="public\assets\animatecss\" />
+    <Folder Include="public\assets\bootstrap\" />
+    <Folder Include="public\assets\bootstrap\css\" />
+    <Folder Include="public\assets\bootstrap\js\" />
+    <Folder Include="public\assets\css\" />
+    <Folder Include="public\assets\dev-icons\" />
+    <Folder Include="public\assets\dev-icons\css\" />
+    <Folder Include="public\assets\dev-icons\fonts\" />
+    <Folder Include="public\assets\dropdown\" />
+    <Folder Include="public\assets\dropdown\css\" />
+    <Folder Include="public\assets\dropdown\js\" />
+    <Folder Include="public\assets\embla\" />
+    <Folder Include="public\assets\facebook-plugin\" />
+    <Folder Include="public\assets\font-awesome-brands\" />
+    <Folder Include="public\assets\font-awesome-brands\css\" />
+    <Folder Include="public\assets\font-awesome-brands\fonts\" />
+    <Folder Include="public\assets\font-awesome-regular\" />
+    <Folder Include="public\assets\font-awesome-regular\css\" />
+    <Folder Include="public\assets\font-awesome-regular\fonts\" />
+    <Folder Include="public\assets\font-awesome-solid\" />
+    <Folder Include="public\assets\font-awesome-solid\css\" />
+    <Folder Include="public\assets\font-awesome-solid\fonts\" />
+    <Folder Include="public\assets\gov-icons\" />
+    <Folder Include="public\assets\gov-icons\css\" />
+    <Folder Include="public\assets\gov-icons\fonts\" />
+    <Folder Include="public\assets\images\" />
+    <Folder Include="public\assets\map-icons\" />
+    <Folder Include="public\assets\map-icons\css\" />
+    <Folder Include="public\assets\map-icons\fonts\" />
+    <Folder Include="public\assets\material-design\" />
+    <Folder Include="public\assets\material-design\css\" />
+    <Folder Include="public\assets\material-design\fonts\" />
+    <Folder Include="public\assets\mbr-switch-arrow\" />
+    <Folder Include="public\assets\mobirise\" />
+    <Folder Include="public\assets\mobirise\css\" />
+    <Folder Include="public\assets\parallax\" />
+    <Folder Include="public\assets\smoothscroll\" />
+    <Folder Include="public\assets\sociallikes\" />
+    <Folder Include="public\assets\socicon\" />
+    <Folder Include="public\assets\socicon\css\" />
+    <Folder Include="public\assets\socicon\fonts\" />
+    <Folder Include="public\assets\theme\" />
+    <Folder Include="public\assets\theme\css\" />
+    <Folder Include="public\assets\theme\js\" />
+    <Folder Include="public\assets\vimeoplayer\" />
+    <Folder Include="public\assets\weather-icons\" />
+    <Folder Include="public\assets\weather-icons\css\" />
+    <Folder Include="public\assets\weather-icons\fonts\" />
+    <Folder Include="public\assets\web\" />
+    <Folder Include="public\assets\web\assets\" />
+    <Folder Include="public\assets\web\assets\cookies-alert-plugin\" />
+    <Folder Include="public\assets\web\assets\gdpr-plugin\" />
+    <Folder Include="public\assets\web\assets\mobirise-icons-bold\" />
+    <Folder Include="public\assets\web\assets\mobirise-icons2\" />
+    <Folder Include="public\assets\web\assets\mobirise-icons\" />
+    <Folder Include="public\assets\witsec-jquery-3.6.0\" />
+    <Folder Include="public\assets\witsec-mailform\" />
+    <Folder Include="public\assets\witsec-search\" />
+    <Folder Include="public\assets\ytplayer\" />
+    <Folder Include="public\images\" />
+    <Folder Include="public\javascripts\" />
+    <Folder Include="public\stylesheets\" />
+    <Folder Include="routes\" />
+    <Folder Include="views\" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
