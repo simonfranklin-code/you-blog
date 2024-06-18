@@ -15,7 +15,7 @@
 }
 
 html {
-    scroll-padding-top: 120px;
+    scroll-padding-top: 20px;
 }
 
 .btn-sm {
@@ -57,3 +57,29 @@ html {
     padding-bottom: 2rem;
     background-color: #353535;
 }
+
+
+.cid-ubqkf91puQ-1 {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background-color: #353535;
+}
+
+    .cid-ubqkf91puQ-1 .inner-header {
+        color: #bbbbbb;
+        background-color: #353535;
+    }
+
+    .cid-ubqkf91puQ-1 .inner-header-link {
+        color: #bbbbbb;
+    }
+
+    .cid-ubqkf91puQ-1 P {
+        color: #bbbbbb;
+        font-family: Epilogue, 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    .cid-ubqkf91puQ-1 a {
+        text-decoration: none;
+    }
+.

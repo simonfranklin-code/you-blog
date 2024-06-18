@@ -1,6 +1,3 @@
-
-
-
 let wsSearchDB = [];
 let wsScoreDB = [];
 let wsQ = null;
@@ -345,9 +342,12 @@ function wsShowLoadMore() {
 	}
 }
 
-// When you're ready, let's go
+// Display the spinner if needed - do this as soon as this gets
+if (wsGetParameterByName("q") !== null)
+	wsToggleSpinner(true);
 
-window.addEventListener("load", function (e) {
+// When you're ready, let's go
+document.addEventListener("DOMContentLoaded", function(e) { 
 	// Get query parameter
 	wsQ = wsGetParameterByName("q");
 	if (wsQ !== null) {
@@ -360,8 +360,7 @@ window.addEventListener("load", function (e) {
 	}
 
 	// Remove GDPR block, if present
-	const gdpr = document.querySelector(".witsec-search .gdpr-block-1");
+	const gdpr = document.querySelector(".witsec-search .gdpr-block");
 	if (gdpr)
 		gdpr.remove();
 });
-

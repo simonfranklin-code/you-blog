@@ -2701,6 +2701,24 @@ a {
   text-align: left;
   color: #ffffff;
 }
+.cid-uc59j62z3D {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: #353535;
+}
+.cid-uc59j62z3D .inner-header {
+  color: #bbbbbb;
+  background-color: #353535;
+}
+.cid-uc59j62z3D .inner-header-link {
+  color: #bbbbbb;
+}
+.cid-uc59j62z3D P {
+  color: #bbbbbb;
+}
+.cid-uc59j62z3D a {
+  text-decoration: none;
+}
 .cid-u8dmtZt77l {
   padding-top: 0rem;
   padding-bottom: 3rem;
@@ -3011,7 +3029,7 @@ a {
   object-fit: cover;
 }
 .cid-tREckUevn6 .card-title {
-  color: #bbbbbb;
+  color: #fafafa;
 }
 .cid-tREckUevn6 .mbr-text,
 .cid-tREckUevn6 .mbr-section-btn {

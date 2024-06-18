@@ -2,34 +2,35 @@ $(window).on("load", function () {
     var url = window.location.pathname;
     var slug = url.split("/")['2'].toLowerCase();
     var comments = {};
+    if (url.includes('blog-post') ) {
+        $.ajax({
+            url: '/comments/' + slug,
+            header: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            mimeType: 'text/json',
+            data: '',
+            beforeSend: function () {
 
-    $.ajax({
-        url: '/comments/' + slug,
-        header: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        },
-        method: 'GET',
-        dataType: 'json',
-        contentType: 'application/json',
-        mimeType: 'text/json',
-        data: '',
-        beforeSend: function () {
+            },
+            success: function (data) {
 
-        },
-        success: function (data) {
+                $('#comments').html(data.commentsSection);
+                comments = data.comments;
 
-            $('#comments').html(data.commentsSection);
-            comments = data.comments;
+            },
+            complete: function () {
+                comments.forEach(async (comment) => {
+                    getReplies(comment);
+                });
 
-        },
-        complete: function () {
-            comments.forEach(async (comment) => {
-                getReplies(comment);
-            });
-
-        }
-    });
+            }
+        });
+    }
 });
 
 function getReplies(comment) {
@@ -66,7 +67,7 @@ function getReplies(comment) {
     });
 }
 
-function submitReplyForm(CommentId) {
+function submitReplyForm(CommentId, blogPostId) {
     try {
         var formData = {
             Email: $("#Email" + CommentId).val(),
@@ -88,19 +89,29 @@ function submitReplyForm(CommentId) {
             cache: false,
             data: formData,
             success: function (data) {
-                alert('Your comment was saved successfully!');
+                //alert('Your reply was saved successfully!');
                 var myModalEl = $("#modalReplyForm" + CommentId);
                 var modal = bootstrap.Modal.getInstance(myModalEl)
                 modal.hide();
-
+                try {
+                    $('#' + data.comment.ParentCommentId).append(data.commentSection);
+                    var url = window.location.pathname + '#commentTitle' + data.comment.CommentId;
+                    window.location.href = url;
+                } catch (err) {
+                    alert(JSON.stringify(err));
+                }
             },
             error: function (err) {
-                if (err.responseJSON.errors !== 'undefined' && err.responseJSON.errors.length > 0) {
-                    var errorMessage = "";
-                    err.responseJSON.errors.forEach((error) => {
-                        errorMessage += error.path + ': ' + error.msg + ': ' + error.value + '\n'
-                    });
-                    alert(errorMessage);
+                if (err.responseJSON !== 'undefined') {
+                    if (err.responseJSON.errors !== 'undefined') {
+                        var errorMessage = "";
+                        err.responseJSON.errors.forEach((error) => {
+                            errorMessage += error.path + ': ' + error.msg + ': ' + error.value + '\n'
+                        });
+                        alert(errorMessage);
+                    }
+                } else {
+                    alert(JSON.stringify(err));
                 }
             }
         });
@@ -135,18 +146,25 @@ function submitCommentForm(CommentId) {
             success: function (data) {
 
 
-                alert('Your comment was saved successfully!');
+                //alert('Your comment was saved successfully!');
                 var myModalEl = $("#modalAddCommentForm0");
                 var modal = bootstrap.Modal.getInstance(myModalEl)
                 modal.hide();
+                $('#comments').append(data.commentSection);
+                var url = window.location.pathname + '#commentTitle' + data.comment.CommentId;
+                window.location.href = url;
             },
             error: function (err) {
-                if (err.responseJSON.errors !== 'undefined' && err.responseJSON.errors.length > 0) {
-                    var errorMessage = "";
-                    err.responseJSON.errors.forEach((error) => {
-                        errorMessage += error.path + ': ' + error.msg + ': ' + error.value + '\n'
-                    });
-                    alert(errorMessage);
+                if (err.responseJSON !== 'undefined') {
+                    if (err.responseJSON.errors !== 'undefined') {
+                        var errorMessage = "";
+                        err.responseJSON.errors.forEach((error) => {
+                            errorMessage += error.path + ': ' + error.msg + ': ' + error.value + '\n'
+                        });
+                        alert(errorMessage);
+                    }
+                } else {
+                    alert(JSON.stringify(err));
                 }
             }
         });

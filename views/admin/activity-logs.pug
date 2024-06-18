@@ -1,0 +1,148 @@
+extends layout
+
+block content
+  h1 User Activity Logs
+
+  form#filterForm
+    .form-row
+      .form-group.col-md-2
+        label(for='userId') User ID
+        input.form-control.form-control-sm(type='number' name='userId' id='userId')
+      .form-group.col-md-2
+        label(for='action') Action
+        input.form-control.form-control-sm(type='text' name='action' id='action')
+      .form-group.col-md-2
+        label(for='entityType') Entity Type
+        input.form-control.form-control-sm(type='text' name='entityType' id='entityType')
+      .form-group.col-md-2
+        label(for='startDate') Start Date
+        input.form-control.form-control-sm(type='date' name='startDate' id='startDate')
+      .form-group.col-md-2
+        label(for='endDate') End Date
+        input.form-control.form-control-sm(type='date' name='endDate' id='endDate')
+      .form-group.col-md-2
+        label(for='keyword') Keyword
+        input.form-control.form-control-sm(type='text' name='keyword' id='keyword')
+      
+  .form-row
+    .form-group.col-md-3
+      label(for='sortField') Sort By
+      select.form-control.form-control-sm(name='sortField' id='sortField')
+        option(value='timestamp') Timestamp
+        option(value='user_id') User ID
+        option(value='action') Action
+        option(value='entity_type') Entity Type
+    .form-group.col-md-3
+      label(for='sortOrder') Order
+      select.form-control.form-control-sm(name='sortOrder' id='sortOrder')
+        option(value='ASC') Ascending
+        option(value='DESC' selected) Descending
+    .form-group.col-md-2.align-self-end
+        button.btn.btn-primary.btn-sm(type='button' id='filterButton') Filter
+
+  table.table.rounded
+    thead
+      tr
+        th User ID
+        th Action
+        th Entity Type
+        th Entity ID
+        th Details
+        th Timestamp
+    tbody#logsTableBody
+
+  nav
+    ul.pagination
+      li.page-item
+        button.page-link(type='button' id='previousPage') Previous
+      li.page-item
+        span.page-link(id='currentPage') 1
+      li.page-item
+        button.page-link(type='button' id='nextPage') Next
+  .alert.alert-danger#logError(style='display: none;') Error fetching logs
+  script.
+    $(document).ready(function() {
+      let currentPage = 1;
+
+      function fetchLogs(page = 1) {
+        const userId = $('#userId').val();
+        const action = $('#action').val();
+        const entityType = $('#entityType').val();
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+        const keyword = $('#keyword').val();
+        const sortField = $('#sortField').val();
+        const sortOrder = $('#sortOrder').val();
+
+        $.ajax({
+          url: `/admin/activity-logs/json?page=${page}&userId=${userId}&action=${action}&entityType=${entityType}&startDate=${startDate}&endDate=${endDate}&keyword=${keyword}&sortField=${sortField}&sortOrder=${sortOrder}`,
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            const logsTableBody = $('#logsTableBody');
+            logsTableBody.empty();
+
+            $.each(data.logs, function(index, log) {
+              const row = $('<tr>').html(`
+                <td>${log.user_id}</td>
+                <td>${log.action}</td>
+                <td>${log.entity_type}</td>
+                <td>${log.entity_id}</td>
+                <td class="ellipsis" data-toggle="popover" title="Activity log details" data-content="${log.details}">${log.details}</td>
+                <td>${new Date(log.timestamp).toLocaleString()}</td>
+              `);
+              logsTableBody.append(row);
+            });
+
+            $('#currentPage').text(data.page);
+            currentPage = data.page;
+
+            $('#previousPage').prop('disabled', data.page <= 1);
+            $('#nextPage').prop('disabled', data.page >= data.totalPages);
+
+            $('[data-toggle="popover"]').popover({
+              trigger: 'hover',
+              placement: 'left',
+              container: 'body'
+            });
+
+            $('#logError').hide();
+          },
+          error: function(xhr, status, error) {
+            console.error('Error fetching logs:', error);
+            $('#logError').show();
+          }
+        });
+      }
+
+      $('#filterButton').on('click', function() {
+        fetchLogs();
+      });
+
+      $('#previousPage').on('click', function() {
+        if (currentPage > 1) {
+          fetchLogs(currentPage - 1);
+        }
+      });
+
+      $('#nextPage').on('click', function() {
+        fetchLogs(currentPage + 1);
+      });
+
+      fetchLogs();
+
+      $('#collapseUsers').addClass('show');
+      $('#activity-logs').addClass('active');
+    });
+
+    function showPopover(id, content) {
+      try {
+        var options = { container: 'body', placement: 'top', trigger: 'hover', content: content };
+        var el = document.getElementById(id);
+        var popover = new bootstrap.Popover(el, options);
+        popover.toggleEnabled();
+        popover.toggle();
+      } catch (err) {
+        alert(JSON.stringify(err));
+      }
+    }

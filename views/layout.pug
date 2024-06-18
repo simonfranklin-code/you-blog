@@ -42,6 +42,30 @@ head
     gtag('config', 'G-2LLV2Z902Q');
   script(src='javascripts/site.js').
   body
+    section#features16-2sn.inner-header-section.cid-ubqkf91puQ-1(data-bs-version='5.1')
+        section.inner-header
+            .container
+                .row.justify-content-end.pt-3
+                    .col-md-12.aligner  
+                        if success_msg
+                            p(style="color: green" id='successMessage') #{success_msg}
+                        if error_msg
+                            p(style="color: red" id='errorMessage') #{error_msg}
+                        if error
+                            p(style="color: red") #{error}
+                        if user
+                            p
+                                | Logged in as #{user.username} (#{user.role})
+                                | 
+                                a(href='/users/logout') Logout
+                                if user.role === 'admin'
+                                    | 
+                                    a(href='/admin/dashboard') Admin Dashboard
+                        else
+                            p
+                                a(href='/users/login') Login
+                                | 
+                                a(href='/users/register') Register
 
     block content
     section#footer1-2kv.footer1.cid-tNQ3d6rTCO(data-bs-version='5.1', once='footers')

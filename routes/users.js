@@ -1,27 +1,34 @@
-'use strict';
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+const { ensureAuthenticated, ensureRole } = require('../middleware/roleMiddleware');
+// Register
+router.get('/register', userController.registerGet);
+router.post('/register', userController.registerPost);
 
-/* GET users listing. */
+// Login
+router.get('/login', userController.loginGet);
+router.post('/login', userController.loginPost);
 
-router.get('/', (req, res) => {
-    res.send('respond with a resource');
+// Logout
+router.get('/logout', userController.logout);
+
+// Profile
+router.get('/profile', userController.profileGet);
+
+// Admin route example
+router.get('/admin', ensureAuthenticated, ensureRole('admin'), (req, res) => {
+    res.send('Admin Dashboard');
 });
 
-router.post('/', (req, res) => {
-    // Logic for creating a new user
-});
+// Password Reset Request
+router.get('/password-reset-request', userController.passwordResetRequestGet);
+router.post('/password-reset-request', userController.passwordResetRequestPost);
 
-router.get('/:id', (req, res) => {
-    // Logic for retrieving a specific user by ID
-});
+// Password Reset
+router.get('/password-reset/:token', userController.passwordResetGet);
+router.post('/password-reset/:token', userController.passwordResetPost);
 
-router.put('/:id', (req, res) => {
-    // Logic for updating a user by ID
-});
 
-router.delete('/:id', (req, res) => {
-    // Logic for deleting a user by ID
-});
 
 module.exports = router;

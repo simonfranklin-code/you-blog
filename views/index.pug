@@ -1,8 +1,9 @@
-DOCTYPE html
-html
-	head
-		title Express App
+extends layout
 
-	body
-		h1 Welcome to the Express App!
-		p Visit the a(href='/users') users route.
+block content
+  h1 Welcome to Blog CMS
+  if user
+    p Logged in as #{user.username}
+  else
+    p Please login or register.
+
