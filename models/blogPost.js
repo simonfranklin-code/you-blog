@@ -19,11 +19,11 @@ db.serialize(() => {
 });
 
 class BlogPost {
-    static add(title, content, blogId, author, userId) {
+    static add(title, slug, blogId, author, userId, content) {
         const createdAt = new Date().toISOString();
         return new Promise((resolve, reject) => {
-            db.run(`INSERT INTO BlogPosts (Title, Content, CreatedAt, BlogId, Author, UserId) VALUES (?, ?, ?, ?, ?, ?)`,
-                [title, content, createdAt, blogId, author, userId], function (err) {
+            db.run(`INSERT INTO BlogPosts (Title, Content, BlogId, Author, UserId, Slug) VALUES (?, ?, ?, ?, ?, ?)`,
+                [title, content, blogId, author, userId, slug], function (err) {
                     if (err) return reject(err);
                     resolve(this.lastID);
                 });

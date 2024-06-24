@@ -5,14 +5,14 @@
       "name": "localhost (Edge)",
       "type": "edge",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}/public"
     },
     {
       "name": "localhost (Chrome)",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}/public"
     },
     {
@@ -27,7 +27,7 @@
       "stopOnEntry": true,
       "console": "externalTerminal",
       "env": {
-        "port": "3000"
+        "port": "8080"
       }
     }
   ],

@@ -2908,8 +2908,10 @@
     <Content Include="views\password-reset.pug" />
     <Content Include="views\profile.pug" />
     <Content Include="views\register.pug" />
+    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app.publish\" />
     <Folder Include="controllers\" />
     <Folder Include="models\" />
     <Folder Include="config\" />

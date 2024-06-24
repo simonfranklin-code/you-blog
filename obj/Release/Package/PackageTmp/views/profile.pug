@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h1 Profile
+    p Username: #{user.username}
+    p Email: #{user.email}
+    button.btn.btn-primary(type='button' data-bs-toggle='offcanvas' data-bs-target='#offcanvasScrolling' aria-controls='offcanvasScrolling') Enable body scrolling
+    #offcanvasScrolling.offcanvas.offcanvas-start(data-bs-scroll='true' data-bs-backdrop='false' tabindex='-1' aria-labelledby='offcanvasScrollingLabel')
+      .offcanvas-header
+        h5#offcanvasScrollingLabel.offcanvas-title Colored with scrolling
+        button.btn-close.text-reset(type='button' data-bs-dismiss='offcanvas' aria-label='Close')
+      .offcanvas-body
+        p Try scrolling the rest of the page to see this option in action.
+

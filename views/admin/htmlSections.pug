@@ -3,7 +3,11 @@ extends layout
 block content
 
     h1 HTML Sections
-    button.btn.btn-primary.btn-sm.mb-3#newHtmlSectionBtn New HTML Section
+    .form-row
+       .form-group.col-md-2
+         button.btn.btn-primary.btn-sm.mb-3#newHtmlSectionBtn New HTML Section
+       .form-group.col-md-2
+         button.btn.btn-primary.btn-sm.mb-3#importHtmlSectionBtn Import HTML Sections
     form#filterForm
       .form-row
         .form-group.col-md-2
@@ -25,6 +29,9 @@ block content
             option(value=15) 15
             option(value=20) 20
             option(value=25) 25
+            option(value=50) 50
+            option(value=75) 75
+            option(value=100) 100
         .form-group.col-md-1.align-self-end
           button.btn.btn-primary.btn-sm#filterButton Filter
 
@@ -69,6 +76,9 @@ block content
           .modal-body(id="editHtmlSectionBody")
             form#htmlSectionForm
               input(type='hidden' id='htmlSectionId' name='id')
+              .formgroup
+                label(for='blogPostId') Blog Post
+                select.form-control.form-control-sm#addBlogPostId( name='blogPostId')
               .form-group
                 label(for='htmlContent') HTML
                 textarea.form-control.form-control-sm#htmlContent(name='html')
@@ -215,6 +225,9 @@ block content
         let currentHtmlSectionId = 0;
         let currentHtmlSectionAnchor = '';
         let selectedText = '';
+        let htmlSections = null;
+
+
 
         function fetchHtmlSections() {
             const anchor = $('#anchorFilter').val();
@@ -234,6 +247,13 @@ block content
                         $('#blogPostIdFilter').append(option);
                     });
 
+                    data.blogPosts.forEach(blogPost => {
+                        let option = `<option value="${blogPost.BlogPostId}" name="${blogPost.Title}">${blogPost.Title}</option>`;
+                        $('#addBlogPostId').append(option);
+                    });
+
+                    htmlSections = data.htmlSections;
+                    
                     data.htmlSections.forEach(section => {
                         tbody.append(`
                             <tr>
@@ -243,6 +263,7 @@ block content
                               <td>${section.DateCreated}</td>
                               <td class="admin-blogs-ellipsis" data-toggle="popover" title="HtmlSection Slug details" data-content="${section.Slug}">${section.Slug}</td>
                               <td>
+                                <button class="btn btn-primary btn-sm import-btn" data-anchor="${section.Anchor}" data-slug="${section.Slug}">Import</button>
                                 <button class="btn btn-primary btn-sm view-btn" data-anchor="${section.Anchor}" data-id="${section.HtmlSectionID}">View</button>
                                 <button class="btn btn-warning btn-sm edit-btn" data-id="${section.HtmlSectionID}">Edit</button>
                                 <button class="btn btn-danger btn-sm delete-btn" data-id="${section.HtmlSectionID}">Delete</button>
@@ -326,6 +347,16 @@ block content
             });
         });
 
+        $(document).on('click', '.import-btn', function () {
+            const slug = $(this).data('slug');
+            const anchor = $(this).data('anchor');
+            $.get(`/admin/htmlSections/importSingleHtmlSectionById/${slug}/${anchor}`, function (section) {
+
+                $('#editableHtmlContent').html(section[0]);
+                $('#viewHtmlSectionModal').modal('show');
+            });
+        });
+
         $('#htmlSectionForm').on('submit', function (e) {
             e.preventDefault();
             const htmlSectionId = $('#htmlSectionId').val();
@@ -388,6 +419,52 @@ block content
             });
         });
         
+
+        $('#importHtmlSectionBtn').on('click', function () {
+
+            const htmlSectionsFromDb = htmlSections;
+
+            $.ajax({
+                url: '/admin/htmlSections/importSingleHtmlSectionById/solid-foundation-knowledge-is-power-in-digital-marketing/2',
+                method: 'GET',
+                
+                success: function(htmlSectionsFromFile) {
+                    
+                    if (htmlSectionsFromDb !== 'undefined' && htmlSectionsFromDb.length > 0) {
+                        for (let i = 0; i < htmlSectionsFromFile.length; i++) {
+                            const htmlSectionId = htmlSectionsFromDb[i].HtmlSectionID;
+                            const dbAnchor = htmlSectionsFromDb[i].Anchor;
+                            const [htmlContent, anchor] = htmlSectionsFromFile[i];
+                            const blogPostId = $('#blogPostIdFilter').val();
+                            if (dbAnchor === anchor) {
+
+                                $.ajax({
+                                    url: '/admin/htmlSections/updateBySectionId',
+                                    method: 'POST',
+                                    data: {
+                                        blogPostId,
+                                        htmlSectionId, 
+                                        htmlContent
+                                    },
+                                    success: function(data) {
+                                        console.log(JSON.stringify(data));
+                                    },
+                                    error: function(err) {
+                                        console.log(JSON.stringify(err));
+                                    }
+                                });
+                            }
+                        }
+
+                    }
+                    ///alert(JSON.stringify(data));
+                },
+                error: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
+        });
+
         $('#image-html').on('click', function () {
             $('#imageUploadInput').click();
         });

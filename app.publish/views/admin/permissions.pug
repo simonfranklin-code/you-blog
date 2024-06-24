@@ -1,0 +1,288 @@
+extends layout
+
+block content
+  h1 Manage Permissions
+
+  h2 Create Permission
+
+  .form-row
+    .form-group.col-md-3
+      label(for='tbx_createPermissionNme') Permission Name
+      input.form-control.form-control-sm(type='text' id='tbx_createPermissionName' required)
+    .form-group.col-md-2.align-self-end
+      button.btn.btn-primary.btn-sm(type='button' id='btn_createPermission') Create
+
+  h2 Assign Permission to Role
+  form(action='/admin/permissions/assign' method='POST')
+    .form-row
+      .form-group.col-md-1
+        label(for='role') Role
+        select.form-control.form-control-sm(name='role' required)
+          each role in roles
+            option(value=role) #{role}
+      .form-group.col-md-3
+        label(for='permissionName') Permission
+        select.form-control.form-control-sm(name='permissionName' required)
+          each permission in permissionsLookup
+            option(value=permission.name) #{permission.name}
+
+      .form-group.col-md-2.align-self-end
+        button.btn.btn-primary.btn-sm(type='submit' id='assignPermission') Assign
+
+  h2 Permissions
+  .form-row
+    .form-group.col-md-2
+      label(for='permissionNameFilter') Permission Name
+      input.form-control.form-control-sm(type='text' name='permissionNameFilter' id='permissionNameFilter')
+    .form-group.col-md-2.align-self-end
+      button.btn.btn-primary.btn-sm(type='button' id='filterPermissionsButton') Filter
+
+  .form-row
+    .form-group.col-md-3
+      label(for='permissionsSortField') Sort By
+      select.form-control.form-control-sm(name='permissionsSortField' id='permissionsSortField')
+        option(value='id') ID
+        option(value='name') Name
+    .form-group.col-md-3
+      label(for='permissionsSortOrder') Order
+      select.form-control.form-control-sm(name='permissionsSortOrder' id='permissionsSortOrder')
+        option(value='ASC') Ascending
+        option(value='DESC') Descending
+    .form-group-col-md-3
+      label(for='limit') Permissions limit
+      select.form-control.form-control-sm(name='limit' id='limit' required)
+        option(value=5) 5
+        option(value=10) 10
+        option(value=15) 15
+        option(value=20) 20
+        option(value=25) 25
+        option(value=50) 50
+        option(value=75) 75
+        option(value=100) 100
+
+  table.table.rounded
+    thead
+      tr
+        th ID
+        th Name
+    tbody#permissionsTableBody
+
+  nav
+    ul.pagination
+      li.page-item
+        button.page-link(type='button' id='previousPermissionsPage') Previous
+      li.page-item
+        span.page-link(id='currentPermissionsPage') 1
+      li.page-item
+        button.page-link(type='button' id='nextPermissionsPage') Next
+
+  .alert.alert-danger#permissionsError(style='display: none;') Error fetching permissions
+
+  h2 Role Permissions
+  .form-row
+    .form-group.col-md-2
+      label(for='roleFilter') Role
+      input.form-control(type='text' name='roleFilter' id='roleFilter')
+    .form-group.col-md-2
+      label(for='permissionFilter') Permission
+      input.form-control(type='text' name='permissionFilter' id='permissionFilter')
+    .form-group.col-md-2.align-self-end
+      button.btn.btn-primary(type='button' id='filterRolePermissionsButton') Filter
+
+  .form-row
+    .form-group.col-md-3
+      label(for='rolePermissionsSortField') Sort By
+      select.form-control(name='rolePermissionsSortField' id='rolePermissionsSortField')
+        option(value='role') Role
+        option(value='permission') Permission
+    .form-group.col-md-3
+      label(for='rolePermissionsSortOrder') Order
+      select.form-control.form-control-sm(name='rolePermissionsSortOrder' id='rolePermissionsSortOrder')
+        option(value='ASC') Ascending
+        option(value='DESC') Descending
+    .form-group-col-md-3
+      label(for='rolePermissionsLimit') Role permissions limit
+      select.form-control.form-control-sm(name='rolePermissionsLimit' id='rolePermissionsLimit' required)
+        option(value=5) 5
+        option(value=10) 10
+        option(value=15) 15
+        option(value=20) 20
+        option(value=25) 25
+        option(value=50) 50
+        option(value=75) 75
+        option(value=100) 100
+
+  table.table.rounded
+    thead
+      tr
+        th Role
+        th Permission
+    tbody#rolePermissionsTableBody
+
+  nav
+    ul.pagination
+      li.page-item
+        button.page-link(type='button' id='previousRolePermissionsPage') Previous
+      li.page-item
+        span.page-link(id='currentRolePermissionsPage') 1
+      li.page-item
+        button.page-link(type='button' id='nextRolePermissionsPage') Next
+
+  .alert.alert-danger#rolePermissionsError(style='display: none;') Error fetching role permissions
+
+  script.
+    $(document).ready(function() {
+      let currentPermissionsPage = 1;
+      let currentRolePermissionsPage = 1;
+
+      function fetchPermissions(page = 1) {
+        console.log('Fetching permissions for page:', page);
+        const name = $('#permissionNameFilter').val();
+        const sortField = $('#permissionsSortField').val();
+        const sortOrder = $('#permissionsSortOrder').val();
+        const limit = $('#limit').val();
+        $.ajax({
+          url: `/admin/permissions/json?page=${page}&limit=${limit}&name=${name}&sortField=${sortField}&sortOrder=${sortOrder}`,
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            const permissionsTableBody = $('#permissionsTableBody');
+            permissionsTableBody.empty();
+
+            $.each(data.permissions, function(index, permission) {
+              const row = $('<tr>').html(`
+                <td>${permission.id}</td>
+                <td>${permission.name}</td>
+              `);
+              permissionsTableBody.append(row);
+            });
+
+            $('#currentPermissionsPage').text('Page ' + data.page + ' of ' + data.totalPages + ' pages');
+            currentPermissionsPage = data.page;
+
+            $('#previousPermissionsPage').prop('disabled', data.page <= 1);
+            $('#nextPermissionsPage').prop('disabled', data.page >= data.totalPages);
+
+            $('#permissionsError').hide();
+          },
+          error: function(xhr, status, error) {
+            console.error('Error fetching permissions:', error);
+            $('#permissionsError').show();
+          }
+        });
+      }
+
+      function fetchRolePermissions(page = 1) {
+        console.log('Fetching role permissions for page:', page);
+        const role = $('#roleFilter').val();
+        const permission = $('#permissionFilter').val();
+        const sortField = $('#rolePermissionsSortField').val();
+        const sortOrder = $('#rolePermissionsSortOrder').val();
+        const limit = $('#rolePermissionsLimit').val()
+        $.ajax({
+          url: `/admin/permissions/role_permissions/json?page=${page}&limit=${limit}&role=${role}&permission=${permission}&sortField=${sortField}&sortOrder=${sortOrder}`,
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            const rolePermissionsTableBody = $('#rolePermissionsTableBody');
+            rolePermissionsTableBody.empty();
+
+            $.each(data.rolePermissions, function(index, rolePermission) {
+              const row = $('<tr>').html(`
+                <td>${rolePermission.role}</td>
+                <td>${rolePermission.permission}</td>
+              `);
+              rolePermissionsTableBody.append(row);
+            });
+
+            $('#currentRolePermissionsPage').text('Page ' + data.page + ' of ' + data.totalPages + ' pages');
+            currentRolePermissionsPage = data.page;
+
+            $('#previousRolePermissionsPage').prop('disabled', data.page <= 1);
+            $('#nextRolePermissionsPage').prop('disabled', data.page >= data.totalPages);
+
+            $('#rolePermissionsError').hide();
+          },
+          error: function(xhr, status, error) {
+            console.error('Error fetching role permissions:', error);
+            $('#rolePermissionsError').show();
+          }
+        });
+      }
+      
+      function createPermission(){
+        console.log('Creating permission');
+        const createPermissionName = $('#tbx_createPermissionName').val();
+        var formData = {'name': createPermissionName };
+
+        $.ajax({
+          url: '/admin/permissions/create',
+          type: 'POST',
+          cache: false,
+          data: formData,
+          success: function(data) {
+              if(data.isError === false){
+                  $('#success-message').text(data.message);
+              }else{
+                  $('#error-message').text(data.message);
+              }
+          },
+          error: function(xhr, status, error) {
+            console.error('Error creating permissions:', error);
+            $('error-message').text('Error creating permission');
+          }
+        });
+
+      }
+      //
+      $('#btn_createPermission').on('click', function() {
+        console.log('Create permissions button clicked');
+        createPermission();
+      });
+
+
+
+      // Event listeners for permissions pagination
+      $('#filterPermissionsButton').on('click', function() {
+        console.log('Filter permissions button clicked');
+        fetchPermissions();
+      });
+      $('#previousPermissionsPage').on('click', function() {
+        console.log('Previous permissions page button clicked');
+        if (currentPermissionsPage > 1) {
+          currentPermissionsPage--;
+          fetchPermissions(currentPermissionsPage);
+        }
+      });
+      $('#nextPermissionsPage').on('click', function() {
+        console.log('Next permissions page button clicked');
+        currentPermissionsPage++;
+        fetchPermissions(currentPermissionsPage);
+      });
+
+      // Event listeners for role permissions pagination
+      $('#filterRolePermissionsButton').on('click', function() {
+        console.log('Filter role permissions button clicked');
+        fetchRolePermissions();
+      });
+      $('#previousRolePermissionsPage').on('click', function() {
+        console.log('Previous role permissions page button clicked');
+        if (currentRolePermissionsPage > 1) {
+          currentRolePermissionsPage--;
+          fetchRolePermissions(currentRolePermissionsPage);
+        }
+      });
+      $('#nextRolePermissionsPage').on('click', function() {
+        console.log('Next role permissions page button clicked');
+        currentRolePermissionsPage++;
+        fetchRolePermissions(currentRolePermissionsPage);
+      });
+
+      // Initial fetch
+      fetchPermissions();
+      fetchRolePermissions();
+    });
+
+
+
+

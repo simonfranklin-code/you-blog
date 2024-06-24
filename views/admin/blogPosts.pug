@@ -13,23 +13,28 @@ block content
           input.form-control.form-control-sm#authorFilter(name='author' placeholder='Author')
         .form-group.col-md-2
           label(for='blogId') Blog ID
-          input.form-control.form-control-sm#blogIdFilter(name='blogId' placeholder='Blog ID')
+          select.form-control.form-control-sm#blogIdFilter(name='blogId')
         .form-group-col-md-3
           label(for='limit') Posts limit
           select.form-control.form-control-sm(name='limit' id='limit' required)
             option(value=1) 1
             option(value=2) 2
             option(value=3) 3
-            option(value=5) 5
+            option(value=5 selected) 5
             option(value=10) 10
             option(value=15) 15
             option(value=20) 20
             option(value=25) 25
+            option(value=50) 50
+            option(value=75) 75
+            option(value=100) 100
         .form-group.col-md-1.align-self-end
           button.btn.btn-primary.btn-sm#filterButton Filter
     table.table#blogPostsTable(width='100%')
       thead
         tr
+          th
+            a(href='#' class='sort' data-field='BlogPostId') Id
           th
             a(href='#' class='sort' data-field='Title') Title
           th Slug
@@ -70,21 +75,30 @@ block content
                 label(for='blogPostSlug') Slug
                 input.form-control.form-control-sm#blogPostSlug(name='slug' required)
               .form-group
-                label(for='blogPostCreatedAt') Created At
-                input.form-control.form-control-sm#blogPostCreatedAt(type='date' name='createdAt' required)
-              .form-group
                 label(for='blogPostBlogId') Blog ID
-                input.form-control.form-control-sm#blogPostBlogId(type='number' name='blogId' required)
+                select.form-control.form-control-sm#blogPostBlogId(name='blogId')
+                  each blog in blogs
+                    option(value=blog.BlogId)= blog.Title 
               .form-group
                 label(for='blogPostAuthor') Author
                 input.form-control.form-control-sm#blogPostAuthor(name='author' required)
               .form-group
                 label(for='blogPostUserId') User ID
-                input.form-control.form-control-sm#blogPostUserId(name='userId')
-              button.btn.btn-primary.btn-sm(type='submit') Save
+                select.form-control.form-control-sm#blogPostUserId(name='userId')
+                  each user in users
+                    option(value=user.id)= user.username                  
+              .form-group
+                label(for='blogPostContent') Content
+                textarea.form-control.form-control-sm#blogPostContent(name='content' rows='3' required)
+              .form-row
+                .form-group.col-md-1
+                  button.btn.btn-primary.btn-sm(type='submit') Save
+                .form-group.col-md-2
+                  button.btn.btn-primary.btn-sm.ml-3#importHtmlFile(type='buttom') Import
+                  
           .modal-footer
-            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-
+            button.btn.btn-primary.btn-sm(type='button' data-dismiss='modal') Close
+            input#htmlFileUploadInput(type='file' name='htmlFileUploadInput' accept='.html' style='position: absolute; width: 0px; height: 0px; left: -3000px; top: -3000px;')
     // Delete Confirmation Modal
     .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog')
       .modal-dialog(role='document')
@@ -117,9 +131,16 @@ block content
                 success: function (data) {
                     const tbody = $('#blogPostsTableBody');
                     tbody.empty();
+
+                    data.blogs.forEach(blog => {
+                        let option = `<option value="${blog.BlogId}" name="${blog.Title}">${blog.Title}</option>`;
+                        $('#blogIdFilter').append(option);
+                    });
+
                     data.blogPosts.forEach(blogPost => {
                         tbody.append(`
                             <tr>
+                              <td>${blogPost.BlogPostId}</td>
                               <td class="admin-blogs-ellipsis" data-toggle="popover" title="BlogPost Title details" data-content="${blogPost.Title}">${blogPost.Title}</td>
                               <td class="admin-blogs-ellipsis" data-toggle="popover" title="BlogPost Slug details" data-content="${blogPost.Slug}">${blogPost.Slug}</td>
                               <td>${blogPost.Author}</td>
@@ -147,6 +168,35 @@ block content
                 }
             });
         }
+
+        $('#htmlFileUploadInput').on('change', function () {
+            const file = this.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                const blogPostId = $('#blogPostId').val();
+                formData.append('html', file);
+                formData.append('blogPostId', blogPostId);
+                $.ajax({
+                    url: '/admin/blogPosts/uploadHtmlFile',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Html file uploaded succesfully.');
+                            
+                        } else {
+                            alert('Html file upload failed.');
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while uploading the Html file.');
+                    }
+                });
+            }
+        });
 
         $('#filterButton').on('click', function (e) {
             e.preventDefault();
@@ -183,6 +233,12 @@ block content
             $('#blogPostModal').modal('show');
         });
 
+        $('#importHtmlFile').on('click', function () {
+            $('#htmlFileUploadInput').click();
+        });
+
+        
+
         $(document).on('click', '.edit-btn', function () {
             const blogPostId = $(this).data('id');
             $.get(`/admin/blogPosts/${blogPostId}`, function (blogPost) {
@@ -192,7 +248,7 @@ block content
                 $('#blogPostBlogId').val(blogPost.BlogId);
                 $('#blogPostAuthor').val(blogPost.Author);
                 $('#blogPostUserId').val(blogPost.UserId);
-                $('#blogPostCreatedAt').val(blogPost.CreatedAt);
+                $('#blogPostContent').val(blogPost.Content);
                 $('#blogPostId').val(blogPost.BlogPostId);
                 $('#blogPostModal').modal('show');
             });

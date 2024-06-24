@@ -4,6 +4,6 @@
     <BuildCommand> </BuildCommand>
     <!--Command to run on project clean-->
     <CleanCommand> </CleanCommand>
-    <StartupCommand>set PORT=3000 &amp; npm run start</StartupCommand>
+    <StartupCommand>set PORT=8080 &amp; npm run start</StartupCommand>
   </PropertyGroup>
 </Project>

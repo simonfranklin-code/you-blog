@@ -1,0 +1,44 @@
+extends layout
+
+block content
+    .row
+        .col-4
+            .login-box
+                .login-logo
+                    b Login
+                    // /.login-logo
+                .card
+                    .card-body.login-card-body
+                        p.login-box-msg Sign in to start your session
+                        form(action='/users/login' method='POST')
+                            .input-group.mb-3
+                                input.form-control(type='email' name='email' placeholder='Email')
+                            .input-group-text
+                                span.bi.bi-envelope
+                            .input-group.mb-3
+                                input.form-control(type='password' name='password' placeholder='Password')
+                            .input-group-text
+                                span.bi.bi-lock-fill
+                                // begin::Row
+                                .row
+                                    .col-12
+                                        .d-grid.gap-2
+                                            button.btn.btn-primary(type='submit') Sign In
+                                    // /.col
+                                // end::Row
+                        .social-auth-links.text-center.mb-3.d-grid.gap-2
+                            p - OR -
+                            a.btn.btn-primary(href='#')
+                                i.bi.bi-facebook.me-2
+                                    |  Sign in using Facebook
+                                a.btn.btn-danger(href='#')
+                                    i.bi.bi-google.me-2
+                                    |  Sign in using Google+
+                        // /.social-auth-links
+                        p.mb-1
+                            a(href='/users/password-reset-request') Forgot your password?
+                        p.mb-0
+                            a.text-center(href='users/register')
+                                | Register a new membership
+                    // /.login-card-body
+            // /.login-box

@@ -53,6 +53,19 @@ exports.updateHtmlSection = (req, res) => {
     });
 };
 
+exports.updateHtmlSectionByHtmlSectionId = (req, res) => {
+    const { BlogPostId, HtmlSectionID, Html } = req.body;
+
+    db.run(`UPDATE HtmlSections SET Html = ?, DateUpdated = ? WHERE HtmlSectionID = ? AND BlogPostId = ?`, [Html, new Date().toISOString(), HtmlSectionID, BlogPostId], function (err) {
+        if (err) {
+            console.error(err);
+            res.json({ success: false });
+        } else {
+            res.json({ success: true });
+        }
+    });
+};
+
 exports.uploadImage = (req, res) => {
     if (!req.files || !req.files.image) {
         return res.status(400).json({ success: false, message: 'No image file uploaded.' });
@@ -75,4 +88,36 @@ exports.uploadImage = (req, res) => {
 
         res.json({ success: true, imageUrl: `/uploads/${image.name}` });
     });
+};
+
+exports.importHtml = async (req, res) => {
+    try {
+        const slug = req.params.slug;
+        const blogPostId = parseInt(req.params.id);
+        const url = 'http://localhost:8080/' + slug + '.html';
+        const htmlSections = await HtmlSection.importHtml(url, blogPostId);
+        if (htmlSections === null || htmlSections === 'undefined') {
+            throw new Error('importHtml failed');
+        } else {
+            res.json(htmlSections);
+        }
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+exports.importSingleHtmlSectionById = async (req, res) => {
+    try {
+        const slug = req.params.slug;
+        const anchor = req.params.anchor;
+        const url = 'http://localhost:8080/' + slug + '.html';
+        const htmlSections = await HtmlSection.importSingleHtmlSection(url, anchor);
+        if (htmlSections === null || htmlSections === 'undefined') {
+            throw new Error('importSingleHtmlSectionById failed');
+        } else {
+            res.json(htmlSections);
+        }
+    } catch (err) {
+        res.json(err);
+    }
 };

@@ -43,6 +43,7 @@ router.post('/blogPosts/create', ensureAuthenticated, ensurePermission('add_blog
 router.post('/blogPosts/edit/:id', ensureAuthenticated, ensurePermission('edit_blogPosts'), blogPostAdminController.editBlogPost);
 router.post('/blogPosts/delete/:id', ensureAuthenticated, ensurePermission('delete_blogPosts'), blogPostAdminController.deleteBlogPost);
 router.get('/blogPosts/:id', ensureAuthenticated, ensurePermission('view_blogPosts'), blogPostAdminController.getBlogPost);
+router.post('/blogPosts/uploadHtmlFile', ensureAuthenticated, ensurePermission('add_blogPosts'), blogPostAdminController.uploadHtmlFile);
 
 // Manage HTML Sections
 router.get('/htmlSections', ensureAuthenticated, ensurePermission('manage_htmlSections'), htmlSectionController.getHtmlSectionsPage);
@@ -52,7 +53,10 @@ router.post('/htmlSections/edit/:id', ensureAuthenticated, ensurePermission('edi
 router.post('/htmlSections/delete/:id', ensureAuthenticated, ensurePermission('delete_htmlSections'), htmlSectionController.deleteHtmlSection);
 router.get('/htmlSections/:id', ensureAuthenticated, ensurePermission('view_htmlSections'), htmlSectionController.getHtmlSection);
 router.post('/htmlSections/update', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.updateHtmlSection);
+router.post('/htmlSections/updateBySectionId', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.updateHtmlSectionByHtmlSectionId);
 router.post('/htmlSections/uploadImage', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.uploadImage);
+router.get('/htmlSections/importHtml/:slug/:id', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.importHtml);
+router.get('/htmlSections/importSingleHtmlSectionById/:slug/:anchor', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.importSingleHtmlSectionById);
 
 module.exports = router;
 
