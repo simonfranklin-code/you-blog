@@ -39,9 +39,10 @@ html(lang='en')
     // Custom styles for this template
     link(href='css/sb-admin-2.min.css', rel='stylesheet')
     link(rel='stylesheet' href='assets/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet' href='stylesheets/main.css')
     link(href='css/bs-additional.css', rel='stylesheet')
     script(src='vendor/jquery/jquery.min.js')
-    
+    script(src='js/site.js').
   body#page-top
     // Page Wrapper
     #wrapper
@@ -140,7 +141,14 @@ html(lang='en')
               p(style="color: red" id='error-message') #{error_msg}
             if error
               p(style="color: red") #{error}
-            // flash msg
+            if user
+              p.mt-2
+              | Logged in as #{user.username} (#{user.role})&nbsp; 
+              | 
+              a(href='/users/logout')  Logout&nbsp;
+                if user.role === 'admin'
+                  | 
+                  a(href='/admin/dashboard')  Admin Dashboard
             ul.navbar-nav.ml-auto
               // Nav Item - Search Dropdown (Visible Only XS)
               li.nav-item.dropdown.no-arrow.d-sm-none
@@ -161,31 +169,14 @@ html(lang='en')
                   // Counter - Alerts
                   span.badge.badge-danger.badge-counter 3+
                 // Dropdown - Alerts
-                .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='alertsDropdown')
+                .dropdown-list.dropdown-menu.dropdown-menu-left.shadow.animated--grow-in(aria-labelledby='alertsDropdown')
                   h6.dropdown-header
-                    | Alerts Center
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .mr-3
-                      .icon-circle.bg-primary
-                        i.fas.fa-file-alt.text-white
-                    div
-                      .small.text-gray-500 December 12, 2019
-                      span.font-weight-bold A new monthly report is ready to download!
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .mr-3
-                      .icon-circle.bg-success
-                        i.fas.fa-donate.text-white
-                    div
-                      .small.text-gray-500 December 7, 2019
-                      
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .mr-3
-                      .icon-circle.bg-warning
-                        i.fas.fa-exclamation-triangle.text-white
-                    div
-                      .small.text-gray-500 December 2, 2019
-                        Spending Alert: We&apos;ve noticed unusually high spending for your account.
+                    | Notification Center
+                  #notificationsContainer
+                    
+
                   a.dropdown-item.text-center.small.text-gray-500(href='#') Show All Alerts
+
               // Nav Item - Messages
               li.nav-item.dropdown.no-arrow.mx-1
                 a#messagesDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -237,11 +228,11 @@ html(lang='en')
               // Nav Item - User Information
               li.nav-item.dropdown.no-arrow
                 a#userDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                  span.mr-2.d-none.d-lg-inline.text-gray-600.small Douglas McGee
+                  span.mr-2.d-none.d-lg-inline.text-gray-600.small #{user.username}
                   img.img-profile.rounded-circle(src='img/undraw_profile.svg')
                 // Dropdown - User Information
                 .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='userDropdown')
-                  a.dropdown-item(href='#')
+                  a.dropdown-item(href='/admin/profile')
                     i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-800 
                     | Profile
                   a.dropdown-item(href='#')
@@ -284,7 +275,7 @@ html(lang='en')
           .modal-body Select &quot;Logout&quot; below if you are ready to end your current session.
           .modal-footer
             button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-            a.btn.btn-primary(href='login.html') Logout
+            a.btn.btn-primary(href='/users/logout') Logout
     // Bootstrap core JavaScript
     //- script(src='vendor/jquery/jquery.min.js')
     script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
@@ -297,4 +288,4 @@ html(lang='en')
     script(src='assets/web/assets/cookies-alert-plugin/cookies-alert-script.js')
     script(src='assets/smoothscroll/smooth-scroll.js').
     script(src='assets/ytplayer/index.js').
-    script(src='assets/dropdown/js/navbar-dropdown.js').
+    

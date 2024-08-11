@@ -12,3 +12,134 @@
 2024-06-05T15:18:30.522Z - Error: SQLITE_MISMATCH: datatype mismatch
 2024-06-05T15:43:45.725Z - Error: SQLITE_MISMATCH: datatype mismatch
 2024-06-05T15:43:45.727Z - Error: SQLITE_MISMATCH: datatype mismatch
+2024-06-25T14:33:27.275Z - Error: DateCreated is not defined
+2024-06-27T09:35:35.030Z - Error: Unknown language: "pug"
+2024-06-27T10:07:00.222Z - Error: Text.contains is not a function
+2024-06-27T10:07:44.726Z - Error: Text.contains is not a function
+2024-06-27T10:17:01.540Z - Error: Text.contains is not a function
+2024-06-27T10:21:03.760Z - Error: Text.contains is not a function
+2024-06-27T10:23:40.145Z - Error: Assignment to constant variable.
+2024-06-27T10:27:34.376Z - Error: Assignment to constant variable.
+2024-06-27T10:31:45.494Z - Error: Assignment to constant variable.
+2024-06-27T11:27:22.755Z - Error: Assignment to constant variable.
+2024-06-27T11:44:38.457Z - Error: Assignment to constant variable.
+2024-07-02T13:07:26.335Z - Error: commentId is not defined
+2024-07-03T11:02:43.062Z - Error: SQLITE_ERROR: no such table: comment_likes
+2024-07-03T11:02:43.064Z - Error: SQLITE_ERROR: no such table: comment_likes
+2024-07-03T11:03:21.971Z - Error: SQLITE_ERROR: no such table: comment_likes
+2024-07-03T11:03:21.971Z - Error: SQLITE_ERROR: no such table: comment_likes
+2024-07-06T13:40:33.543Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-07T15:22:49.759Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-07T16:42:39.756Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-07T16:42:52.969Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-07T16:43:06.787Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-07T16:43:28.321Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-07T16:43:47.265Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-08T09:34:09.508Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-10T18:03:29.821Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-10T18:05:44.801Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-11T06:10:18.318Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:10:18.319Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:22:21.847Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:22:21.848Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:36:34.409Z - Error: SQLITE_ERROR: table BlogPostReviews has no column named Slug
+2024-07-11T06:36:34.407Z - Error: SQLITE_ERROR: table BlogPostReviews has no column named Slug
+2024-07-11T06:46:20.240Z - Error: SQLITE_ERROR: table BlogPostReviews has no column named Slug
+2024-07-11T06:46:20.240Z - Error: SQLITE_ERROR: table BlogPostReviews has no column named Slug
+2024-07-11T06:48:44.946Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:48:44.948Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:49:37.524Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:49:37.525Z - Error: SQLITE_ERROR: no such column: Slug
+2024-07-11T06:58:26.056Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T06:58:26.055Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T08:51:39.688Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T08:51:39.690Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T08:56:53.655Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T08:56:53.657Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T09:09:09.283Z - Error: BlogPostId is not defined
+2024-07-11T09:55:22.211Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T09:55:22.215Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T10:17:07.470Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-11T10:17:07.471Z - Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: BlogPostReviews.BlogPostId
+2024-07-13T17:35:23.295Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-13T17:35:27.941Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-13T18:37:03.752Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-13T19:59:51.202Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-14T10:48:13.585Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T10:25:12.346Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T12:04:08.868Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T14:20:44.576Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T14:58:25.424Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T15:09:29.461Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T15:15:47.954Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T16:21:16.151Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T17:00:49.514Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T17:02:35.416Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T17:16:01.351Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T22:07:07.123Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T22:08:49.355Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T22:09:01.050Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-15T22:13:13.070Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-16T17:01:00.570Z - Error: SQLITE_ERROR: near "liked": syntax error
+2024-07-16T17:01:36.104Z - Error: SQLITE_ERROR: near "liked": syntax error
+2024-07-16T17:06:00.358Z - Error: SQLITE_ERROR: near "liked": syntax error
+2024-07-16T18:07:56.702Z - Error: SQLITE_ERROR: near "liked": syntax error
+2024-07-17T11:51:05.923Z - Error: SQLITE_ERROR: near "liked": syntax error
+2024-07-17T11:52:15.989Z - Error: SQLITE_ERROR: near "liked": syntax error
+2024-07-18T10:40:24.919Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T11:10:09.760Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T11:12:41.688Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T11:19:20.258Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T11:28:18.063Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T15:27:01.173Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T15:36:58.643Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-18T15:40:36.905Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-19T11:35:25.522Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-19T14:04:22.701Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-19T14:04:23.043Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-21T16:50:00.102Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-21T16:50:30.721Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-21T16:50:32.522Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-21T16:50:32.927Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-28T07:34:33.795Z - Error: userId is not defined
+2024-07-28T16:08:08.192Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-31T15:32:53.445Z - Error: Cannot read properties of undefined (reading 'id')
+2024-07-31T15:34:32.960Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-02T09:46:44.316Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-02T09:46:59.459Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-02T09:47:32.526Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-02T09:49:01.559Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-06T08:02:24.963Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-06T08:02:46.808Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-06T08:03:54.876Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-06T08:46:09.583Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-07T17:36:12.546Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-08T17:59:41.451Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-08T18:00:22.588Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-08T18:00:35.255Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-08T18:01:00.002Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T11:25:23.878Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T11:25:38.267Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T11:25:51.478Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T11:26:09.491Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T11:26:33.513Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T11:27:13.694Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T13:45:16.093Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T13:49:06.534Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T13:52:33.861Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:02:25.725Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:22:55.338Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:24:20.420Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:25:08.753Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:25:35.652Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:25:51.823Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T14:26:17.160Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T19:36:12.999Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T19:39:02.943Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-09T19:39:48.205Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-11T10:11:06.474Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-11T10:11:55.081Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-11T14:18:58.110Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-11T14:21:33.218Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-11T14:38:36.268Z - Error: Cannot read properties of undefined (reading 'id')
+2024-08-11T14:39:15.727Z - Error: Cannot read properties of undefined (reading 'id')

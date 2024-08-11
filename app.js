@@ -3,7 +3,8 @@ require('dotenv').config();
 var debug = require('debug')('my express app');
 var express = require('express');
 const fileUpload = require('express-fileupload');
-var path = require('path');
+const path = require('path');
+const lessMiddleware = require('less-middleware');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -11,19 +12,18 @@ var bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const passport = require('passport');
 const session = require('express-session');
-
 const SQLiteStore = require('connect-sqlite3')(session); // Ensure you have connect-sqlite3 installed
-
 const { body, validationResult } = require('express-validator');
 const blogPostRoutes = require('./routes/blogPostRoutes');
-const blogPostCommentsRoutes = require('./routes/blogPostCommentsRoutes');
-const blogPostCommentRepliesRoutes = require('./routes/blogPostCommentRepliesRoutes');
-const addBlogPostCommentReplyRoutes = require('./routes/addBlogPostCommentReplyRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
-
-
+const likeRoutes = require('./routes/likeRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const reviewLikeRoutes = require('./routes/reviewLikeRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const followerRoutes = require('./routes/followerRoutes');
 var app = express();
 
 // Passport config
@@ -36,7 +36,7 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7} // 7 days
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 7 days
 }));
 
 // Passport middleware
@@ -49,9 +49,22 @@ app.use((req, res, next) => {
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
+    
     next();
 });
-
+// Configure Less middleware
+app.use(
+    lessMiddleware(path.join(__dirname, 'public'), {
+        dest: path.join(__dirname, 'public'),
+        preprocess: {
+            path: function (pathname, req) {
+                return pathname.replace('/stylesheets/', '/less/');
+            },
+        },
+        force: true,
+        debug: true,
+    })
+);
 // Enable files upload
 app.use(fileUpload({
     createParentPath: true
@@ -71,19 +84,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 app.use('/blog-post/:slug', blogPostRoutes);
-app.use('/comments/:slug', blogPostCommentsRoutes);
-app.use('/addCommentReply', addBlogPostCommentReplyRoutes);
-app.use('/replies/:slug/:commentId', blogPostCommentRepliesRoutes);
-
+app.use('/comments', commentRoutes);
 // Mounting the userRoutes
 app.use('/users', userRoutes);
 app.use('/', indexRoutes);
-
 // Mounting the adminRoutes
 app.use('/admin', adminRoutes);
-
-
-
+app.use('/likes', likeRoutes);
+app.use('/reviews', reviewRoutes);
+app.use('/reviewLikes', reviewLikeRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/followers', followerRoutes);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

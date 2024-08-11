@@ -4,17 +4,20 @@ const cheerio = require('cheerio');
 
 db.serialize(() => {
     db.run(`
+
         CREATE TABLE IF NOT EXISTS "HtmlSections" (
-            "HtmlSectionID" INTEGER NOT NULL UNIQUE,
-            "Html" TEXT,
-            "BlogPostId" INTEGER NOT NULL,
-            "DateCreated" DATETIME DEFAULT CURRENT_TIMESTAMP,
-            "DateUpdated" DATETIME,
-            "ViewIndex" INTEGER,
-            "Anchor" TEXT NOT NULL,
-            "Slug" TEXT,
-            CONSTRAINT "FK_HtmlSections_BlogPosts_BlogPostId" FOREIGN KEY("BlogPostId") REFERENCES "BlogPosts"("BlogPostId") ON DELETE CASCADE,
-            PRIMARY KEY("HtmlSectionID" AUTOINCREMENT)
+	        "HtmlSectionID"	INTEGER NOT NULL UNIQUE,
+	        "Html"	TEXT,
+	        "BlogPostId"	INTEGER NOT NULL,
+	        "DateCreated"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+	        "DateUpdated"	DATETIME,
+	        "ViewIndex"	INTEGER,
+	        "Anchor"	TEXT NOT NULL,
+	        "Slug"	TEXT,
+	        "UserId"	INTEGER NOT NULL,
+	        CONSTRAINT "FK_HtmlSections_users_id" FOREIGN KEY("UserId") REFERENCES "users"("id") ,
+	        PRIMARY KEY("HtmlSectionID" AUTOINCREMENT),
+	        CONSTRAINT "FK_HtmlSections_BlogPosts_BlogPostId" FOREIGN KEY("BlogPostId") REFERENCES "BlogPosts"("BlogPostId") ON DELETE CASCADE
         );
     `);
 });
@@ -37,6 +40,16 @@ class HtmlSection {
         return new Promise((resolve, reject) => {
             db.run(`UPDATE HtmlSections SET Html = ?, ViewIndex = ?, Anchor = ?, Slug = ?, DateUpdated = ? WHERE HtmlSectionID = ?`,
                 [html, viewIndex, anchor, slug, dateUpdated, htmlSectionId], function (err) {
+                    if (err) return reject(err);
+                    resolve(this.changes);
+                });
+        });
+    }
+
+    static deleteBySlug(slug) {
+        return new Promise((resolve, reject) => {
+            db.run(`DELETE FROM HtmlSections WHERE Slug = ?`,
+                [slug], function (err) {
                     if (err) return reject(err);
                     resolve(this.changes);
                 });
@@ -156,11 +169,14 @@ class HtmlSection {
     // Update HTML sections in the database
     static async insertHtmlSections(blogPostId, htmlSections, slug) {
 
+        await HtmlSection.deleteBySlug(slug);
+
         if (htmlSections !== 'undefined' && htmlSections.length > 0) {
 
             for (let i = 0; i < htmlSections.length; i++) {
 
                 const [htmlContent, anchor] = htmlSections[i]; // Destructure the outer HTML and id (anchor) from each sub-array
+                
                 await HtmlSection.add(htmlContent, blogPostId, i + 1, anchor, slug);
                 
                 try {
@@ -180,7 +196,7 @@ class HtmlSection {
     static async importHtml(url, blogPostId, slug) {
         try {
             const html = await HtmlSection.fetchHTML(url);
-            const htmlSections = HtmlSection.extractHtmlSections(html);
+            const htmlSections = await HtmlSection.extractHtmlSections(html);
             await HtmlSection.insertHtmlSections(blogPostId, htmlSections, slug);
             return new Promise((resolve, reject) => {
                 if (htmlSections === 'undefined') {
@@ -202,7 +218,7 @@ class HtmlSection {
     static async importSingleHtmlSection(url, id) {
         try {
             const html = await HtmlSection.fetchHTML(url);
-            const htmlSections = HtmlSection.extractHtmlSectionById(html, id);
+            const htmlSections = await HtmlSection.extractHtmlSectionById(html, id);
             //await HtmlSection.updateHtmlSections(blogPostId, htmlSections);
             return new Promise((resolve, reject) => {
                 if (htmlSections === 'undefined') {

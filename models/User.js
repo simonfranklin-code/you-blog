@@ -1,16 +1,18 @@
 const bcrypt = require('bcryptjs');
 const db = require('../models/db');
+const NotificationStats = require('./NotificationStats');
 
 // Create User table if it doesn't exist
 db.serialize(() => {
     db.run(`
-        CREATE TABLE IF NOT EXISTS "Users" (
+        CREATE TABLE IF NOT EXISTS "users" (
 	        "id"	INTEGER,
-	        "username"	VARCHAR(255) NOT NULL UNIQUE,
-	        "email"	VARCHAR(255) NOT NULL UNIQUE,
-	        "password"	VARCHAR(255) NOT NULL,
-	        "dateCreated" TEXT,
-	        "dateModified"	TEXT,
+	        "username"	TEXT NOT NULL UNIQUE,
+	        "email"	TEXT NOT NULL UNIQUE,
+	        "password"	TEXT NOT NULL,
+	        "dateCreated"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	        "dateModified"	DATETIME NOT NULL,
+	        "role"	TEXT DEFAULT 'user',
 	        PRIMARY KEY("id" AUTOINCREMENT)
         );
     `);
@@ -41,13 +43,19 @@ class User {
                         }
 
                         let findUserByIdSql = 'SELECT * FROM Users WHERE Id = ' + insertedRow.id;
-                        db.get(findUserByIdSql, [], (err, row) => {
+                        db.get(findUserByIdSql, [], async (err, row) => {
                             if (err) {
                                 db.run('ROLLBACK');
                                 return reject(err);
                             }
+                            try {
+                                await NotificationStats.createStats(row.id);
+                            } catch (statsErr) {
+                                return reject(statsErr);
+                            }
                             db.run('COMMIT');
-                            resolve({ id: insertedRow.Id, username: username, email: email, password: hashedPassword, dateCreated: row.dateCreated, dateModified: row.dateModified });
+
+                            resolve({ id: row.id, username: username, email: email, password: hashedPassword, dateCreated: row.dateCreated, dateModified: row.dateModified });
                         });
                     });
 
@@ -232,6 +240,25 @@ class User {
                     return reject(new Error('Failed to count users'));
                 }
                 resolve(row.count);
+            });
+        });
+    }
+
+    static getUserStatistics(userId) {
+        return new Promise((resolve, reject) => {
+            db.get(`
+                SELECT
+                    (SELECT COUNT(*) FROM Comments WHERE UserId = ?) AS commentsCount,
+                    (SELECT COUNT(*) FROM BlogPostReviews WHERE UserId = ?) AS reviewsCount,
+                    (SELECT COUNT(*) FROM BlogPostViews WHERE UserId = ?) AS blogPostViewsCount,
+                    (SELECT COUNT(*) FROM ReviewLikes WHERE UserId = ?) AS reviewLikesCount,
+                    (SELECT COUNT(*) FROM comment_likes WHERE user_id = ?) AS commentLikesCount
+                FROM users
+                WHERE id = ?`, [userId, userId, userId, userId, userId, userId], (err, row) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(row);
             });
         });
     }

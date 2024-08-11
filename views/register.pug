@@ -1,16 +1,79 @@
-extends layout
-
-block content
-  h1 Register
-  form(action='/users/register' method='POST')
-    div
-      label Username
-      input(type='text' name='username' required)
-    div
-      label Email
-      input(type='email' name='email' required)
-    div
-      label Password
-      input(type='password' name='password' required)
-    div
-      button(type='submit') Register
+doctype html
+html(lang='en')
+  head
+    base(href='/')
+    |
+    meta(charset='utf-8')
+    |     
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    |     
+    meta(name='description', content='')
+    |     
+    meta(name='author', content='')
+    |     
+    title You-Blog - Register
+    // Custom fonts for this template
+    link(href='vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
+    |     
+    link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
+    // Custom styles for this template
+    link(href='css/sb-admin-2.min.css', rel='stylesheet')
+  body.bg-gradient-primary
+    .container
+      .card.o-hidden.border-0.shadow-lg.my-5
+        .card-body.p-0
+          // Nested Row within Card Body
+          .row
+            .col-lg-5.d-none.d-lg-block.bg-register-image
+            |                     
+            .col-lg-7
+              .p-5
+                .text-center
+                  h1.h4.text-gray-900.mb-4 Create an Account!
+                |                             
+                form.user(action='/users/register' method='POST')
+                  .form-group.row
+                    .col-sm-12.mb-3.mb-sm-0
+                      input#username.form-control.form-control-user(type='text', name='username' placeholder='User Name')
+                    |                                     
+                  
+                  |                                 
+                  .form-group
+                    input#exampleInputEmail.form-control.form-control-user(type='email', name='email', placeholder='Email Address')
+                  |                                 
+                  .form-group.row
+                    .col-sm-12.mb-3.mb-sm-0
+                      input#exampleInputPassword.form-control.form-control-user(type='password', name='password', placeholder='Password')
+                    |                                     
+                  |                                 
+                  button.btn.btn-primary.btn-user.btn-block(type='submit')
+                    | Register Account
+                  |                                 
+                  hr
+                  |                                 
+                  a.btn.btn-google.btn-user.btn-block(href='index.html')
+                    i.fab.fa-google.fa-fw
+                    |  Register with Google
+                  |                                 
+                  a.btn.btn-facebook.btn-user.btn-block(href='index.html')
+                    i.fab.fa-facebook-f.fa-fw
+                    |  Register with Facebook
+                  input(type='hidden', name='role' value='user')
+                |                             
+                hr
+                |                             
+                .text-center
+                  a.small(href='forgot-password.html') Forgot Password?
+                |                             
+                .text-center
+                  a.small(href='login.html') Already have an account? Login!
+    // Bootstrap core JavaScript
+    script(src='vendor/jquery/jquery.min.js')
+    |     
+    script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
+    // Core plugin JavaScript
+    script(src='vendor/jquery-easing/jquery.easing.min.js')
+    // Custom scripts for all pages
+    script(src='js/sb-admin-2.min.js')

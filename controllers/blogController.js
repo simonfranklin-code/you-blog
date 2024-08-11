@@ -1,4 +1,6 @@
 const Blog = require('../models/Blog');
+const Notification = require('../models/Notification');
+const Follower = require('../models/Follower');
 
 exports.getBlogsPage = (req, res) => {
     res.render('admin/blogs');
@@ -16,12 +18,27 @@ exports.getBlogs = async (req, res) => {
 exports.createBlog = async (req, res) => {
     const { title, description, author } = req.body;
     await Blog.add(title, description, author);
+    const UserId = req.user.id;
+    await Notification.createNotification(UserId, `Your Blog "${title}" has been created.`);
+    // Notify followers
+    const followers = await Follower.getFollowers(UserId);
+    followers.forEach(async follower => {
+        await Notification.createNotification(follower.FollowerUserId, `User ${req.user.username} has created a new blog "${title}".`);
+    });
+
     res.json({ success: true });
 };
 
 exports.editBlog = async (req, res) => {
     const { title, description } = req.body;
     await Blog.edit(req.params.id, title, description);
+    const UserId = req.user.id;
+    await Notification.createNotification(UserId, `Your Blog "${title}" has been updated.`);
+    // Notify followers
+    const followers = await Follower.getFollowers(UserId);
+    followers.forEach(async follower => {
+        await Notification.createNotification(follower.FollowerUserId, `User ${req.user.username} has updated blog "${title}".`);
+    });
     res.json({ success: true });
 };
 

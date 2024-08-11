@@ -40,19 +40,34 @@
     <Content Include="controllers\blogController.js" />
     <Content Include="controllers\blogPostAdminController.js" />
     <Content Include="controllers\commentRepliesController.js" />
+    <Content Include="controllers\followerController.js" />
     <Content Include="controllers\htmlSectionController.js" />
+    <Content Include="controllers\likeController.js" />
+    <Content Include="controllers\notificationController.js" />
     <Content Include="controllers\permissionController.js" />
+    <Content Include="controllers\reviewController.js" />
+    <Content Include="controllers\reviewLikeController.js" />
     <Content Include="database\sessions.db" />
     <Content Include="database\You-Blog.db" />
     <Content Include="middleware\permissionMiddleware.js" />
     <Content Include="middleware\roleMiddleware.js" />
+    <Content Include="middleware\trackViews.js" />
     <Content Include="models\ActivityLog.js" />
     <Content Include="models\Blog.js" />
     <Content Include="models\blogPost.js" />
+    <Content Include="models\BlogPostView.js" />
+    <Content Include="models\Comment.js" />
+    <Content Include="models\config.js" />
     <Content Include="models\db.js" />
+    <Content Include="models\Follower.js" />
     <Content Include="models\htmlSection.js" />
+    <Content Include="models\Like.js" />
+    <Content Include="models\Notification.js" />
+    <Content Include="models\NotificationStats.js" />
     <Content Include="models\PasswordResetToken.js" />
     <Content Include="models\Permission.js" />
+    <Content Include="models\Review.js" />
+    <Content Include="models\ReviewLike.js" />
     <Content Include="models\upload.js" />
     <Content Include="models\user.js" />
     <Content Include="public\assets\bootstrap\css\bootstrap-grid.min.css" />
@@ -1032,6 +1047,7 @@
     <Content Include="public\assets\images\_fc4b8345-5dc3-4310-9cf3-eaf45ed42c2a.jpg" />
     <Content Include="public\assets\theme\css\style.css" />
     <Content Include="public\assets\theme\js\script.js" />
+    <Content Include="public\css\adminlte.css" />
     <Content Include="public\css\bs-additional.css" />
     <Content Include="public\css\sb-admin-2.css" />
     <Content Include="public\css\sb-admin-2.min.css" />
@@ -1049,6 +1065,14 @@
     <Content Include="public\js\demo\datatables-demo.js" />
     <Content Include="public\js\sb-admin-2.js" />
     <Content Include="public\js\sb-admin-2.min.js" />
+    <Content Include="public\js\site.js" />
+    <Content Include="models\project.mobirise.js" />
+    <Content Include="public\temp\temp.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="public\temp\temp2.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\vendor\bootstrap\js\bootstrap.bundle.js" />
     <Content Include="public\vendor\bootstrap\js\bootstrap.bundle.js.map" />
     <Content Include="public\vendor\bootstrap\js\bootstrap.bundle.min.js" />
@@ -2871,7 +2895,6 @@
     <Content Include="routes\addUserRoutes.js" />
     <Content Include="routes\admin.js" />
     <Content Include="routes\blogPostCommentRepliesRoutes.js" />
-    <Content Include="public\javascripts\site.js" />
     <Content Include="routes\blogPostCommentsRoutes.js" />
     <Content Include="controllers\blogPostController.js" />
     <Content Include="controllers\commentsController.js" />
@@ -2883,20 +2906,34 @@
     <Content Include="routes\blog-post.js" />
     <Content Include="routes\blogPostRoutes.js" />
     <Content Include="routes\blogRoutes.js" />
+    <Content Include="routes\commentRoutes.js" />
+    <Content Include="routes\followerRoutes.js" />
     <Content Include="routes\htmlSectionRoutes.js" />
     <Content Include="routes\index.js" />
+    <Content Include="routes\likeRoutes.js" />
+    <Content Include="routes\mobiriseRoutes.js" />
+    <Content Include="routes\notificationRoutes.js" />
+    <Content Include="routes\reviewLikeRoutes.js" />
+    <Content Include="routes\reviewRoutes.js" />
     <Content Include="routes\users.js" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
+    <Content Include="service.js" />
+    <Content Include="uninstall-service.js" />
     <Content Include="validation\validator.js" />
     <Content Include="views\admin\activity-logs.pug" />
+    <Content Include="views\admin\admin-users.pug" />
     <Content Include="views\admin\blogPosts.pug" />
     <Content Include="views\admin\blogs.pug" />
     <Content Include="views\admin\dashboard.pug" />
+    <Content Include="views\admin\find-and-replace-on-html-sections.pug" />
+    <Content Include="views\admin\find-and-replace-results.pug" />
     <Content Include="views\admin\htmlSections.pug" />
     <Content Include="views\admin\layout.pug" />
+    <Content Include="views\admin\mobirise.pug" />
     <Content Include="views\admin\permissions.pug" />
+    <Content Include="views\admin\profile.pug" />
     <Content Include="views\admin\users.pug" />
     <Content Include="views\blog-post.pug" />
     <Content Include="views\comments.pug" />
@@ -2906,21 +2943,26 @@
     <Content Include="views\login.pug" />
     <Content Include="views\password-reset-request.pug" />
     <Content Include="views\password-reset.pug" />
-    <Content Include="views\profile.pug" />
+    <Content Include="views\user\dashboard.pug" />
+    <Content Include="views\user\layout.pug" />
+    <Content Include="views\user\profile.pug" />
     <Content Include="views\register.pug" />
     <Content Include="web.config" />
+    <Content Include="YouBlog.ExpressApp.esproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app.publish\" />
-    <Folder Include="controllers\" />
     <Folder Include="models\" />
     <Folder Include="config\" />
     <Folder Include="database\" />
     <Folder Include="middleware\" />
+    <Folder Include="controllers\" />
+    <Folder Include="service\" />
     <Folder Include="public\css\" />
     <Folder Include="public\img\" />
     <Folder Include="public\js\" />
     <Folder Include="public\js\demo\" />
+    <Folder Include="public\temp\" />
     <Folder Include="public\uploads\" />
     <Folder Include="public\vendor\" />
     <Folder Include="public\vendor\bootstrap\" />
@@ -2945,6 +2987,7 @@
     <Folder Include="public\vendor\fontawesome-free\webfonts\" />
     <Folder Include="public\vendor\jquery-easing\" />
     <Folder Include="public\vendor\jquery\" />
+    <Folder Include="uploads\" />
     <Folder Include="validation\" />
     <Folder Include="public\" />
     <Folder Include="public\assets\" />
@@ -3013,6 +3056,7 @@
     <Folder Include="routes\" />
     <Folder Include="views\" />
     <Folder Include="views\admin\" />
+    <Folder Include="views\user\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

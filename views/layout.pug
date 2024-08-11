@@ -25,13 +25,14 @@ head
   link(rel='stylesheet' href='assets/dropdown/css/style.css')
   link(rel='stylesheet' href='assets/socicon/css/styles.css')
   link(rel='stylesheet' href='assets/theme/css/style.css')
+  link(href='vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
   link(rel='preload' href='https://fonts.googleapis.com/css?family=Epilogue:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap' as='style' onload="this.onload=null;this.rel='stylesheet'")
 
   noscript
     link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Epilogue:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap')
   link(rel='preload' as='style' href='assets/mobirise/css/mbr-additional.css')
   link(rel='stylesheet' href='assets/mobirise/css/mbr-additional.css' type='text/css')
-  link(rel='stylesheet' href='stylesheets/main.css')
+  
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js').
   // Google tag (gtag.js)
   script(type='text/plain' async='' data-src='https://www.googletagmanager.com/gtag/js?id=G-2LLV2Z902Q').
@@ -40,136 +41,98 @@ head
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-2LLV2Z902Q');
-  script(src='javascripts/site.js').
+  script(src='js/site.js').
+  script(src="https://kit.fontawesome.com/4defe9e4da.js" crossorigin="anonymous").
+  link(rel='stylesheet' href='stylesheets/main.css')
   body
     section#features16-2sn.inner-header-section.cid-ubqkf91puQ-1(data-bs-version='5.1')
-        section.inner-header
-            .container
-                .row.justify-content-end.pt-3
-                    .col-md-12.aligner  
-                        if success_msg
-                            p(style="color: green" id='successMessage') #{success_msg}
-                        if error_msg
-                            p(style="color: red" id='errorMessage') #{error_msg}
-                        if error
-                            p(style="color: red") #{error}
-                        if user
-                            p
-                                | Logged in as #{user.username} (#{user.role})
+        
+        .container(style='max-width: 100%;')
+            .row.justify-content-end.pt-3
+                .col-md-9  
+                    if success_msg
+                        span(style="color: green" id='successMessage') #{success_msg}
+                    if error_msg
+                        span(style="color: red" id='errorMessage') #{error_msg}
+                    if error
+                        span(style="color: red") #{error}
+                    if user
+                        p.mt-2
+                            | Logged in as #{user.username} (#{user.role})
+                            | 
+                            a(href='/users/logout') Logout
+                            if user.role === 'admin'
                                 | 
-                                a(href='/users/logout') Logout
-                                if user.role === 'admin'
-                                    | 
-                                    a(href='/admin/dashboard') Admin Dashboard
-                        else
-                            p
-                                a(href='/users/login') Login
-                                | 
-                                a(href='/users/register') Register
+                                a(href='/admin/dashboard') Admin Dashboard
+                    else
+                        p.mt-2
+                            a(href='/users/login') Login
+                            | 
+                            a(href='/users/register') Register
+                .col-md-3
+                    .navbar-buttons.wsearch.display-4
+                        form.mbr-form.float-end(method='GET', action='/blog-post/Blog-Search')
+                            .input-group
+                                button#button-addon1.btn.btn-outline-secondary.btn-sm(type='submit') Go
+                                input.form-control.form-control-sm(type='text', name='q', placeholder='Search', aria-label='Example text with button addon', aria-describedby='button-addon1')
+
 
     block content
-    section#footer1-2kv.footer1.cid-tNQ3d6rTCO(data-bs-version='5.1', once='footers')
-      style.
-        #accordionExample > p {
-        color: #232323;
-        }
+
+    section#footer4-2tj.footer4.cid-uhEsLsQ0cU(data-bs-version='5.1', once='footers')
       .container
         .row.mbr-white
-          .col-12.col-md-6.col-lg-2
+          .col-6.col-lg-3
+            .media-wrap.col-md-8.col-12
+              a(href='index.html')
+                img(src='assets/images/-139cba96-4dc6-475c-b6e4-c7af325a1aa4-337x337.webp', alt='Mobirise Website Builder')
+          .col-12.col-md-6.col-lg-3
             h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Analytics
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Implementing-Analytics-in-Digital-Marketing') Implementing Analytics
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Understand-the-importance-of-analytics') The importance of analytics
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Understanding-Analytics-in-Digital-Marketing') Understanding Analytics
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Key-Analytics-Tools-for-Digital-Marketing') Key Analytics Tools
-              li.mbr-text.item-wrap
-                br
-          .col-12.col-md-6.col-lg-2
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Trends
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/digital-marketing-trends') Staying up-to-date
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Subscribe-to-industry-newsletters-and-blogs') Subscribe
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Follow-industry-influencers-on-social-media') Follow
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Attend-industry-events-and-conferences') Attend
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Join-online-communities-and-forums') Join
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Take-online-courses-and-certifications') Take
-          .col-12.col-md-6.col-lg-2
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong SEO
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Have-a-strong-understanding-of-SEO') Have a strong understanding of SEO
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Keyword-research') Keyword research
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/On-page-optimization') On-page optimization
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Off-page-optimization') Off-page optimization
-              li.mbr-text.item-wrap Technical optimization
-          .col-12.col-md-6.col-lg-2
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Channels
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Be-familiar-with-various-digital-marketing-channels') Digital marketing channels
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Search-Engine-Optimization-(SEO)') Search Engine Optimization (SEO)
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Pay-Per-Click-Advertising-(PPC)') Pay-Per-Click Advertising (PPC)
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Social-Media-Marketing') Social Media Marketing
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Email-Marketing') Email Marketing
-          .col-12.col-md-6.col-lg-2
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Creatively
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Be-able-to-think-creatively') Be able to think creatively
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/The-Power-of-Creative-Thinking') The Power of Creative Thinking
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Uniqueness-Breeds-Engagement') Uniqueness Breeds Engagement
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Fostering-Emotional-Connections') Fostering Emotional Connections
-          .col-12.col-md-6.col-lg-2
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Relationships
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Build-and-maintain-strong-relationships') Build and maintain
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Understanding-the-Importance-of-Strong-Relationships-in-Digital-Marketing') Understanding the Importance
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Building-Strong-Relationships-in-Digital-Marketing') Building Strong Relationships
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Maintaining-Strong-Relationships-in-Digital-Marketing') Maintaining Strong Relationships
-              li.mbr-text.item-wrap
-                a.text-primary(href='blog-post/Why-strong-relationships-matter') Why strong relationships matter
+              strong About
+            p.mbr-text.mbr-fonts-style.mb-4.display-4
+              | Mobirise is a free offline app for
+              | Windows and Mac to easily create small/medium websites, landing pages, online resumes and
+              | portfolios.
             h5.mbr-section-subtitle.mbr-fonts-style.mb-3.display-7
-              strong Social
+              strong Follow Us
             .social-row.display-7
               .soc-item
-                span.mbr-iconfont.socicon-facebook.socicon
+                a(href='https://twitter.com/mobirise', target='_blank')
+                  span.mbr-iconfont.socicon.socicon-facebook
               .soc-item
-                span.mbr-iconfont.socicon-twitter.socicon
+                a(href='https://twitter.com/mobirise', target='_blank')
+                  span.mbr-iconfont.socicon.socicon-twitter
               .soc-item
-                span.mbr-iconfont.socicon-instagram.socicon
-          .col-12.mt-4
-            p.mbr-text.mb-0.mbr-fonts-style.copyright.align-center.display-7
-              | &copy; Copyright 2024 Digital Marketing Guru - All Rights Reserved
+                a(href='https://twitter.com/mobirise', target='_blank')
+                  span.mbr-iconfont.socicon.socicon-instagram
+          .col-12.col-md-6.col-lg-3
+            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
+              strong Mobirise Help
+            ul.list.mbr-fonts-style.display-4
+              li.mbr-text.item-wrap Help Center
+              li.mbr-text.item-wrap Mobirise Forums
+              li.mbr-text.item-wrap Mobirise Kit
+              li.mbr-text.item-wrap Our site
+          .col-12.col-md-6.col-lg-3
+            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
+              strong Mobirise Extensions
+            ul.list.mbr-fonts-style.display-4
+              li.mbr-text.item-wrap Code Editor
+              li.mbr-text.item-wrap Form Builder
+              li.mbr-text.item-wrap Popup Builder
+              li.mbr-text.item-wrap Enterprise
+    .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Confirm Delete
+            button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              span(aria-hidden='true') &times;
+          .modal-body
+            p Are you sure you want to delete this item?
+          .modal-footer
+            button.btn.btn-secondary.btn-sm(type='button' data-bs-dismiss='modal') Cancel
+            button.btn.btn-danger.btn-sm#confirmDeleteBtn(type='button') Delete
 
 script(src='https://code.jquery.com/jquery-3.6.0.min.js').
 script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p', crossorigin='anonymous').
@@ -244,4 +207,4 @@ script.
 input(name='cookieData' type='hidden' data-cookie-cookiesalerttype='2' data-cookie-customdialogselector='#cookie-dialog' data-cookie-colortext='#bbbbbb' data-cookie-colorbg='rgb(53, 53, 53)' data-cookie-opacityoverlay='0' data-cookie-bgopacity='100' data-cookie-textbutton='ACCEPT' data-cookie-rejecttext='REJECT' data-cookie-colorbutton='#6ec7f2' data-cookie-rejectcolor='#ffffff' data-cookie-colorlink='#47b5ed' data-cookie-underlinelink='true' data-cookie-text="We use cookies to give you the best experience as specified in the <a href='privacy.html'>cookie policy</a>. Rejecting cookies may make some features unavailable.")
 input(name='animation' type='hidden')
 
-    
+script(src="https://code.responsivevoice.org/responsivevoice.js?key=PBQFEcV7").

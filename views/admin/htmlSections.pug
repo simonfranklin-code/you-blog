@@ -7,7 +7,7 @@ block content
        .form-group.col-md-2
          button.btn.btn-primary.btn-sm.mb-3#newHtmlSectionBtn New HTML Section
        .form-group.col-md-2
-         button.btn.btn-primary.btn-sm.mb-3#importHtmlSectionBtn Import HTML Sections
+         button.btn.btn-primary.btn-sm.mb-3#findAdReplaceBtn Find and Replace
     form#filterForm
       .form-row
         .form-group.col-md-2
@@ -217,6 +217,32 @@ block content
             button.btn.btn-primary(type='button', id='applyFontColor') Apply
             button.btn.btn-secondary(type='button', data-dismiss='modal') Close
 
+    // Find and replace Modal
+    .modal.fade(id='findAndReplaceModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Find and replace
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') &times;
+          .modal-body
+            form#findAndReplaceForm
+              .formgroup
+                label(for="find-text") Find:
+                input.form-control.form-control-sm#find-text(type="text" name="find-text" required)
+              .formgroup
+                label(for="replace-text") Replace with:
+                input.form-control.form-control-sm#replace-text(type="text" name="replace-text")
+              .formgroup
+                label(for="replace-all") Replace all:
+                input#replace-all(type="checkbox" name="replace-all")
+              .formgroup
+                button.btn.btn-primary.btn-sm(type="submit") Submit
+              div           
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+    
+
     script.
       $(document).ready(function () {
         let currentPage = 1;
@@ -263,10 +289,11 @@ block content
                               <td>${section.DateCreated}</td>
                               <td class="admin-blogs-ellipsis" data-toggle="popover" title="HtmlSection Slug details" data-content="${section.Slug}">${section.Slug}</td>
                               <td>
-                                <button class="btn btn-primary btn-sm import-btn" data-anchor="${section.Anchor}" data-slug="${section.Slug}">Import</button>
-                                <button class="btn btn-primary btn-sm view-btn" data-anchor="${section.Anchor}" data-id="${section.HtmlSectionID}">View</button>
-                                <button class="btn btn-warning btn-sm edit-btn" data-id="${section.HtmlSectionID}">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-btn" data-id="${section.HtmlSectionID}">Delete</button>
+                                
+                                <i class="fas fa-file-import mbr-iconfont mbr-iconfont-btn import-btn" data-anchor="${section.Anchor}" data-slug="${section.Slug}"></i>
+                                <i class="fas fa-eye mbr-iconfont mbr-iconfont-btn view-btn" data-anchor="${section.Anchor}" data-id="${section.HtmlSectionID}"></i>
+                                <i class="fas fa-edit mbr-iconfont mbr-iconfont-btn edit-btn" data-anchor="${section.Anchor}" data-id="${section.HtmlSectionID}"></i>
+                                <i class="far fa-times-circle mbr-iconfont mbr-iconfont-btn delete-btn" data-anchor="${section.Anchor}" data-id="${section.HtmlSectionID}"></i>
                               </td>
                             </tr>
                         `);
@@ -278,7 +305,7 @@ block content
                     $('#nextPage').prop('disabled', currentPage >= data.totalPages);
 
                     $('[data-toggle="popover"]').popover({
-                      trigger: 'hover',
+                      trigger: 'click',
                       placement: 'left',
                       container: 'body'
                     });
@@ -368,7 +395,7 @@ block content
                 }
             });
         });
-
+   
         $('#saveHtmlSectionForm').on('submit', function (e) {
             e.preventDefault();
             const saveHtmlSectionId = $('#saveHtmlSectionId').val();
@@ -419,6 +446,46 @@ block content
             });
         });
         
+        $('#findAdReplaceBtn').on('click', function() {
+            $('#findAndReplaceModal').modal('show');
+        });
+
+
+        $('#findAndReplaceForm').on('submit', function (e) {
+            e.preventDefault();
+            const find = $('#find-text').val();
+            const replace = $('#replace-text').val();
+            let blogPostId = null;
+
+            if ($('#replace-all').is(':checked')) {
+                blogPostId = null;
+            } else {
+                blogPostId = $('#blogPostIdFilter').val();
+            }
+
+
+            $.ajax({
+                url: '/admin/htmlSections/findAndReplace',
+                method: 'POST',
+                data: {
+                    find: find,
+                    replace: replace,
+                    blogPostId: blogPostId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#findAndReplaceModal').modal('hide');
+                        alert(response.message)
+                    } else {
+                        alert('Find And Replace Failed.');
+                    }
+                },
+                error: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
+        });
+
 
         $('#importHtmlSectionBtn').on('click', function () {
 
@@ -471,11 +538,11 @@ block content
 
        $('.image-wrapper > img').on('click', function () {
             $('#imageUploadInput').click();
-        });
+       });
 
 
-        $('#imageUploadInput').on('change', function () {
-            const file = this.files[0];
+       $('#imageUploadInput').on('change', function () {
+         const file = this.files[0];
 
             if (file) {
                 const formData = new FormData();

@@ -5,17 +5,32 @@ const permissionController = require('../controllers/permissionController');
 const blogController = require('../controllers/blogController');
 const blogPostAdminController = require('../controllers/blogPostAdminController');
 const htmlSectionController = require('../controllers/htmlSectionController');
-
+const mobiriseData = require('../models/project.mobirise');
+const hljs = require('highlight.js');
+const db = require('../models/db');
 const { ensureAuthenticated, ensureRole, ensureRoles, ensurePermission } = require('../middleware/permissionMiddleware');
 
 // Admin Dashboard
 router.get('/dashboard', ensureAuthenticated, ensureRoles(['admin']), adminController.dashboard);
-
+// Admin Profile
+router.get('/profile', ensureAuthenticated, ensureRoles(['admin']), adminController.getAdminProfile);
 // Manage Users
-router.get('/users', ensureAuthenticated, ensurePermission('manage_users'), adminController.getUsers);
+//router.get('/users', ensureAuthenticated, ensurePermission('manage_users'), adminController.getUsers);
 router.get('/users/json', ensureAuthenticated, ensurePermission('manage_users'), adminController.getUsersJSON);
 router.post('/users/edit/:id', ensureAuthenticated, ensurePermission('manage_users'), adminController.editUser);
 router.post('/users/delete/:id', ensureAuthenticated, ensurePermission('manage_users'), adminController.deleteUser);
+
+router.get('/users', ensureAuthenticated, ensureRole('admin'), (req, res) => {
+    res.render('admin/admin-users', { title: 'Manage Users' });
+});
+
+router.get('/api/users', ensureAuthenticated, ensureRole('admin'), adminController.getAllUsers);
+router.post('/api/users', ensureAuthenticated, ensureRole('admin'), adminController.createUser);
+router.put('/api/users', ensureAuthenticated, ensureRole('admin'), adminController.updateUser);
+router.delete('/api/users', ensureAuthenticated, ensureRole('admin'), adminController.deleteUser);
+
+
+
 
 // Activity Logs
 router.get('/activity-logs', ensureAuthenticated, ensurePermission('view_activity_logs'), adminController.getActivityLogs);
@@ -57,6 +72,14 @@ router.post('/htmlSections/updateBySectionId', ensureAuthenticated, ensurePermis
 router.post('/htmlSections/uploadImage', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.uploadImage);
 router.get('/htmlSections/importHtml/:slug/:id', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.importHtml);
 router.get('/htmlSections/importSingleHtmlSectionById/:slug/:anchor', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.importSingleHtmlSectionById);
+router.post('/htmlSections/findAndReplace', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.findAndReplace);
+
+router.get('/mobirise', (req, res) => {
+    res.render('admin/mobirise', { title: 'You-Blog CMS', mobiriseData: mobiriseData, hljs: hljs });
+});
+
+
+
 
 module.exports = router;
 

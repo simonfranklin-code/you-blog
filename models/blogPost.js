@@ -6,21 +6,21 @@ db.serialize(() => {
             "BlogPostId" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             "Title" TEXT NOT NULL,
             "Content" TEXT NOT NULL,
-            "CreatedAt" TEXT NOT NULL,
-            "UpdatedAt" TEXT,
+            "CreatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "UpdatedAt" DATETIME NOT NULL,
             "BlogId" INTEGER NOT NULL,
             "Slug" TEXT,
             "UserId" TEXT,
             "Author" TEXT,
             FOREIGN KEY("BlogId") REFERENCES "Blogs"("BlogId") ON DELETE CASCADE,
-            FOREIGN KEY("UserId") REFERENCES "AspNetUsers"("Id") ON UPDATE CASCADE
+            FOREIGN KEY("UserId") REFERENCES "users"("id") ON UPDATE CASCADE
         );
     `);
 });
 
 class BlogPost {
     static add(title, slug, blogId, author, userId, content) {
-        const createdAt = new Date().toISOString();
+        
         return new Promise((resolve, reject) => {
             db.run(`INSERT INTO BlogPosts (Title, Content, BlogId, Author, UserId, Slug) VALUES (?, ?, ?, ?, ?, ?)`,
                 [title, content, blogId, author, userId, slug], function (err) {
@@ -33,8 +33,8 @@ class BlogPost {
     static edit(blogPostId, title, slug, blogId, author, userId, createdAt) {
         const updatedAt = new Date().toISOString();
         return new Promise((resolve, reject) => {
-            db.run(`UPDATE BlogPosts SET Title = ?, Slug = ?, UpdatedAt = ?, BlogId = ?, Author = ?, UserId = ?, CreatedAt = ? WHERE BlogPostId = ?`,
-                [title, slug, updatedAt, blogId, author, userId, createdAt, blogPostId], function (err) {
+            db.run(`UPDATE BlogPosts SET Title = ?, Slug = ?, UpdatedAt = ?, BlogId = ?, Author = ?, UserId = ? WHERE BlogPostId = ?`,
+                [title, slug, updatedAt, blogId, author, userId, blogPostId], function (err) {
                     if (err) return reject(err);
                     resolve(this.changes);
                 });

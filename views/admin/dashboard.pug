@@ -1,9 +1,8 @@
 extends layout
-
 block content
-  h1 Admin Dashboard
-  ul.list-group
-    li.list-group-item
-      a(href='/admin/users') Manage Users
-    li.list-group-item
-      a(href='/admin/activity-logs') View Activity Logs
+	!= htmlContent    
+
+	script(src='vendor/chart.js/Chart.min.js').
+	script(src='js/demo/chart-area-demo.js').
+	script(src='js/demo/chart-bar-demo.js').
+	script(src='js/demo/chart-pie-demo.js').

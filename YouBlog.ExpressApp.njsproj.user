@@ -5,4 +5,7 @@
     <ProjectView>ShowAllFiles</ProjectView>
     <NameOfLastUsedPublishProfile>C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\Properties\PublishProfiles\IISProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
+  <PropertyGroup>
+    <PromptedToMigrateToJsps />
+  </PropertyGroup>
 </Project>

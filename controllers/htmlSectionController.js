@@ -1,8 +1,12 @@
 const HtmlSection = require('../models/HtmlSection');
 const BlogPost = require('../models/BlogPost');
 const db = require('../models/db');
+const Notification = require('../models/Notification');
+const Follower = require('../models/Follower');
+const User = require('../models/User');
 var path = require('path');
 const fs = require('fs');
+
 
 exports.getHtmlSectionsPage = (req, res) => {
     res.render('admin/htmlSections');
@@ -21,12 +25,26 @@ exports.getHtmlSections = async (req, res) => {
 exports.createHtmlSection = async (req, res) => {
     const { html, blogPostId, viewIndex, anchor, slug } = req.body;
     await HtmlSection.add(html, blogPostId, viewIndex, anchor, slug);
+    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been created.`);
+    // Notify followers
+    const followers = await Follower.getFollowers(req.user.id);
+    followers.forEach(async follower => {
+        const username = await User.findById(req.user.id).username;
+        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
+    });
     res.json({ success: true });
 };
 
 exports.editHtmlSection = async (req, res) => {
     const { html, viewIndex, anchor, slug } = req.body;
     await HtmlSection.edit(req.params.id, html, viewIndex, anchor, slug);
+    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been edited.`);
+    // Notify followers
+    const followers = await Follower.getFollowers(req.user.id);
+    followers.forEach(async follower => {
+        const username = await User.findById(req.user.id).username;
+        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
+    });
     res.json({ success: true });
 };
 
@@ -121,3 +139,54 @@ exports.importSingleHtmlSectionById = async (req, res) => {
         res.json(err);
     }
 };
+
+exports.findAndReplace = async (req, res) => {
+    try {
+        let { find, replace, blogPostId } = req.body;
+        let sql = '';
+        // Enhanced validation
+        if (find == null) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        } else if (replace == null || replace == 'undefined') {
+            replace = '';
+        }
+        if (blogPostId == null) {
+            sql = `UPDATE HtmlSections SET Html = REPLACE(Html, ?, ?)`;
+            db.run(sql, [find, replace], function (err) {
+                if (err) {
+                    console.error('Error executing SQL:', err.message);
+                    return res.status(500).json({ error: 'An error occurred while updating the database' });
+                }
+                // Check the number of affected rows
+                if (this.changes > 0) {
+                    res.json({ success: true, message: `${this.changes} rows updated` });
+                } else {
+                    res.status(404).json({ success: false, message: 'No matching records found' });
+                }
+            });
+
+        } else {
+            sql = `UPDATE HtmlSections SET Html = REPLACE(Html, ?, ?) WHERE BlogPostId = ?`;
+            db.run(sql, [find, replace, blogPostId], function (err) {
+                if (err) {
+                    console.error('Error executing SQL:', err.message);
+                    return res.status(500).json({ error: 'An error occurred while updating the database' });
+                }
+
+                // Check the number of affected rows
+                if (this.changes > 0) {
+                    res.json({ success: true, message: `${this.changes} rows updated` });
+                } else {
+                    res.status(404).json({ success: false, message: 'No matching records found' });
+                }
+            });
+        }
+
+
+
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+
