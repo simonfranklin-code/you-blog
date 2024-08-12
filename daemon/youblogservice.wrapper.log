@@ -1,0 +1,2 @@
+2024-08-11 20:38:14 - Starting C:\Program Files\nodejs\node.exe  --harmony "C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\app.js" --scriptoptions= --log "You-Blog Service wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2024-08-11 20:38:14 - Started 22672

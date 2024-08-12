@@ -1,0 +1,11 @@
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at ServerResponse.setHeader (node:_http_outgoing:659:11)
+    at ServerResponse.header (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\response.js:795:10)
+    at ServerResponse.send (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\response.js:175:12)
+    at done (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\response.js:1044:10)
+    at exports.renderFile (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\pug\lib\index.js:448:12)
+    at exports.__express [as engine] (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\pug\lib\index.js:493:11)
+    at View.render (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\application.js:657:10)
+    at Function.render (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\Susana Rijo\Source\repos\Smf\YouBlog\YouBlog.ExpressApp\node_modules\express\lib\response.js:1048:7)
