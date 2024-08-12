@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const db = require('../models/db');
-const NotificationStats = require('./NotificationStats');
+const NotificationStats = require('../models/NotificationStats');
 
 // Create User table if it doesn't exist
 db.serialize(() => {
