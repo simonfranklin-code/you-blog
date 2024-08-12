@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.8",
+    "axios": "^1.7.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.15.0",
+    "cheerio": "^1.0.0",
     "connect-flash": "^0.1.1",
     "connect-sqlite3": "^0.9.15",
     "cookie-parser": "^1.4.0",
