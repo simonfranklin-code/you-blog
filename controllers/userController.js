@@ -459,7 +459,6 @@ exports.loginPost = (req, res, next) => {
         } else if (req.user.role === 'admin') {
             res.redirect('/admin/dashboard');
         }
-        next();
     });
 };
 
