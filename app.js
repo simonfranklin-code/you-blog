@@ -36,7 +36,7 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 7 days
+    cookie: { secure: true, maxAge: 1000 * 60 * 60 * 24 * 7 } // 7 days
 }));
 
 // Passport middleware
@@ -69,7 +69,7 @@ app.use(
 app.use(fileUpload({
     createParentPath: true
 }));
-
+app.set('trust proxy', 1); // Trust first proxy
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -131,3 +131,5 @@ app.set('port', 10000);
 var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
 });
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
