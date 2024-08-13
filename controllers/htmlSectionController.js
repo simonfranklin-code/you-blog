@@ -112,7 +112,7 @@ exports.importHtml = async (req, res) => {
     try {
         const slug = req.params.slug;
         const blogPostId = parseInt(req.params.id);
-        const url = 'http://localhost:8080/' + slug + '.html';
+        const url = 'https://you-blog-ih2g.onrender.com/' + slug + '.html';
         const htmlSections = await HtmlSection.importHtml(url, blogPostId);
         if (htmlSections === null || htmlSections === 'undefined') {
             throw new Error('importHtml failed');
@@ -128,7 +128,7 @@ exports.importSingleHtmlSectionById = async (req, res) => {
     try {
         const slug = req.params.slug;
         const anchor = req.params.anchor;
-        const url = 'http://localhost:8080/' + slug + '.html';
+        const url = 'https://you-blog-ih2g.onrender.com/' + slug + '.html';
         const htmlSections = await HtmlSection.importSingleHtmlSection(url, anchor);
         if (htmlSections === null || htmlSections === 'undefined') {
             throw new Error('importSingleHtmlSectionById failed');
