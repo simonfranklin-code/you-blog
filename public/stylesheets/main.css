@@ -342,3 +342,58 @@ code.hljs {
 .cid-comments .mbr-section-btn {
     color: #bbbbbb;
 }
+
+
+
+.bg-body {
+    background-color: #232323;
+    background-image: linear-gradient(180deg, #353535 10%, #181818 100%);
+    background-size: cover;
+    color: #fafafa;
+}
+
+.app-header {
+    z-index: 1034;
+    grid-area: lte-app-header;
+    max-width: 100%;
+    border-bottom: 1px solid #232323;
+    transition: 0.3s ease-in-out;
+}
+
+
+
+.navbar-expand .navbar-nav .nav-link {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.dropdown-menu-lg {
+    min-width: 280px;
+    max-width: 280px;
+    padding: 0;
+}
+
+.navbar-badge {
+    position: absolute;
+    top: 10px;
+
+    right: 0px;
+    padding: 2px 4px;
+    font-size: 0.6rem;
+    font-weight: 400;
+}
+
+.card-title {
+    float:none;
+    margin: 0;
+
+}
+
+@media (min-width: 576px) {
+    .navbar-nav > .user-menu .user-image {
+        float: left;
+        margin-top: -8px;
+        margin-right: 0.5rem;
+        line-height: 10px;
+    }
+}
