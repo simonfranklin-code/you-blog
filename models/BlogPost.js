@@ -3,17 +3,22 @@ const db = require('../models/db');
 db.serialize(() => {
     db.run(`
         CREATE TABLE IF NOT EXISTS "BlogPosts" (
-            "BlogPostId" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            "Title" TEXT NOT NULL,
-            "Content" TEXT NOT NULL,
-            "CreatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "UpdatedAt" DATETIME NOT NULL,
-            "BlogId" INTEGER NOT NULL,
-            "Slug" TEXT,
-            "UserId" TEXT,
-            "Author" TEXT,
-            FOREIGN KEY("BlogId") REFERENCES "Blogs"("BlogId") ON DELETE CASCADE,
-            FOREIGN KEY("UserId") REFERENCES "users"("id") ON UPDATE CASCADE
+	        "BlogPostId"	INTEGER NOT NULL,
+	        "Title"	TEXT NOT NULL,
+	        "Content"	TEXT NOT NULL,
+	        "CreatedAt"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+	        "UpdatedAt"	DATETIME,
+	        "BlogId"	INTEGER NOT NULL,
+	        "Slug"	TEXT,
+	        "UserId"	TEXT,
+	        "Author"	TEXT,
+	        "MetaKeywords"	TEXT,
+	        "MetaDescription"	TEXT,
+	        "Footer"	TEXT,
+	        "BeforeEndOfBodyScript"	TEXT,
+	        PRIMARY KEY("BlogPostId" AUTOINCREMENT),
+	        FOREIGN KEY("UserId") REFERENCES "users"("id") ON UPDATE CASCADE,
+	        FOREIGN KEY("BlogId") REFERENCES "Blogs"("BlogId") ON DELETE CASCADE
         );
     `);
 });
@@ -30,11 +35,11 @@ class BlogPost {
         });
     }
 
-    static edit(blogPostId, title, slug, blogId, author, userId, createdAt) {
+    static edit(blogPostId, title, slug, blogId, author, userId, content, metaDescription, metaKeywords, footer) {
         const updatedAt = new Date().toISOString();
         return new Promise((resolve, reject) => {
-            db.run(`UPDATE BlogPosts SET Title = ?, Slug = ?, UpdatedAt = ?, BlogId = ?, Author = ?, UserId = ? WHERE BlogPostId = ?`,
-                [title, slug, updatedAt, blogId, author, userId, blogPostId], function (err) {
+            db.run(`UPDATE BlogPosts SET Title = ?, Slug = ?, UpdatedAt = ?, BlogId = ?, Author = ?, UserId = ?, Content = ?, MetaDescription = ?, MetaKeywords = ?, Footer = ? WHERE BlogPostId = ?`,
+                [title, slug, updatedAt, blogId, author, userId, content, metaDescription, metaKeywords, footer, blogPostId], function (err) {
                     if (err) return reject(err);
                     resolve(this.changes);
                 });
@@ -53,6 +58,15 @@ class BlogPost {
     static get(blogPostId) {
         return new Promise((resolve, reject) => {
             db.get(`SELECT * FROM BlogPosts WHERE BlogPostId = ?`, [blogPostId], (err, row) => {
+                if (err) return reject(err);
+                resolve(row);
+            });
+        });
+    }
+
+    static getBlogPostBySlug(slug) {
+        return new Promise((resolve, reject) => {
+            db.get(`SELECT * FROM BlogPosts WHERE Slug = ?`, [slug], (err, row) => {
                 if (err) return reject(err);
                 resolve(row);
             });

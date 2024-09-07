@@ -1,33 +1,42 @@
 const db = require('../models/db');
 db.serialize(() => {
     db.run(`
+
         CREATE TABLE IF NOT EXISTS "Blogs" (
 	        "BlogId"	INTEGER NOT NULL,
 	        "Title"	TEXT NOT NULL,
 	        "Description"	TEXT,
+	        "BaseDirectory"	TEXT,
+	        "MetaKeywords"	TEXT,
+	        "MetaDescription"	TEXT,
+	        "HeadStylesBlock"	TEXT,
+	        "HeadScriptsBlock"	TEXT,
 	        "DateCreated"	DATETIME DEFAULT CURRENT_TIMESTAMP,
-	        "Author"	TEXT,
-	        CONSTRAINT "PK_Blogs" PRIMARY KEY("BlogId" AUTOINCREMENT)
+	        "Owner"	TEXT,
+	        "UserId"	INTEGER,
+	        "Slug"	TEXT,
+	        CONSTRAINT "PK_Blogs" PRIMARY KEY("BlogId" AUTOINCREMENT),
+	        FOREIGN KEY("UserId") REFERENCES "users"("id") ON UPDATE CASCADE
         );
     `);
 });
 
 class Blog {
-    static add(title, description, author) {
+    static add(title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug) {
         const dateCreated = new Date().toISOString();
         return new Promise((resolve, reject) => {
-            db.run(`INSERT INTO Blogs (Title, Description, Author) VALUES (?, ?, ?)`,
-                [title, description, author], function (err) {
+            db.run(`INSERT INTO Blogs (Title, Description, Owner, UserId, BaseDirectory, MetaKeywords, MetaDescription, HeadStylesBlock, HeadScriptsBlock, Slug ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug], function (err) {
                     if (err) return reject(err);
                     resolve(this.lastID);
                 });
         });
     }
 
-    static edit(blogId, title, description) {
+    static edit(blogId, title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug) {
         return new Promise((resolve, reject) => {
-            db.run(`UPDATE Blogs SET Title = ?, Description = ? WHERE BlogId = ?`,
-                [title, description, blogId], function (err) {
+            db.run(`UPDATE Blogs SET Title = ?, Description = ?, Owner = ?, UserId = ?, BaseDirectory = ?, MetaKeywords = ?, MetaDescription = ?, HeadStylesBlock = ?, HeadScriptsBlock = ?, Slug = ? WHERE BlogId = ?`,
+                [title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug, blogId], function (err) {
                     if (err) return reject(err);
                     resolve(this.changes);
                 });
@@ -46,6 +55,15 @@ class Blog {
     static get(blogId) {
         return new Promise((resolve, reject) => {
             db.get(`SELECT * FROM Blogs WHERE BlogId = ?`, [blogId], (err, row) => {
+                if (err) return reject(err);
+                resolve(row);
+            });
+        });
+    }
+
+    static getBlogBySlug(slug) {
+        return new Promise((resolve, reject) => {
+            db.get(`SELECT * FROM Blogs WHERE Slug = ?`, [slug], (err, row) => {
                 if (err) return reject(err);
                 resolve(row);
             });
