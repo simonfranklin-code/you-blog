@@ -1,60 +1,63 @@
 extends layout
 
 block content
-  h1 Manage Users
+  // begin::App Content Header
+  .app-content-header
+     // begin::Container
+     .container-fluid
+       // begin::Row
+       .row
+          .col-sm-6
+            h3.mb-0 Manage Users
+          .col-sm-6
+            ol.breadcrumb.float-sm-end
+              li.breadcrumb-item
+                a(href='/admin/dashboard') Admin
+              li.breadcrumb-item.active(aria-current='page')
+                | Users
+        // end::Row
+     // end::Container
+  // end::App Content Header
+  .row.g-4
+    // begin::Col
+    .col-12.connectedSortable
+      .callout.callout-info
+        | For detailed documentation of Form visit 
+        a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
+        | Bootstrap Form
+    // end::Col
+    // begin::Col
+    .col-md-12.connectedSortable
 
-  form#filterForm
-    .form-row
-      .form-group.col-md-2
-        label(for='username') Username
-        input.form-control(type='text' name='username' id='username')
-      .form-group.col-md-2
-        label(for='email') Email
-        input.form-control(type='text' name='email' id='email')
-      .form-group.col-md-2
-        label(for='role') Role
-        select.form-control(name='role' id='role')
-          option(value='') All
-          option(value='user') User
-          option(value='admin') Admin
-      .form-group.col-md-2
-        label(for='keyword') Keyword
-        input.form-control(type='text' name='keyword' id='keyword')
-      .form-group.col-md-2.align-self-end
-        button.btn.btn-primary(type='button' id='filterButton') Filter
-
-  .form-row
-    .form-group.col-md-3
-      label(for='sortField') Sort By
-      select.form-control(name='sortField' id='sortField')
-        option(value='id') ID
-        option(value='username') Username
-        option(value='email') Email
-        option(value='role') Role
-    .form-group.col-md-3
-      label(for='sortOrder') Order
-      select.form-control(name='sortOrder' id='sortOrder')
-        option(value='ASC') Ascending
-        option(value='DESC') Descending
-
-  table.table.rounded
-    thead
-      tr
-        th Id
-        th Username
-        th Email
-        th Role
-        th Actions
-    tbody#usersTableBody
-
-  nav
-    ul.pagination
-      li.page-item
-        button.page-link(type='button' id='previousPage') Previous
-      li.page-item
-        span.page-link(id='currentPage') 1
-      li.page-item
-        button.page-link(type='button' id='nextPage') Next
+      .card.card-success.card-outline.mb-4
+      // begin::Header
+      .card-header
+        .card-title Filter HTML Sections
+        // end::Header
+        
+        // begin::Body
+      .card-body
+        table.table.rounded
+          thead
+            tr
+            th Id
+            th Username
+            th Email
+            th Role
+            th Actions
+          tbody#usersTableBody
+        // end::Body
+        // begin::Footer
+        .card-footer
+          nav
+            ul.pagination
+              li.page-item
+                button.page-link(type='button' id='previousPage') Previous
+              li.page-item
+                span.page-link(id='currentPage') 1
+              li.page-item
+                button.page-link(type='button' id='nextPage') Next
+        // end::Footer
 
   .alert.alert-danger#userError(style='display: none;') Error fetching users
 

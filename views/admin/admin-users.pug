@@ -1,34 +1,99 @@
 extends layout
+block titleBlock
+  title #{title}
 
-block content    
-    .container.mt-5
-      h1 #{title}
-      //- button.btn.btn-primary.btn-sm.addUser.mb-3(data-toggle="modal", data-target="#userModal") Add User
-      .row.mb-3
-        .col-md-3
-          input.form-control.form-control-sm#usernameFilter(placeholder="Filter by Username")
-        .col-md-3
-          input.form-control.form-control-sm#emailFilter(placeholder="Filter by Email")
-        .col-md-3
-          select.form-select.form-control-sm#roleFilter
-            option(value="") All Roles
-            option(value="user") User
-            option(value="admin") Admin
-            option(value="editor") Editor
-        .col-md-3
-          button.btn.btn-secondary.btn-sm#applyFilters Apply Filters
-      table.table
-        thead
-          tr
-            th(scope="col") ID
-            th(scope="col" class="sortable") Username
-            th(scope="col" class="sortable") Email
-            th(scope="col" class="sortable") Role
-            th(scope="col") Actions
-        tbody#userTableBody
-      // Pagination
-      nav.mt-3
-        ul.pagination#pagination
+block content 
+    // begin::App Content Header
+    .app-content-header
+      // begin::Container
+      .container-fluid
+        // begin::Row
+        .row
+           .col-sm-6
+             h3.mb-0 #{title}
+           .col-sm-6
+             ol.breadcrumb.float-sm-end
+               li.breadcrumb-item
+                 a(href='/admin/dashboard') Admin
+               li.breadcrumb-item.active(aria-current='page')
+                 | Users
+    .row.g-4
+      // begin::Col
+      .col-12.connectedSortable
+        .callout.callout-info
+          | For detailed documentation of Form visit 
+          a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
+          | Bootstrap Form
+      // end::Col
+      // begin::Col  
+      .col-md-12.connectedSortable
+        .card.card-success.card-outline.mb-4
+          // begin::Header
+          .card-header
+            .card-title 
+              | Filter HTML Sections
+          // end::Header
+          // begin::Body
+          .card-body
+
+            .container.mt-5
+              //- button.btn.btn-primary.btn-sm.addUser.mb-3(data-toggle="modal", data-target="#userModal") Add User
+              .row.mb-3
+                .col-md-3
+                  input.form-control.form-control-sm#usernameFilter(placeholder="Filter by Username")
+                .col-md-3
+                  input.form-control.form-control-sm#emailFilter(placeholder="Filter by Email")
+                .col-md-3
+                  select.form-select.form-control-sm#roleFilter
+                    option(value="") All Roles
+                    option(value="user") User
+                    option(value="admin") Admin
+                    option(value="editor") Editor
+                .col-md-3
+                  button.btn.btn-secondary.btn-sm#applyFilters Apply Filters
+          // begin::Footer
+          .card-footer
+           
+            nav
+              ul.pagination
+                li.page-item
+                  button.page-link(type='button' id='previousPage') Previous
+                li.page-item
+                  span.page-link(id='currentPage') 1
+                li.page-item
+                  button.page-link(type='button' id='nextPage') Next
+          // end::Footer
+      // begin::Col  
+      .col-md-12.connectedSortable
+        .card.card-success.card-outline.mb-4
+          // begin::Header
+          .card-header
+            .card-title Filter HTML Sections
+          // end::Header
+        
+          // begin::Body
+          .card-body
+
+            table.table
+              thead
+                tr
+                  th(scope="col" class="sortable") ID
+                  th(scope="col" class="sortable") Username
+                  th(scope="col" class="sortable") Email
+                  th(scope="col" class="sortable") Role
+                  th(scope="col") Actions
+                tbody#userTableBody
+          // begin::Footer
+          .card-footer
+            nav
+              ul.pagination#pagination
+                li.page-item
+                  button.page-link(type='button' id='previousPage') Previous
+                li.page-item
+                  span.page-link(id='currentPage') 1
+                li.page-item
+                  button.page-link(type='button' id='nextPage') Next
+          // end::Footer
     // Modal
     .modal.fade#userModal(tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true")
       .modal-dialog
@@ -196,4 +261,22 @@ block content
 
           loadUsers(currentPage, getFilters(), { field: sortField, order: sortOrder });
         });
+      });
+
+    script(src='https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js' integrity='sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ=' crossorigin='anonymous')
+    // sortablejs
+    script.
+      const connectedSortables =
+      document.querySelectorAll(".connectedSortable");
+      connectedSortables.forEach((connectedSortable) => {
+      let sortable = new Sortable(connectedSortable, {
+      group: "shared",
+      handle: ".card-header",
+      });
+      });
+      const cardHeaders = document.querySelectorAll(
+      ".connectedSortable .card-header",
+      );
+      cardHeaders.forEach((cardHeader) => {
+      cardHeader.style.cursor = "move";
       });

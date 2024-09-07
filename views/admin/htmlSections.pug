@@ -1,66 +1,120 @@
 extends layout
-
+block titleBlock
+  title #{title}
 block content
+    // begin::App Content Header
+    .app-content-header
+      // begin::Container
+      .container-fluid
+        // begin::Row
+        .row
+          .col-sm-6
+            h3.mb-0 #{title}
+          .col-sm-6
+            ol.breadcrumb.float-sm-end
+              li.breadcrumb-item
+                a(href='/admin/dashboard') Admin
+              li.breadcrumb-item.active(aria-current='page')
+                | #{title}
+          // end::Row
+        // end::Container
+    // end::App Content Header
+    .row.g-4
+      // begin::Col
+      .col-12.connectedSortable
+        .callout.callout-info
+          | For detailed documentation of Form visit 
+          a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
+            | Bootstrap Form
+      // end::Col
+      // begin::Col
+      .col-md-12.connectedSortable
+        // begin::Filters
+        .card.card-success.card-outline.mb-4
+          // begin::Header
+          .card-header
+            .card-title Filter HTML Sections
+          // end::Header
+          // begin::Form
+          form#filterForm
+            // begin::Body
+            .card-body
+              .row.g-4
+                .col-6
+                  .form-group
+                    label(for='anchor') Anchor
+                    input.form-control.form-control-sm#anchorFilter(name='anchor' placeholder='Anchor')
+                  .form-group
+                    label(for='blogPostId') Blog Post
+                    select.form-control.form-control-sm#blogPostIdFilter( name='blogPostId')
+                .col-6 
+                  .form-group
+                    label(for='limit') Sections limit
+                    select.form-control.form-control-sm(name='limit' id='limit' required)
+                      option(value=1) 1
+                      option(value=2) 2
+                      option(value=3) 3
+                      option(value=5 selected) 5
+                      option(value=10) 10
+                      option(value=15) 15
+                      option(value=20) 20
+                      option(value=25) 25
+                      option(value=50) 50
+                      option(value=75) 75
+                      option(value=100) 100
+            // end::Body
+            // begin::Footer
+            .card-footer
+              .btn-group.btn-group-sm(role='group', aria-label='Button group with nested dropdown')
+                button.btn.btn-primary.btn-sm#filterButton
+                  i.fas.fa-filter
+                button.btn.btn-primary.btn-sm#newHtmlSectionBtn
+                  i.far.fa-file-alt
+                button.btn.btn-primary.btn-sm#findAdReplaceBtn
+                  i.fas.fa-search
+            // end::Footer
+          // end::Form
+        // end::Quick Example
 
-    h1 HTML Sections
-    .form-row
-       .form-group.col-md-2
-         button.btn.btn-primary.btn-sm.mb-3#newHtmlSectionBtn New HTML Section
-       .form-group.col-md-2
-         button.btn.btn-primary.btn-sm.mb-3#findAdReplaceBtn Find and Replace
-    form#filterForm
-      .form-row
-        .form-group.col-md-2
-          label(for='anchor') Anchor
-          input.form-control.form-control-sm#anchorFilter(name='anchor' placeholder='Anchor')
-        .form-group.col-md-3
-          label(for='blogPostId') Blog Post
-          select.form-control.form-control-sm#blogPostIdFilter( name='blogPostId')
-          
+    .row.g-4
+      .col-md-12.connectedSortable
+        // begin::Blog Post Table
+        .card.card-success.card-outline.mb-4
+          // begin::Header
+          .card-header
+            .card-title Blog Posts list
+          // end::Header
+          // begin::Body
+          .card-body
+            .table-responsive
+              table.table#htmlSectionsTable
+                thead
+                  tr
+                    th
+                      a(href='#' class='sort' data-field='BlogPostId') Id
+                    th
+                      a(href='#' class='sort' data-field='Anchor') Anchor
+                    th
+                      a(href='#' class='sort' data-field='ViewIndex') View Index
+                    th
+                      a(href='#' class='sort' data-field='DateCreated') Date Created
+                    th
+                      a(href='#' class='sort' data-field='Slug') Slug
+                    th Actions
 
-        .form-group-col-md-2
-          label(for='limit') Sections limit
-          select.form-control.form-control-sm(name='limit' id='limit' required)
-            option(value=1) 1
-            option(value=2) 2
-            option(value=3) 3
-            option(value=5 selected) 5
-            option(value=10) 10
-            option(value=15) 15
-            option(value=20) 20
-            option(value=25) 25
-            option(value=50) 50
-            option(value=75) 75
-            option(value=100) 100
-        .form-group.col-md-1.align-self-end
-          button.btn.btn-primary.btn-sm#filterButton Filter
-
-    .table-responsive
-      table.table#htmlSectionsTable
-        thead
-          tr
-            th
-              a(href='#' class='sort' data-field='BlogPostId') Id
-            th
-              a(href='#' class='sort' data-field='Anchor') Anchor
-            th
-              a(href='#' class='sort' data-field='ViewIndex') View Index
-            th
-              a(href='#' class='sort' data-field='DateCreated') Date Created
-            th
-              a(href='#' class='sort' data-field='Slug') Slug
-            th Actions
-
-        tbody#htmlSectionsTableBody
-
-    nav
-      ul.pagination
-        li.page-item
-          button.page-link(type='button' id='previousPage') Previous
-        li.page-item
-          span.page-link(id='currentPage') 1
-        li.page-item
-          button.page-link(type='button' id='nextPage') Next
+                tbody#htmlSectionsTableBody
+          // begin::Footer
+          .card-footer.pb-0
+            nav.mb-0
+              ul.pagination
+                li.page-item
+                  button.page-link(type='button' id='previousPage') Previous
+                li.page-item
+                  span.page-link(id='currentPage') 1
+                li.page-item
+                  button.page-link(type='button' id='nextPage') Next
+          // end::Footer
+        // end::Blog Post Table
 
     .alert.alert-danger#logError(style='display: none;') Error fetching HTML sections
 
@@ -71,8 +125,8 @@ block content
         .modal-content
           .modal-header
             h5.modal-title#htmlSectionModalTitle New HTML Section
-            button.close(type='button' data-dismiss='modal' aria-label='Close')
-              span(aria-hidden='true') &times;
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              
           .modal-body(id="editHtmlSectionBody")
             form#htmlSectionForm
               input(type='hidden' id='htmlSectionId' name='id')
@@ -81,26 +135,28 @@ block content
                 select.form-control.form-control-sm#addBlogPostId( name='blogPostId')
               .form-group
                 label(for='htmlContent') HTML
-                textarea.form-control.form-control-sm#htmlContent(name='html')
+                textarea.form-control.form-control-sm#htmlContent(name='html' required)
               .form-group
                 label(for='viewIndex') View Index
-                input.form-control.form-control-sm#viewIndex(name='viewIndex' type='number')
+                input.form-control.form-control-sm#viewIndex(name='viewIndex' type='number' required)
               .form-group
                 label(for='anchor') Anchor
                 input.form-control.form-control-sm#anchor(name='anchor' required)
               .form-group
                 label(for='slug') Slug
-                input.form-control.form-control-sm#slug(name='slug')
-              button.btn.btn-primary.btn-sm(type='submit') Save
+                input.form-control.form-control-sm#slug(name='slug' required)
+              
           .modal-footer
-            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+            button.btn.btn-primary.btn-sm#saveHtmlSection(type='button') Save 
+            |
+            button.btn.btn-secondary.btn-sm(type='button' data-bs-dismiss='modal') Close
 
     // View Modal
     .modal.fade#viewHtmlSectionModal( data-backdrop="static" data-keyboard="false" tabindex='-1' role='dialog')
       .modal-dialog.modal-xl.modal-dialog-scrollable(role='document')
         .modal-content
           .modal-header
-                       
+                      
             .btn-group.btn-group-sm(role='group', aria-label='Button group with nested dropdown')
               
               button.btn.btn-primary.btn-sm(type='button' id='edit-html')
@@ -125,13 +181,13 @@ block content
                 .dropdown-menu
                   a.dropdown-item(href='#') Dropdown link
                   a.dropdown-item(href='#') Dropdown link
-
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close') 
             
           .modal-body(id="viewHtmlSectionBody")
             #editableHtmlContent
             input#imageUploadInput(type='file' name='imageUploadInput' accept='image/*' style='position: absolute; width: 0px; height: 0px; left: -3000px; top: -3000px;')
           .modal-footer
-            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+            button.btn.btn-secondary.btn-sm(type='button' data-bs-dismiss='modal') Close
     // Delete Confirmation Modal
     .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog')
       .modal-dialog(role='document')
@@ -223,8 +279,7 @@ block content
         .modal-content
           .modal-header
             h5.modal-title Find and replace
-              button.close(type='button', data-dismiss='modal', aria-label='Close')
-                span(aria-hidden='true') &times;
+            button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
           .modal-body
             form#findAndReplaceForm
               .formgroup
@@ -236,11 +291,11 @@ block content
               .formgroup
                 label(for="replace-all") Replace all:
                 input#replace-all(type="checkbox" name="replace-all")
-              .formgroup
-                button.btn.btn-primary.btn-sm(type="submit") Submit
-              div           
+          
           .modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+            button.btn.btn-primary.btn-sm#buttonreplace(type="button") Replace
+            |
+            button.btn.btn-secondary.btn-sm(type='button', data-bs-dismiss='modal') Close
     
 
     script.
@@ -252,7 +307,7 @@ block content
         let currentHtmlSectionAnchor = '';
         let selectedText = '';
         let htmlSections = null;
-
+        let selectedBlogPostIndex;
 
 
         function fetchHtmlSections() {
@@ -267,12 +322,13 @@ block content
                     const tbody = $('#htmlSectionsTableBody');
                     tbody.empty();
 
-                    
+                    $('#blogPostIdFilter').empty();
                     data.blogPosts.forEach(blogPost => {
                         let option = `<option value="${blogPost.BlogPostId}" name="${blogPost.Title}">${blogPost.Title}</option>`;
                         $('#blogPostIdFilter').append(option);
                     });
-
+                    $('#blogPostIdFilter').prop('selectedIndex', selectedBlogPostIndex); 
+                    $('#addBlogPostId').empty();
                     data.blogPosts.forEach(blogPost => {
                         let option = `<option value="${blogPost.BlogPostId}" name="${blogPost.Title}">${blogPost.Title}</option>`;
                         $('#addBlogPostId').append(option);
@@ -284,10 +340,10 @@ block content
                         tbody.append(`
                             <tr>
                               <td>${section.HtmlSectionID}</td>
-                              <td class="admin-blogs-ellipsis" data-toggle="popover" title="HtmlSection Anchor details" data-content="${section.Anchor}">${section.Anchor}</td>
+                              <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="HtmlSection Anchor details" data-bs-content="${section.Anchor}">${section.Anchor}</td>
                               <td>${section.ViewIndex}</td>
                               <td>${section.DateCreated}</td>
-                              <td class="admin-blogs-ellipsis" data-toggle="popover" title="HtmlSection Slug details" data-content="${section.Slug}">${section.Slug}</td>
+                              <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="HtmlSection Slug details" data-bs-content="${section.Slug}">${section.Slug}</td>
                               <td>
                                 
                                 <i class="fas fa-file-import mbr-iconfont mbr-iconfont-btn import-btn" data-anchor="${section.Anchor}" data-slug="${section.Slug}"></i>
@@ -304,8 +360,8 @@ block content
                     $('#previousPage').prop('disabled', currentPage <= 1);
                     $('#nextPage').prop('disabled', currentPage >= data.totalPages);
 
-                    $('[data-toggle="popover"]').popover({
-                      trigger: 'click',
+                    $('[data-bs-toggle="popover"]').popover({
+                      trigger: 'hover',
                       placement: 'left',
                       container: 'body'
                     });
@@ -313,8 +369,22 @@ block content
             });
         }
 
+        // Attach the change event listener to the select element
+        $('#blogPostIdFilter').on('change', function() {
+            var selectedIndex = $(this).prop('selectedIndex');
+            selectedBlogPostIndex = selectedIndex;
+            $('#filterButton').click();
+        });
 
+        $('#buttonreplace').on('click', function (e) {
+            $('#findAndReplaceForm').submit();
+        });
 
+        $('#saveHtmlSection').on('click', function (e) {
+            $('#htmlSectionForm').submit();
+        });
+
+       
         $('#filterButton').on('click', function (e) {
             e.preventDefault();
             currentPage = 1;
@@ -343,7 +413,8 @@ block content
             fetchHtmlSections();
         });
 
-        $('#newHtmlSectionBtn').on('click', function () {
+        $('#newHtmlSectionBtn').on('click', function (e) {
+            e.preventDefault();
             $('#htmlSectionModalTitle').text('New HTML Section');
             $('#htmlSectionForm')[0].reset();
             $('#htmlSectionId').val('');
@@ -446,7 +517,8 @@ block content
             });
         });
         
-        $('#findAdReplaceBtn').on('click', function() {
+        $('#findAdReplaceBtn').on('click', function(e) {
+            e.preventDefault();
             $('#findAndReplaceModal').modal('show');
         });
 
@@ -714,4 +786,22 @@ block content
             }
         });
         fetchHtmlSections();
+      });
+
+    script(src='https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js' integrity='sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ=' crossorigin='anonymous')
+    // sortablejs
+    script.
+      const connectedSortables =
+      document.querySelectorAll(".connectedSortable");
+      connectedSortables.forEach((connectedSortable) => {
+      let sortable = new Sortable(connectedSortable, {
+      group: "shared",
+      handle: ".card-header",
+      });
+      });
+      const cardHeaders = document.querySelectorAll(
+      ".connectedSortable .card-header",
+      );
+      cardHeaders.forEach((cardHeader) => {
+      cardHeader.style.cursor = "move";
       });

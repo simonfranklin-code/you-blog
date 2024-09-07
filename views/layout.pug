@@ -1,138 +1,219 @@
 doctype html
 head
-  // Site made with Mobirise Website Builder v5.9.6, https://mobirise.com
-  base(href='/')
+  block baseDirectoryBlock
+ 
   meta(charset='UTF-8')
   meta(http-equiv='X-UA-Compatible' content='IE=edge')
-  meta(name='generator' content='Mobirise v5.9.6, mobirise.com')
   meta(name='viewport' content='width=device-width, initial-scale=1, minimum-scale=1')
   link(rel='shortcut icon' href='assets/images/0d0cde80-aa01-4a83-9246-2b6d2bb0ccd5-128x128.png' type='image/x-icon')
-  meta(name='description' content="Before subscribing to any newsletters or blogs, it's important to determine your areas of interest within the digital marketing industry. Some common areas of interest include social media marketing, email marketing, content marketing, SEO, PPC, and analytics.")
-  title Case Study 1: Analyzing Content Quality
-  link(rel='stylesheet' href='assets/font-awesome-brands/../css/fontawesome.min.css')
-  link(rel='stylesheet' href='assets/font-awesome-brands/css/brands.min.css')
-  link(rel='stylesheet' href='assets/font-awesome-solid/../css/fontawesome.min.css')
-  link(rel='stylesheet' href='assets/font-awesome-solid/css/solid.min.css')
-  link(rel='stylesheet' href='assets/material-design/css/material-icons.min.css')
-  link(rel='stylesheet' href='assets/web/assets/mobirise-icons2/mobirise2.css')
-  link(rel='stylesheet' href='assets/web/assets/mobirise-icons/mobirise-icons.css')
-  link(rel='stylesheet' href='assets/web/assets/mobirise-icons-bold/mobirise-icons-bold.css')
-  link(rel='stylesheet' href='assets/bootstrap/css/bootstrap.min.css')
-  link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', rel='stylesheet', integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3', crossorigin='anonymous')
-  link(rel='stylesheet' href='assets/parallax/jarallax.css')
-  link(rel='stylesheet' href='assets/web/assets/gdpr-plugin/gdpr-styles.css')
-  link(rel='stylesheet' href='assets/animatecss/animate.css')
-  link(rel='stylesheet' href='assets/dropdown/css/style.css')
-  link(rel='stylesheet' href='assets/socicon/css/styles.css')
-  link(rel='stylesheet' href='assets/theme/css/style.css')
-  link(href='vendor/fontawesome-free/css/all.min.css', rel='stylesheet', type='text/css')
-  link(rel='preload' href='https://fonts.googleapis.com/css?family=Epilogue:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap' as='style' onload="this.onload=null;this.rel='stylesheet'")
+  block titleBlock 
+  block metaDescriptionBlock
+  block metaKewordsBlock
 
-  noscript
-    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Epilogue:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap')
-  link(rel='preload' as='style' href='assets/mobirise/css/mbr-additional.css')
-  link(rel='stylesheet' href='assets/mobirise/css/mbr-additional.css' type='text/css')
+  link(rel='stylesheet' href='/css/adminlte.css')
+  block headStylesBlock
   
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js').
-  // Google tag (gtag.js)
-  script(type='text/plain' async='' data-src='https://www.googletagmanager.com/gtag/js?id=G-2LLV2Z902Q').
-  script(type='text/plain').
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-2LLV2Z902Q');
-  script(src='js/site.js').
+  block headScriptsBlock
+
+  script(src='/js/site.js').
   script(src="https://kit.fontawesome.com/4defe9e4da.js" crossorigin="anonymous").
-  link(rel='stylesheet' href='stylesheets/main.css')
-  body
-    section#features16-2sn.inner-header-section.cid-ubqkf91puQ-1(data-bs-version='5.1')
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css', integrity='sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=', crossorigin='anonymous')
+  // end::Fonts
+  // begin::Third Party Plugin(OverlayScrollbars)
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/styles/overlayscrollbars.min.css', integrity='sha256-dSokZseQNT08wYEWiz5iLI8QPlKxG+TswNRD8k35cpg=', crossorigin='anonymous')
+  // end::Third Party Plugin(OverlayScrollbars)
+  // begin::Third Party Plugin(Bootstrap Icons)
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css', integrity='sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI=', crossorigin='anonymous')
+  // end::Third Party Plugin(Bootstrap Icons)
+  link(rel='stylesheet' href='/stylesheets/main.css')
+  body.bg-body-tertiary
         
-        .container(style='max-width: 100%;')
-            .row.justify-content-end.pt-3
-                .col-md-9  
-                    if success_msg
-                        span(style="color: green" id='successMessage') #{success_msg}
-                    if error_msg
-                        span(style="color: red" id='errorMessage') #{error_msg}
-                    if error
-                        span(style="color: red") #{error}
-                    if user
-                        p.mt-2
-                            | Logged in as #{user.username} (#{user.role})
-                            | 
-                            a(href='/users/logout') Logout
-                            if user.role === 'admin'
-                                | 
-                                a(href='/admin/dashboard') Admin Dashboard
-                    else
-                        p.mt-2
-                            a(href='/users/login') Login
-                            | 
-                            a(href='/users/register') Register
-                .col-md-3
-                    .navbar-buttons.wsearch.display-4
-                        form.mbr-form.float-end(method='GET', action='/blog-post/Blog-Search')
-                            .input-group
-                                button#button-addon1.btn.btn-outline-secondary.btn-sm(type='submit') Go
-                                input.form-control.form-control-sm(type='text', name='q', placeholder='Search', aria-label='Example text with button addon', aria-describedby='button-addon1')
+      // begin::Header
+      nav.app-header.navbar.navbar-expand.bg-body
+        // begin::Container
+        .container-fluid
+          // begin::Start Navbar Links
+          ul.navbar-nav
+            li.nav-item.d-none.d-md-block
+              a.nav-link(href='#') Home
+            li.nav-item.d-none.d-md-block
+              a.nav-link(href='#') Contact
+
+          // end::Start Navbar Links
+          // begin::End Navbar Links
+          ul.navbar-nav.ms-auto
+            // begin::Navbar Search
+            li.nav-item
+              a.nav-link(data-widget='navbar-search', href='#', role='button')
+                i.bi.bi-search
+            // end::Navbar Search
+            // begin::Messages Dropdown Menu
+            li.nav-item.dropdown
+              a.nav-link(data-bs-toggle='dropdown', href='#')
+                i.bi.bi-chat-text
+                |  
+                span.navbar-badge.badge.text-bg-danger 3
+              .dropdown-menu.dropdown-menu-lg.dropdown-menu-end
+                a.dropdown-item(href='#')
+                  // begin::Message
+                  .d-flex
+                    .flex-shrink-0
+                      img.img-size-50.rounded-circle.me-3(src='/dist/assets/img/user1-128x128.jpg', alt='User Avatar')
+                    .flex-grow-1
+                      h3.dropdown-item-title
+                        | Brad Diesel
+                        span.float-end.fs-7.text-danger
+                          i.bi.bi-star-fill
+                      p.fs-7 Call me whenever you can...
+                      p.fs-7.text-secondary
+                        i.bi.bi-clock-fill.me-1
+                        |  4 Hours Ago
+                  // end::Message
+                .dropdown-divider
+                |  
+                a.dropdown-item(href='#')
+                  // begin::Message
+                  .d-flex
+                    .flex-shrink-0
+                      img.img-size-50.rounded-circle.me-3(src='/dist/assets/img/user8-128x128.jpg', alt='User Avatar')
+                    .flex-grow-1
+                      h3.dropdown-item-title
+                        | John Pierce
+                        span.float-end.fs-7.text-secondary
+                          i.bi.bi-star-fill
+                      p.fs-7 I got your message bro
+                      p.fs-7.text-secondary
+                        i.bi.bi-clock-fill.me-1
+                        |  4 Hours Ago
+                  // end::Message
+                .dropdown-divider
+                |  
+                a.dropdown-item(href='#')
+                  // begin::Message
+                  .d-flex
+                    .flex-shrink-0
+                      img.img-size-50.rounded-circle.me-3(src='/dist/assets/img/user3-128x128.jpg', alt='User Avatar')
+                    .flex-grow-1
+                      h3.dropdown-item-title
+                        | Nora Silvester
+                        span.float-end.fs-7.text-warning
+                          i.bi.bi-star-fill
+                      p.fs-7 The subject goes here
+                      p.fs-7.text-secondary
+                        i.bi.bi-clock-fill.me-1
+                        |  4 Hours Ago
+                  // end::Message
+                .dropdown-divider
+                |  
+                a.dropdown-item.dropdown-footer(href='#') See All Messages
+            // end::Messages Dropdown Menu
+            // begin::Notifications Dropdown Menu
+            li.nav-item.dropdown
+              a.nav-link(data-bs-toggle='dropdown', href='#')
+                i.bi.bi-bell-fill
+                |  
+                span.navbar-badge.badge.text-bg-warning 15
+              .dropdown-menu.dropdown-menu-lg.dropdown-menu-end
+                span.dropdown-item.dropdown-header 15 Notifications
+                .dropdown-divider
+                |  
+                a.dropdown-item(href='#')
+                  i.bi.bi-envelope.me-2
+                  |  4 new messages
+                  span.float-end.text-secondary.fs-7 3 mins
+                .dropdown-divider
+                |  
+                a.dropdown-item(href='#')
+                  i.bi.bi-people-fill.me-2
+                  |  8 friend requests
+                  span.float-end.text-secondary.fs-7 12 hours
+                .dropdown-divider
+                |  
+                a.dropdown-item(href='#')
+                  i.bi.bi-file-earmark-fill.me-2
+                  |  3 new reports
+                  span.float-end.text-secondary.fs-7 2 days
+                .dropdown-divider
+                |  
+                a.dropdown-item.dropdown-footer(href='#')
+                  | See All Notifications
+            // end::Notifications Dropdown Menu
+            // begin::Fullscreen Toggle
+            li.nav-item
+              a.nav-link(href='#', data-lte-toggle='fullscreen')
+                i.bi.bi-arrows-fullscreen(data-lte-icon='maximize')
+                |  
+                i.bi.bi-fullscreen-exit(data-lte-icon='minimize', style='display: none;')
+            // end::Fullscreen Toggle
+            li.nav-item
+              a.nav-link(data-lte-toggle='sidebar', href='#', role='button')
+                i.bi.bi-list
+            if user
+                // begin::User Menu Dropdown
+                li.nav-item.dropdown.user-menu
+                  a.nav-link.dropdown-toggle(href='#', data-bs-toggle='dropdown')
+                
+                    img.user-image.rounded-circle.shadow(src='/dist/assets/img/user2-160x160.jpg', alt='User Image')
+                    |  
+                    span.d-none.d-md-inline #{user.username}
+                  ul.dropdown-menu.dropdown-menu-lg.dropdown-menu-end
+                    // begin::User Image
+                    li.user-header.text-bg-primary.text-center
+                      .row
+                        .col-12.pt-2
+                          img.rounded-circle.shadow(style='margin: 0 auto;text-align: center; height:64px;width: 64px;' src='/dist/assets/img/user2-160x160.jpg', alt='User Image')
+                      .row  
+                        .col-12.pt-2
+                          p
+                            | #{user.username} - Web Developer
+                            small Member since #{user.dateCreated}
+                    // end::User Image
+                    // begin::Menu Body
+                    li.user-body
+                      // begin::Row
+                      .row
+                        .col-4.text-center
+                          a(href='#') Followers
+                        .col-4.text-center
+                          a(href='#') Sales
+                        .col-4.text-center
+                          a(href='#') Friends
+                      // end::Row
+                    // end::Menu Body
+                    // begin::Menu Footer
+                    li.user-footer
+                      if user.role === 'admin'
+                        | 
+                        a.btn.btn-default.btn-flat(href='/admin/dashboard') Dashboard
+                      else
+                        a.btn.btn-default.btn-flat(href='/users/dashboard') Dashboard
+                        |  
+                      a.btn.btn-default.btn-flat.float-end(href='/users/logout') Sign out
+                    // end::Menu Footer
+                // end::User Menu Dropdown
+          // end::End Navbar Links
+       
+        // end::Container
+      // end::Header
+      .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog' style='z-index: 10000;')
+        .modal-dialog(role='document')
+          .modal-content
+            .modal-header
+              h5.modal-title Confirm Delete
+              button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+            .modal-body
+              p Are you sure you want to delete this item?
+            .modal-footer
+              button.btn.btn-secondary.btn-sm(type='button' data-bs-dismiss='modal') Cancel
+              button.btn.btn-danger.btn-sm#confirmDeleteBtn(type='button') Delete 
+
+    
+
+  block content
+  block footer
 
 
-    block content
-
-    section#footer4-2tj.footer4.cid-uhEsLsQ0cU(data-bs-version='5.1', once='footers')
-      .container
-        .row.mbr-white
-          .col-6.col-lg-3
-            .media-wrap.col-md-8.col-12
-              a(href='index.html')
-                img(src='assets/images/-139cba96-4dc6-475c-b6e4-c7af325a1aa4-337x337.webp', alt='Mobirise Website Builder')
-          .col-12.col-md-6.col-lg-3
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong About
-            p.mbr-text.mbr-fonts-style.mb-4.display-4
-              | Mobirise is a free offline app for
-              | Windows and Mac to easily create small/medium websites, landing pages, online resumes and
-              | portfolios.
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-3.display-7
-              strong Follow Us
-            .social-row.display-7
-              .soc-item
-                a(href='https://twitter.com/mobirise', target='_blank')
-                  span.mbr-iconfont.socicon.socicon-facebook
-              .soc-item
-                a(href='https://twitter.com/mobirise', target='_blank')
-                  span.mbr-iconfont.socicon.socicon-twitter
-              .soc-item
-                a(href='https://twitter.com/mobirise', target='_blank')
-                  span.mbr-iconfont.socicon.socicon-instagram
-          .col-12.col-md-6.col-lg-3
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Mobirise Help
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap Help Center
-              li.mbr-text.item-wrap Mobirise Forums
-              li.mbr-text.item-wrap Mobirise Kit
-              li.mbr-text.item-wrap Our site
-          .col-12.col-md-6.col-lg-3
-            h5.mbr-section-subtitle.mbr-fonts-style.mb-2.display-7
-              strong Mobirise Extensions
-            ul.list.mbr-fonts-style.display-4
-              li.mbr-text.item-wrap Code Editor
-              li.mbr-text.item-wrap Form Builder
-              li.mbr-text.item-wrap Popup Builder
-              li.mbr-text.item-wrap Enterprise
-    .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog')
-      .modal-dialog(role='document')
-        .modal-content
-          .modal-header
-            h5.modal-title Confirm Delete
-            button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
-              span(aria-hidden='true') &times;
-          .modal-body
-            p Are you sure you want to delete this item?
-          .modal-footer
-            button.btn.btn-secondary.btn-sm(type='button' data-bs-dismiss='modal') Cancel
-            button.btn.btn-danger.btn-sm#confirmDeleteBtn(type='button') Delete
 
 script(src='https://code.jquery.com/jquery-3.6.0.min.js').
 script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p', crossorigin='anonymous').
@@ -142,7 +223,7 @@ script(src='assets/web/assets/cookies-alert-plugin/cookies-alert-script.js')
 script(src='assets/smoothscroll/smooth-scroll.js').
 script(src='assets/ytplayer/index.js').
 script(src='assets/dropdown/js/navbar-dropdown.js').
-
+script(src='/js/adminlte.js').
 
 script(src='assets/witsec-search/search.js?v=1').
 script(type='text/plain' data-src='assets/theme/js/script.js').
@@ -191,6 +272,8 @@ script.
   return "";
   }
 
+script(src='/js/socket.io.js')
+
 
 
 
@@ -207,4 +290,3 @@ script.
 input(name='cookieData' type='hidden' data-cookie-cookiesalerttype='2' data-cookie-customdialogselector='#cookie-dialog' data-cookie-colortext='#bbbbbb' data-cookie-colorbg='rgb(53, 53, 53)' data-cookie-opacityoverlay='0' data-cookie-bgopacity='100' data-cookie-textbutton='ACCEPT' data-cookie-rejecttext='REJECT' data-cookie-colorbutton='#6ec7f2' data-cookie-rejectcolor='#ffffff' data-cookie-colorlink='#47b5ed' data-cookie-underlinelink='true' data-cookie-text="We use cookies to give you the best experience as specified in the <a href='privacy.html'>cookie policy</a>. Rejecting cookies may make some features unavailable.")
 input(name='animation' type='hidden')
 
-script(src="https://code.responsivevoice.org/responsivevoice.js?key=PBQFEcV7").

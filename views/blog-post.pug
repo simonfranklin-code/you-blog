@@ -1,3 +1,18 @@
 extends layout.pug
+block baseDirectoryBlock
+  != blog.BaseDirectory
+
+block titleBlock
+  title #{title}
+block headStylesBlock
+   != blog.HeadStylesBlock
+block headScriptsBlock
+   != blog.HeadScriptsBlock
+block metaDescriptionBlock
+   != metaDescription
+block metaKewordsBlock
+   != metaKewords
 block content
     != htmlContent
+block footer
+    != footer

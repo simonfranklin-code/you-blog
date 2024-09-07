@@ -10,8 +10,8 @@ block content
           label(for='title') Title
           input.form-control.form-control-sm#titleFilter(name='title' placeholder='Title')
         .form-group.col-md-2
-          label(for='author') Author
-          input.form-control.form-control-sm#authorFilter(name='author' placeholder='Author')
+          label(for='owner') Owner
+          input.form-control.form-control-sm#OwnerFilter(name='owner' placeholder='Owner')
         .form-group-col-md-3
           label(for='limit') Blogs limit
           select.form-control.form-control-sm(name='limit' id='limit' required)
@@ -34,7 +34,7 @@ block content
             a(href='#' class='sort' data-field='Title') Title
           th Description
           th
-            a(href='#' class='sort' data-field='Author') Author
+            a(href='#' class='sort' data-field='Owner') Owner
           th
             a(href='#' class='sort' data-field='DateCreated') Date Created
           th Actions
@@ -70,8 +70,29 @@ block content
                 label(for='blogDescription') Description
                 textarea.form-control.form-control-sm#blogDescription(name='description')
               .form-group
-                label(for='blogAuthor') Author
-                input.form-control.form-control-sm#blogAuthor(name='author' required)
+                label(for='blogOwner') Owner
+                input.form-control.form-control-sm#blogOwner(name='owner' required)
+              .form-group
+                label(for='blogUserId') User Id
+                input.form-control.form-control-sm#blogUserId(name='userId' required)
+              .form-group
+                label(for='blogBaseDirectory') Base Directory
+                input.form-control.form-control-sm#blogBaseDirectory(name='baseDirectory' required)
+              .form-group
+                label(for='blogMetaKeywords') Meta Keywords
+                input.form-control.form-control-sm#blogMetaKeywords(name='metaKeywords' required)
+              .form-group
+                label(for='blogMetaDescription') Meta Description
+                textarea.form-control.form-control-sm#blogMetaDescription(name='metaDescription')
+              .form-group
+                label(for='blogHeadStylesBlock') Head Styles Block
+                textarea.form-control.form-control-sm#blogHeadStylesBlock(name='headStylesBlock')
+              .form-group
+                label(for='blogHeadScriptsBlock') Head Scripts Block
+                textarea.form-control.form-control-sm#blogHeadScriptsBlock(name='headScriptsBlock')
+              .form-group
+                label(for='blogSlug') Slug
+                input.form-control.form-control-sm#blogSlug(name='slug' required)
               button.btn.btn-primary.btn-sm(type='submit') Save
           .modal-footer
             button.btn.btn-secondary(type='button' data-dismiss='modal') Close
@@ -100,12 +121,12 @@ block content
 
         function fetchBlogs() {
             const title = $('#titleFilter').val();
-            const author = $('#authorFilter').val();
+            const owner = $('#ownerFilter').val();
             const limit = $('#limit').val();
             
             $.ajax({
                 url: '/admin/blogs/api',
-                data: { page: currentPage, limit: limit, sortField, sortOrder, title, author },
+                data: { page: currentPage, limit: limit, sortField, sortOrder, title, owner },
                 success: function (data) {
                     const tbody = $('#blogsTableBody');
                     tbody.empty();
@@ -116,7 +137,7 @@ block content
                               <td>${blog.Title}</td>
                   
                               <td class="admin-blogs-ellipsis" data-toggle="popover" title="Blog description details" data-content="${blog.Description}">${blog.Description}</td>
-                              <td>${blog.Author}</td>
+                              <td>${blog.Owner}</td>
                               <td>${new Date(blog.DateCreated).toLocaleString()}</td>
                               <td>
                                 <button class="btn btn-warning btn-sm edit-btn" data-id="${blog.BlogId}">Edit</button>
@@ -183,10 +204,17 @@ block content
             const blogId = $(this).data('id');
             $.get(`/admin/blogs/${blogId}`, function (blog) {
                 $('#blogModalTitle').text('Edit Blog');
+                $('#blogId').val(blog.BlogId);
                 $('#blogTitle').val(blog.Title);
                 $('#blogDescription').val(blog.Description);
-                $('#blogAuthor').val(blog.Author);
-                $('#blogId').val(blog.BlogId);
+                $('#blogOwner').val(blog.Owner);
+                $('#blogBaseDirectory').val(blog.BaseDirectory);
+                $('#blogMetaKeywords').val(blog.MetaKeywords);
+                $('#blogMetaDescription').val(blog.MetaDescription);
+                $('#blogHeadStylesBlock').val(blog.HeadStylesBlock);
+                $('#blogHeadScriptsBlock').val(blog.HeadScriptsBlock);
+                $('#blogSlug').val(blog.Slug);
+                
                 $('#blogModal').modal('show');
             });
         });
