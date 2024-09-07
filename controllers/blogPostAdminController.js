@@ -81,7 +81,7 @@ exports.uploadHtmlFile = (req, res) => {
             console.error(err);
             return res.status(500).json({ success: false, message: 'Html file upload failed.' });
         }
-        const url = 'http://localhost:10000/uploads/' + htmlFile.name;
+        const url = 'https://you-blog-ih2g.onrender.com/uploads/' + htmlFile.name;
         const slug = htmlFile.name.replace('.html', '').toLowerCase();
         
         const htmlSections = HtmlSection.importHtml(url, req.body.blogPostId, slug);
