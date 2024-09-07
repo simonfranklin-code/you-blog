@@ -95,7 +95,7 @@ tr {
 }
 
 .admin-blogs-ellipsis {
-    max-width: 235px; /* Adjust as needed */
+    max-width: 140px; /* Adjust as needed */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
