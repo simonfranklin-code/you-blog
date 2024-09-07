@@ -9,12 +9,12 @@ const fs = require('fs');
 
 
 exports.getHtmlSectionsPage = (req, res) => {
-    res.render('admin/htmlSections');
+    res.render('admin/htmlSections', {title: 'Html Sections'});
 };
 
 exports.getHtmlSections = async (req, res) => {
     const filters = {};
-    const { page = 1, limit = 5, sortField = 'DateCreated', sortOrder = 'DESC', anchor, blogPostId } = req.query;
+    const { page = 1, limit = 5, sortField = 'ViewIndex', sortOrder = 'ASC', anchor, blogPostId } = req.query;
     const htmlSections = await HtmlSection.getAll(page, parseInt(limit), sortField, sortOrder, { anchor, blogPostId });
     const totalHtmlSections = await HtmlSection.getHtmlSectionsCount({ blogPostId });
     const totalPages = Math.ceil(totalHtmlSections / limit);
@@ -29,7 +29,7 @@ exports.createHtmlSection = async (req, res) => {
     // Notify followers
     const followers = await Follower.getFollowers(req.user.id);
     followers.forEach(async follower => {
-        const username = await User.findById(req.user.id).username;
+        const username = req.user.username;
         await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
     });
     res.json({ success: true });

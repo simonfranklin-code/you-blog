@@ -8,8 +8,8 @@ exports.getBlogsPage = (req, res) => {
 
 exports.getBlogs = async (req, res) => {
     const filters = {};
-    const { page = 1, limit = 1, sortField = 'dateCreated', sortOrder = 'DESC', title, author } = req.query;
-    const blogs = await Blog.getAll(page, parseInt(limit), sortField, sortOrder, { title, author });
+    const { page = 1, limit = 1, sortField = 'dateCreated', sortOrder = 'DESC', title, owner } = req.query;
+    const blogs = await Blog.getAll(page, parseInt(limit), sortField, sortOrder, { title, owner });
     const totalBlogs = await Blog.getBlogsCount({ filters });
     const totalPages = Math.ceil(totalBlogs / limit);
     res.json({ blogs, totalPages, totalBlogs });
@@ -30,8 +30,8 @@ exports.createBlog = async (req, res) => {
 };
 
 exports.editBlog = async (req, res) => {
-    const { title, description } = req.body;
-    await Blog.edit(req.params.id, title, description);
+    const { title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug } = req.body;
+    await Blog.edit(req.params.id, title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug);
     const UserId = req.user.id;
     await Notification.createNotification(UserId, `Your Blog "${title}" has been updated.`);
     // Notify followers

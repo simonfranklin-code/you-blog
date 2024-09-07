@@ -11,7 +11,7 @@ const fs = require('fs');
 exports.getBlogPostsPage = async (req, res) => {
     const usersLookup = await User.findAll();
     const blogsLookup = await Blog.getAll(1, 1000, 'BlogId', 'ASC', {})
-    res.render('admin/blogPosts', { users: usersLookup, blogs: blogsLookup });
+    res.render('admin/blogPosts', { users: usersLookup, blogs: blogsLookup, title: 'Blog Post Manager' });
 };
 
 exports.getBlogPosts = async (req, res) => {
@@ -38,8 +38,8 @@ exports.createBlogPost = async (req, res) => {
 };
 
 exports.editBlogPost = async (req, res) => {
-    const { title, slug, blogId, author, userId, content } = req.body;
-    await BlogPost.edit(req.params.id, title, slug, blogId, author, userId, content);
+    const { title, slug, blogId, author, userId, content, metaDescription, metaKeywords, footer } = req.body;
+    await BlogPost.edit(req.params.id, title, slug, blogId, author, userId, content, metaDescription, metaKeywords, footer);
     await Notification.createNotification(userId, `Your Blog post "${title}" has been updated.`);
     // Notify followers
     const followers = await Follower.getFollowers(userId);
@@ -81,7 +81,7 @@ exports.uploadHtmlFile = (req, res) => {
             console.error(err);
             return res.status(500).json({ success: false, message: 'Html file upload failed.' });
         }
-        const url = 'http://localhost:8080/uploads/' + htmlFile.name;
+        const url = 'http://localhost:10000/uploads/' + htmlFile.name;
         const slug = htmlFile.name.replace('.html', '').toLowerCase();
         
         const htmlSections = HtmlSection.importHtml(url, req.body.blogPostId, slug);

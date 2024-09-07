@@ -1,6 +1,8 @@
 
 exports.getBlogPost = (req, res) => {
     const db = require('../models/db');
+    const blog = require('../models/Blog')
+    const blogPost = require('../models/BlogPost');
     var commentsSection = "";
     var htmlReplies = "";
     String.prototype.format = function (commentId, htmlReplies) {
@@ -25,15 +27,21 @@ exports.getBlogPost = (req, res) => {
             return typeof html == 'undefined' ? match : html;
         });
     };
-    function getBlogPostSections() {
+    async function getBlogPostSections() {
 
         const url = req.baseUrl;
-        const slug = url.split('/')[2];
+        const blogSlug = url.split('/')[2];
+        const slug = url.split('/')[4];
+        
         //const slug = req.params.slug;
         console.log('Connected to the SQLite database.');
-
-
-
+        const blogPostFromSlug = await blogPost.getBlogPostBySlug(slug);
+        const blogPostTitle = blogPostFromSlug.Title;
+        const metaDescription = blogPostFromSlug.MetaDescription;
+        const metaKeywords = blogPostFromSlug.MetaKeywords;
+        const blogFromSlug = await blog.getBlogBySlug(blogSlug);
+        const footer = blogPostFromSlug.Footer;
+        const beforeEndOfBodyScript = blogPostFromSlug.beforeEndOfBodyScript;
         let sql = 'SELECT * FROM HtmlSections WHERE Slug = ? ORDER BY ViewIndex ASC';
 
         db.all(sql, [slug.toLowerCase()], (err, rows) => {
@@ -119,7 +127,15 @@ exports.getBlogPost = (req, res) => {
                        </div>
                    </div>
                 </section>`
-            res.render('blog-post', { htmlContent: htmlContent });
+
+            res.render('blog-post', {
+                htmlContent: htmlContent,
+                title: blogPostTitle,
+                blog: blogFromSlug,
+                metaDescription: metaDescription,
+                metaKeywords: metaKeywords,
+                footer: footer
+            });
         });
 
 
