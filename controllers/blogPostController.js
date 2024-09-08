@@ -53,7 +53,7 @@ exports.getBlogPost = (req, res) => {
                 htmlContent += row["Html"];
             });
             htmlContent +=
-                `<section data-bs-version="5.1" class="features16 cid-reviews" id="Reviews">
+                `<section data-bs-version="5.1" class="features16 cid-ubyiHIN383" id="Reviews">
                     <div class="container-fluid">
                         <div class="content-wrapper">
                             <div class="row align-items-center">
@@ -132,6 +132,7 @@ exports.getBlogPost = (req, res) => {
                 htmlContent: htmlContent,
                 title: blogPostTitle,
                 blog: blogFromSlug,
+                blogPost: blogPostFromSlug,
                 metaDescription: metaDescription,
                 metaKeywords: metaKeywords,
                 footer: footer
