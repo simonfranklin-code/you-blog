@@ -9,9 +9,9 @@ block headStylesBlock
 block headScriptsBlock
    != blog.HeadScriptsBlock
 block metaDescriptionBlock
-   != metaDescription
+   meta(name='description' content=`${metaDescription}`)
 block metaKewordsBlock
-   != metaKewords
+   meta(name='keywords' content=`${metaKeywords}`)
 block content
     != htmlContent
 block footer
