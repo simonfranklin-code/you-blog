@@ -1,6 +1,7 @@
 $(function () {
     var socket = io();
-
+    var msgCount = 0;
+    var cls = 'end';
     // On form submission, send the message
     $('#chat-form').submit(function (e) {
         e.preventDefault(); // Prevent form from submitting the traditional way
@@ -12,8 +13,14 @@ $(function () {
 
     // Listen for incoming messages
     socket.on('chatMessage', function (data) {
+        msgCount += 1;
+        if (msgCount % 2 === 0) {
+            cls = '';
+        } else {
+            cls = 'end';
+        }
         var msgTemplate = `
-            <div class="direct-chat-msg end">
+            <div class="direct-chat-msg ${cls}">
                 <div class="direct-chat-infos clearfix">
                     <span class="direct-chat-name float-end">${data.username}</span>
                     <span class="direct-chat-timestamp float-start">${new Date()}</span>
