@@ -13,6 +13,7 @@ db.serialize(() => {
 	        "dateCreated"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	        "dateModified"	DATETIME NOT NULL,
 	        "role"	TEXT DEFAULT 'user',
+	        "avatar"	TEXT,
 	        PRIMARY KEY("id" AUTOINCREMENT)
         );
     `);
@@ -87,6 +88,17 @@ class User {
         });
     }
 
+    static getUserWithAvatar(id) {
+        return new Promise((resolve, reject) => {
+            db.get('SELECT * FROM UserWithAvatar WHERE id = ?', [id], (err, row) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(row);
+            });
+        });
+    }
+
     static async comparePassword(plainPassword, hashedPassword) {
         return bcrypt.compare(plainPassword, hashedPassword);
     }
@@ -117,11 +129,11 @@ class User {
         });
     }
 
-    static update(id, { username, email, role }) {
+    static update(id, { username, email, role, avatar }) {
         return new Promise((resolve, reject) => {
             db.run(
-                'UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?',
-                [username, email, role, id],
+                'UPDATE users SET username = ?, email = ?, role = ?, avatar = ? WHERE id = ?',
+                [username, email, role, avatar, id],
                 function (err) {
                     if (err) {
                         return reject(err);

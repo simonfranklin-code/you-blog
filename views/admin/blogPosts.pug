@@ -19,18 +19,18 @@ block content
           // end::Row
         // end::Container
     // end::App Content Header
-    .row.g-4
+    .row.g-4#items
       // begin::Col
-      .col-12.connectedSortable
-        .callout.callout-info
+      .col-md-12.connectedSortable#callout
+        .callout.callout-info#callout-info
           | For detailed documentation of Form visit 
           a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
             | Bootstrap Form
       // end::Col
       // begin::Col
-      .col-md-12.connectedSortable
+      .col-md-12.connectedSortable#filterBlogPosts
         // begin::Filters
-        .card.card-primary.card-outline.mb-4
+        .card.card-primary.card-outline.mb-4#filter-blog-posts
           // begin::Header
           .card-header
             .card-title Filter Blog Posts
@@ -75,10 +75,10 @@ block content
             // end::Footer
           // end::Form
         // end::Quick Example
-    .row.g-4
-      .col-md-12.connectedSortable
+    
+      .col-md-12.connectedSortable#blogPostslist
         // begin::Blog Post Table
-        .card.card-secondry.card-outline.mb-4
+        .card.card-secondry.card-outline.mb-4#blog-posts-list
           // begin::Header
           .card-header
             .card-title Blog Posts list
@@ -364,17 +364,47 @@ block content
     script(src='https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js' integrity='sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ=' crossorigin='anonymous')
     // sortablejs
     script.
-      const connectedSortables =
-      document.querySelectorAll(".connectedSortable");
-      connectedSortables.forEach((connectedSortable) => {
-      let sortable = new Sortable(connectedSortable, {
-      group: "shared",
-      handle: ".card-header",
-      });
-      });
-      const cardHeaders = document.querySelectorAll(
-      ".connectedSortable .card-header",
-      );
-      cardHeaders.forEach((cardHeader) => {
-      cardHeader.style.cursor = "move";
-      });
+        let sortables = [];
+
+        // Initialize Sortable for each connectedSortable group
+        const connectedSortables = document.querySelectorAll(".connectedSortable");
+        connectedSortables.forEach((connectedSortable, index) => {
+            const sortable = new Sortable(connectedSortable, {
+                group: "shared",
+                handle: ".card-header",
+                animation: 150,
+                onEnd: function () {
+                    saveOrder(index, connectedSortable.id);  // Save order of this specific sortable
+                }
+            });
+            sortables.push(sortable);  // Store each sortable instance
+        });
+
+        // Add cursor style to card headers
+        const cardHeaders = document.querySelectorAll(".connectedSortable .card-header");
+        cardHeaders.forEach((cardHeader) => {
+            cardHeader.style.cursor = "move";
+        });
+
+        // Save order for a specific sortable instance
+        function saveOrder(sortableIndex, containerId) {
+            const sortableInstance = sortables[sortableIndex];
+            const itemOrder = sortableInstance.toArray();
+            localStorage.setItem(`itemOrder_${containerId}`, JSON.stringify(itemOrder));  // Save order per sortable using container ID
+        }
+
+        // Load the saved order on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            connectedSortables.forEach((connectedSortable) => {
+                const storedOrder = localStorage.getItem(`itemOrder_${connectedSortable.id}`);
+                if (storedOrder) {
+                    const order = JSON.parse(storedOrder);
+                    order.forEach(function (id) {
+                        const item = document.getElementById(id);
+                        if (item) {
+                            connectedSortable.appendChild(item);  // Append items in the stored order
+                        }
+                    });
+                }
+            });
+        });

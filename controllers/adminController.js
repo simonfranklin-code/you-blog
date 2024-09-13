@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const ActivityLog = require('../models/ActivityLog');
-
+const userWithAvatar = require('../models/User');
 exports.dashboard = (req, res) => {
 
     const html = `
@@ -331,7 +331,7 @@ exports.dashboard = (req, res) => {
     
     `
 
-    res.render('admin/dashboard', { htmlContent: html });
+    res.render('admin/dashboard', { user: req.user });
 };
 
 exports.getAdminProfile = async (req, res) => {
@@ -355,13 +355,15 @@ exports.getAdminProfile = async (req, res) => {
     }
 };
 
+
+
 exports.getAllUsers = async (req, res) => {
     try {
         const { page, limit, sortField, sortOrder, ...filters } = req.query;
         const sort = { field: sortField, order: sortOrder };
         const users = await User.findAll({ page, limit, filters, sort });
         const count = await User.countAll({ filters });
-
+        
         res.json({ success: true, users, total: count });
     } catch (err) {
         console.error('Error fetching users:', err);
@@ -417,9 +419,9 @@ exports.getUsersJSON = async (req, res) => {
 
 exports.editUser = async (req, res) => {
     const { id } = req.params;
-    const { username, email, role } = req.body;
+    const { username, email, role, avatar } = req.body;
     try {
-        await User.update(id, { username, email, role });
+        await User.update(id, { username, email, role, avatar });
         await ActivityLog.log(req.user.id, 'Edited user', 'User', id, `Updated username to ${username}, email to ${email}, role to ${role}`);
         req.flash('success_msg', 'User updated successfully');
         res.redirect('/admin/users');
@@ -430,9 +432,9 @@ exports.editUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const { id, username, email, role } = req.body;
+    const { id, username, email, role, avatar } = req.body;
     try {
-        await User.update(id, { username, email, role });
+        await User.update(id, { username, email, role, avatar });
         const user = await User.findById(id);
         res.json({ success: true, user });
     } catch (err) {

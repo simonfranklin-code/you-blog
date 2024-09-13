@@ -81,6 +81,7 @@ block content
                   th(scope="col" class="sortable") Username
                   th(scope="col" class="sortable") Email
                   th(scope="col" class="sortable") Role
+                  th(scope="col") Aavatar
                   th(scope="col") Actions
                 tbody#userTableBody
           // begin::Footer
@@ -116,6 +117,9 @@ block content
                   option(value="user") User
                   option(value="admin") Admin
               .mb-3
+                label.form-label(for="avatar") Avatar
+                input.form-control(type="text" id="avatar" name="avatar")
+              .mb-3
                 button.btn.btn-primary(type="submit") Save changes
           .modal-footer
             button.btn.btn-secondary(data-bs-dismiss="modal") Close
@@ -140,11 +144,12 @@ block content
               if (data.success) {
                 data.users.forEach(user => {
                   $userTableBody.append(`
-                    <tr data-id="${user.id}">
+                    <tr data-id="${user.id}" data-avatar="${user.avatar}">
                       <td>${user.id}</td>
                       <td>${user.username}</td>
                       <td>${user.email}</td>
                       <td>${user.role}</td>
+                      <td><img class="direct-chat-img" src="${user.avatar}" alt="user image" draggable="false"></td>
                       <td>
                         <i class="fas fa-edit mbr-iconfont mbr-iconfont-btn editUserButton"></i>
                         <i class="far fa-times-circle mbr-iconfont mbr-iconfont-btn deleteUserButton"></i>
@@ -213,11 +218,13 @@ block content
           const username = $row.find('td').eq(1).text();
           const email = $row.find('td').eq(2).text();
           const role = $row.find('td').eq(3).text();
-          
+          const avatar = $row.data('avatar');
+
           $('#userId').val(userId);
           $('#username').val(username);
           $('#email').val(email);
           $('#role').val(role);
+          $('#avatar').val(avatar);
           $userModal.show();
         });
 

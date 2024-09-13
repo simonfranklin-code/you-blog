@@ -15,6 +15,8 @@ db.serialize(() => {
 	        "Owner"	TEXT,
 	        "UserId"	INTEGER,
 	        "Slug"	TEXT,
+	        "BlogHeader"	TEXT,
+	        "BlogFooter"	TEXT,
 	        CONSTRAINT "PK_Blogs" PRIMARY KEY("BlogId" AUTOINCREMENT),
 	        FOREIGN KEY("UserId") REFERENCES "users"("id") ON UPDATE CASCADE
         );
@@ -33,10 +35,10 @@ class Blog {
         });
     }
 
-    static edit(blogId, title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug) {
+    static edit(blogId, title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug, blogHeader, blogFooter) {
         return new Promise((resolve, reject) => {
-            db.run(`UPDATE Blogs SET Title = ?, Description = ?, Owner = ?, UserId = ?, BaseDirectory = ?, MetaKeywords = ?, MetaDescription = ?, HeadStylesBlock = ?, HeadScriptsBlock = ?, Slug = ? WHERE BlogId = ?`,
-                [title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug, blogId], function (err) {
+            db.run(`UPDATE Blogs SET Title = ?, Description = ?, Owner = ?, UserId = ?, BaseDirectory = ?, MetaKeywords = ?, MetaDescription = ?, HeadStylesBlock = ?, HeadScriptsBlock = ?, Slug = ?, BlogHeader = ?, BlogFooter = ? WHERE BlogId = ?`,
+                [title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug, blogHeader, blogFooter, blogId], function (err) {
                     if (err) return reject(err);
                     resolve(this.changes);
                 });

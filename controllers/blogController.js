@@ -30,8 +30,8 @@ exports.createBlog = async (req, res) => {
 };
 
 exports.editBlog = async (req, res) => {
-    const { title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug } = req.body;
-    await Blog.edit(req.params.id, title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug);
+    const { title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug, blogHeader, blogFooter } = req.body;
+    await Blog.edit(req.params.id, title, description, owner, userId, baseDirectory, metaKeywords, metaDescription, headStylesBlock, headScriptsBlock, slug, blogHeader, blogFooter);
     const UserId = req.user.id;
     await Notification.createNotification(UserId, `Your Blog "${title}" has been updated.`);
     // Notify followers

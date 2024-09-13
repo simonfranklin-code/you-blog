@@ -66,7 +66,7 @@ class BlogPost {
 
     static getBlogPostBySlug(slug) {
         return new Promise((resolve, reject) => {
-            db.get(`SELECT * FROM BlogPosts WHERE Slug = ?`, [slug], (err, row) => {
+            db.get(`SELECT * FROM BlogPosts WHERE Slug LIKE ?`, [slug], (err, row) => {
                 if (err) return reject(err);
                 resolve(row);
             });

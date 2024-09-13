@@ -12,7 +12,9 @@ block metaDescriptionBlock
    meta(name='description' content=`${metaDescription}`)
 block metaKewordsBlock
    meta(name='keywords' content=`${metaKeywords}`)
+block blogHeader
+    != blog.BlogHeader
 block content
     != htmlContent
 block footer
-    != footer
+    != blog.BlogFooter

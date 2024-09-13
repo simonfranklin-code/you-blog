@@ -1,54 +1,166 @@
 extends layout
-
+block titleBlock
+  title #{title}
 block content
+    // begin::App Content Header
+    .app-content-header
+      // begin::Container
+      .container-fluid
+        // begin::Row
+        .row
+          .col-sm-6
+            h3.mb-0 #{title}
+          .col-sm-6
+            ol.breadcrumb.float-sm-end
+              li.breadcrumb-item
+                a(href='/admin/dashboard') Admin
+              li.breadcrumb-item.active(aria-current='page')
+                | #{title}
+          // end::Row
+        // end::Container
+    // end::App Content Header
+    .row.g-4#items
+      // begin::Col
+      .col-md-12.connectedSortable#callout
+        .callout.callout-info#callout-info
+          | For detailed documentation of Form visit 
+          a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
+            | Bootstrap Form
+      // end::Col
+      // begin::Col
+      .col-md-12.connectedSortable#filterBlogPosts
+        // begin::Filters
+        .card.card-primary.card-outline.mb-4#filter-blog-posts
+          // begin::Header
+          .card-header
+            .card-title Filter Blogs
+          // end::Header
+          // begin::Form
+          form#filterForm
+            // begin::Body
+            .card-body
+              .row.g-4
+                .col-6
+                  .form-group.mb-3 
+                    label(for='title') Title
+                    input.form-control.form-control-sm#titleFilter(name='title' placeholder='Title')
+                  .form-group.mb-3 
+                    label(for='owner') Owner
+                    input.form-control.form-control-sm#OwnerFilter(name='owner' placeholder='Owner')
+                .col-6 
+                  .form-group.mb-3
+                    label(for='blogIdFilter') Blog ID
+                    select#blogIdFilter.form-control.form-control-sm(type='text' name='blogId')
+                  .form-group.mb-3
+                    label(for='limit') Blogs limit
+                    select.form-control.form-control-sm(name='limit' id='limit' required)
+                      option(value=1) 1
+                      option(value=2) 2
+                      option(value=3) 3
+                      option(value=5) 5
+                      option(value=10) 10
+                      option(value=15) 15
+                      option(value=20) 20
+                      option(value=25) 25
+                
+            // end::Body
+            // begin::Footer
+            .card-footer
+              button.btn.btn-primary.btn-sm#filterButton Filter
+              |  &nbsp;
+              button.btn.btn-primary.btn-sm.mb-3#newBlogBtn New Blog  
+            // end::Footer
+          // end::Form
+        // end::Quick Example
+    
+      .col-md-12.connectedSortable#blogPostslist
+        // begin::Blog Post Table
+        .card.card-secondry.card-outline.mb-4#blog-posts-list
+          // begin::Header
+          .card-header
+            .card-title Blog Posts list
+          // end::Header
+          // begin::Body
+          .card-body
+            .table-responsive
+                table.table.rounded#blogsTable(width='100%')
+                  thead
+                    tr
+                      th
+                        a(href='#' class='sort' data-field='BlogId') Id
+                      th
+                        a(href='#' class='sort' data-field='Title') Title
+                      th Description
+                      th
+                        a(href='#' class='sort' data-field='Owner') Owner
+                      th
+                        a(href='#' class='sort' data-field='DateCreated') Date Created
+                      th Actions
+                  tbody#blogsTableBody
+                
+          // end::Body
+          // begin::Footer
+          .card-footer.pb-0
+            nav
+              ul.pagination
+                li.page-item
+                  button.page-link(type='button' id='previousPage') Previous
+                li.page-item
+                  span.page-link(id='currentPage') 1
+                li.page-item
+                  button.page-link(type='button' id='nextPage') Next
 
-    h1 Blogs
-    button.btn.btn-primary.btn-sm.mb-3#newBlogBtn New Blog
-    form#filterForm
-      .form-row
-        .form-group.col-md-2
-          label(for='title') Title
-          input.form-control.form-control-sm#titleFilter(name='title' placeholder='Title')
-        .form-group.col-md-2
-          label(for='owner') Owner
-          input.form-control.form-control-sm#OwnerFilter(name='owner' placeholder='Owner')
-        .form-group-col-md-3
-          label(for='limit') Blogs limit
-          select.form-control.form-control-sm(name='limit' id='limit' required)
-            option(value=1) 1
-            option(value=2) 2
-            option(value=3) 3
-            option(value=5) 5
-            option(value=10) 10
-            option(value=15) 15
-            option(value=20) 20
-            option(value=25) 25
-        .form-group.col-md-1.align-self-end
-          button.btn.btn-primary.btn-sm#filterButton Filter
-    table.table.rounded#blogsTable(width='100%')
-      thead
-        tr
-          th
-            a(href='#' class='sort' data-field='BlogId') Id
-          th
-            a(href='#' class='sort' data-field='Title') Title
-          th Description
-          th
-            a(href='#' class='sort' data-field='Owner') Owner
-          th
-            a(href='#' class='sort' data-field='DateCreated') Date Created
-          th Actions
-      tbody#blogsTableBody
-    nav
-      ul.pagination
-        li.page-item
-          button.page-link(type='button' id='previousPage') Previous
-        li.page-item
-          span.page-link(id='currentPage') 1
-        li.page-item
-          button.page-link(type='button' id='nextPage') Next
+            .alert.alert-danger#logError(style='display: none;') Error fetching blogs
+          // end::Footer
+        // end::Blog Post Table
+    .alert.alert-danger#logError(style='display: none;') Error fetching blog posts
 
-    .alert.alert-danger#logError(style='display: none;') Error fetching blogs
+    //- button.btn.btn-primary.btn-sm.mb-3#newBlogBtn New Blog
+    //- form#filterForm
+    //-   .form-row
+    //-     .form-group.col-md-2
+    //-       label(for='title') Title
+    //-       input.form-control.form-control-sm#titleFilter(name='title' placeholder='Title')
+    //-     .form-group.col-md-2
+    //-       label(for='owner') Owner
+    //-       input.form-control.form-control-sm#OwnerFilter(name='owner' placeholder='Owner')
+    //-     .form-group-col-md-3
+    //-       label(for='limit') Blogs limit
+    //-       select.form-control.form-control-sm(name='limit' id='limit' required)
+    //-         option(value=1) 1
+    //-         option(value=2) 2
+    //-         option(value=3) 3
+    //-         option(value=5) 5
+    //-         option(value=10) 10
+    //-         option(value=15) 15
+    //-         option(value=20) 20
+    //-         option(value=25) 25
+    //-     .form-group.col-md-1.align-self-end
+    //-       button.btn.btn-primary.btn-sm#filterButton Filter
+    //- table.table.rounded#blogsTable(width='100%')
+    //-   thead
+    //-     tr
+    //-       th
+    //-         a(href='#' class='sort' data-field='BlogId') Id
+    //-       th
+    //-         a(href='#' class='sort' data-field='Title') Title
+    //-       th Description
+    //-       th
+    //-         a(href='#' class='sort' data-field='Owner') Owner
+    //-       th
+    //-         a(href='#' class='sort' data-field='DateCreated') Date Created
+    //-       th Actions
+    //-   tbody#blogsTableBody
+    //- nav
+    //-   ul.pagination
+    //-     li.page-item
+    //-       button.page-link(type='button' id='previousPage') Previous
+    //-     li.page-item
+    //-       span.page-link(id='currentPage') 1
+    //-     li.page-item
+    //-       button.page-link(type='button' id='nextPage') Next
+
+    //- .alert.alert-danger#logError(style='display: none;') Error fetching blogs
 
 
     // Modals
@@ -58,8 +170,7 @@ block content
         .modal-content
           .modal-header
             h5.modal-title#blogModalTitle New Blog
-            button.close(type='button' data-dismiss='modal' aria-label='Close')
-              span(aria-hidden='true') &times;
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
           .modal-body
             form#blogForm
               input(type='hidden' id='blogId' name='id')
@@ -93,9 +204,16 @@ block content
               .form-group
                 label(for='blogSlug') Slug
                 input.form-control.form-control-sm#blogSlug(name='slug' required)
-              button.btn.btn-primary.btn-sm(type='submit') Save
+              .form-group
+                label(for='blogHeader') Blog Header
+                textarea.form-control.form-control-sm#blogHeader(name='blogHeader' rows='8')
+              .form-group
+                label(for='blogFooter') Blog Footer
+                textarea.form-control.form-control-sm#blogFooter(name='blogFooter' rows='8')              
           .modal-footer
             button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+            | &nbsp;
+            button.btn.btn-primary.btn-sm#saveBtn(type='button') Save
 
     // Delete Confirmation Modal
     .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog')
@@ -136,7 +254,7 @@ block content
                               <td>${blog.BlogId}</td>
                               <td>${blog.Title}</td>
                   
-                              <td class="admin-blogs-ellipsis" data-toggle="popover" title="Blog description details" data-content="${blog.Description}">${blog.Description}</td>
+                              <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="Blog description details" data-bs-content="${blog.Description}">${blog.Description}</td>
                               <td>${blog.Owner}</td>
                               <td>${new Date(blog.DateCreated).toLocaleString()}</td>
                               <td>
@@ -165,11 +283,19 @@ block content
 
         }
 
+        $('#saveBtn').on('click', function (e) {
+            e.preventDefault();
+            $('#blogForm').submit();
+            fetchBlogs();
+        });
+
         $('#filterButton').on('click', function (e) {
             e.preventDefault();
             currentPage = 1;
             fetchBlogs();
         });
+
+        
 
         $('#previousPage').on('click', function (e) {
             e.preventDefault();
@@ -214,6 +340,8 @@ block content
                 $('#blogHeadStylesBlock').val(blog.HeadStylesBlock);
                 $('#blogHeadScriptsBlock').val(blog.HeadScriptsBlock);
                 $('#blogSlug').val(blog.Slug);
+                $('#blogHeader').val(blog.BlogHeader);
+                $('#blogFooter').val(blog.BlogFooter);
                 
                 $('#blogModal').modal('show');
             });

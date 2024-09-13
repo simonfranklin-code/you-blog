@@ -156,7 +156,7 @@ head
                 li.nav-item.dropdown.user-menu
                   a.nav-link.dropdown-toggle(href='#', data-bs-toggle='dropdown')
                 
-                    img.user-image.rounded-circle.shadow(src='/dist/assets/img/user2-160x160.jpg', alt='User Image')
+                    img.user-image.rounded-circle.shadow(src=`${user.avatar}`, alt='User Image')
                     |  
                     span.d-none.d-md-inline #{user.username}
                   ul.dropdown-menu.dropdown-menu-lg.dropdown-menu-end
@@ -164,7 +164,7 @@ head
                     li.user-header.text-bg-primary.text-center
                       .row
                         .col-12.pt-2
-                          img.rounded-circle.shadow(style='margin: 0 auto;text-align: center; height:64px;width: 64px;' src='/dist/assets/img/user2-160x160.jpg', alt='User Image')
+                          img.rounded-circle.shadow(style='margin: 0 auto;text-align: center; height:64px;width: 64px;' src=`${user.avatar}`, alt='User Image')
                       .row  
                         .col-12.pt-2
                           p
@@ -210,8 +210,25 @@ head
               button.btn.btn-secondary.btn-sm(type='button' data-bs-dismiss='modal') Cancel
               button.btn.btn-danger.btn-sm#confirmDeleteBtn(type='button') Delete 
 
+      #offcanvasExample.offcanvas.offcanvas-start(tabindex='-1' aria-labelledby='offcanvasExampleLabel')
+        .offcanvas-header
+          h5#offcanvasExampleLabel.offcanvas-title Offcanvas
+          button.btn-close(type='button' data-bs-dismiss='offcanvas' aria-label='Close')
+        .offcanvas-body
+          div
+            | Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+            .dropdown.mt-3
+              button.btn.btn-secondary.dropdown-toggle(type='button' data-bs-toggle='dropdown')
+                | Dropdown button
+              ul.dropdown-menu
+                li
+                  a.dropdown-item(href='#') Action
+                li
+                  a.dropdown-item(href='#') Another action
+                li
+                  a.dropdown-item(href='#') Something else here
     
-
+  block blogHeader
   block content
   block footer
 

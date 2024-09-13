@@ -31,7 +31,7 @@ exports.getBlogPost = (req, res) => {
 
         const url = req.baseUrl;
         const blogSlug = url.split('/')[2];
-        const slug = url.split('/')[4];
+        const slug = url.split('/')[3];
         
         //const slug = req.params.slug;
         console.log('Connected to the SQLite database.');
