@@ -26,7 +26,7 @@ $(function () {
                     <span class="direct-chat-timestamp float-start">${new Date()}</span>
                 </div>
                 <!-- /.direct-chat-infos-->
-                <img class="direct-chat-img" src="/dist/assets/img/user3-128x128.jpg" alt="message user image" draggable="false">
+                <img class="direct-chat-img" src="${data.avatar}" alt="message user image" draggable="false">
                 <!-- /.direct-chat-img-->
                 <div class="direct-chat-text">
                     ${data.message}
@@ -38,7 +38,8 @@ $(function () {
     });
 
     // Send a private message
-    $('#sendBtn').on('click', function () {
+    $('#send_btn').on('click', function (e) {
+        e.preventDefault();
         var targetUserId = $('#targetUserId').val();
         var message = $('#message').val();
 
@@ -53,8 +54,27 @@ $(function () {
 
     // Listen for incoming private messages
     socket.on('privateMessage', function (data) {
-        $('#messages').append(
-            $('<li>').text(`From ${data.from}: ${data.message}`)
-        );
+        msgCount += 1;
+        if (msgCount % 2 === 0) {
+            cls = '';
+        } else {
+            cls = 'end';
+        }
+        var msgTemplate = `
+            <div class="direct-chat-msg ${cls}">
+                <div class="direct-chat-infos clearfix">
+                    <span class="direct-chat-name float-end">${data.from}</span>
+                    <span class="direct-chat-timestamp float-start">${new Date()}</span>
+                </div>
+                <!-- /.direct-chat-infos-->
+                <img class="direct-chat-img" src="${data.userWithAvatar.Avatar}" alt="message user image" draggable="false">
+                <!-- /.direct-chat-img-->
+                <div class="direct-chat-text">
+                    ${data.message}
+                </div>
+                <!-- /.direct-chat-text-->
+            </div>
+        `
+        $('#messages').append(msgTemplate); // Append the message to the chat
     });
 });

@@ -1,8 +1,8 @@
 $(window).on("load", function () {
     var url = window.location.pathname;
-    var slug = url.split("/")['2'].toLowerCase();
+    var slug = url.split("/")['3'].toLowerCase();
     var comments = {};
-    if (url.includes('blog-post')) {
+    if (url.includes('/blog/')) {
         $.ajax({
             url: '/comments/getComments/' + slug,
             header: {
@@ -52,7 +52,7 @@ $(window).on("load", function () {
 function populateReviews() {
     // Fetch and display reviews
     var url = window.location.pathname;
-    var slug = url.split("/")['2'].toLowerCase();
+    var slug = url.split("/")['3'].toLowerCase();
     $('#reviewsContainer').html('')
     $.ajax({
         url: '/reviews/reviewsBySlug/' + slug,
@@ -299,7 +299,7 @@ function createReviewHtml(review) {
 
 function getReplies(comment) {
     var url = window.location.pathname;
-    var slug = url.split("/")['2'].toLowerCase();
+    var slug = url.split("/")['3'].toLowerCase();
     var replies = {};
     $.ajax({
         url: '/comments/getReplies/' + slug + '/' + comment.CommentId,
@@ -593,3 +593,4 @@ function unlikeComment(commentId) {
         }
     });
 }
+
