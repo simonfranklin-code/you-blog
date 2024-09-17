@@ -59,9 +59,11 @@ exports.getBlogPost = (req, res) => {
                             <div class="row align-items-center">
                                 <div class="col-12 col-lg">
                                     <div class="text-wrapper">
-                                        <h6 class="card-title mbr-fonts-style display-5">Reviews:</h6>
+
+                                        <h6 class="text-white mbr-fonts-style display-5">Reviews:</h6>
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">Add Review</button>
                                         <div id="reviewsContainer"></div>
+
                                             <!-- Bootstrap 5 Modal for adding/editing a review -->
                                             <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
@@ -72,27 +74,27 @@ exports.getBlogPost = (req, res) => {
                                                         </div>
                                                         <div class="modal-body">
                                                             <form id="reviewForm">
-                                                                <input type="hidden" name="Slug" value="${slug}">
+                                                                <input type="hidden" name="Slug" id="Slug" value="${slug}">
                                                                 <input type="hidden" name="BlogPostReviewId" id="BlogPostReviewId">
                                                                 <div class="form-group mb-3">
                                                                     <label for="Rating">Rating</label>
-                                                                    <input type="number" class="form-control" name="Rating" min="1" max="5" required>
+                                                                    <input type="number" class="form-control form-control-sm" id="Rating" name="Rating" min="1" max="5" required>
                                                                 </div>
                                                                 <div class="form-group mb-3">
                                                                     <label for="Author">Name</label>
-                                                                    <input type="text" class="form-control" name="Author" required>
+                                                                    <input type="text" class="form-control form-control-sm" id="Author" name="Author" required>
                                                                 </div>
                                                                 <div class="form-group mb-3">
                                                                     <label for="AuthorEmailAddress">Email</label>
-                                                                    <input type="email" class="form-control" name="AuthorEmailAddress" required>
+                                                                    <input type="email" class="form-control form-control-sm" id="AuthorEmailAddress" name="AuthorEmailAddress" required>
                                                                 </div>
                                                                 <div class="form-group mb-3">
                                                                     <label for="ReviewText">Review</label>
-                                                                    <textarea class="form-control" name="ReviewText" required></textarea>
+                                                                    <textarea class="form-control form-control-sm" id="ReviewText" name="ReviewText" required></textarea>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                    <button type="submit" class="btn btn-primary">Save Review</button>
+                                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary btn-sm">Save Review</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -116,8 +118,8 @@ exports.getBlogPost = (req, res) => {
                            <div class="row align-items-center">
                                <div class="col-12 col-lg">
                                    <div class="text-wrapper">
-                                        <h6 class="card-title mbr-fonts-style display-5 mb-5"><strong>Comments</strong></h6>
-                                        <p class="mbr-text mbr-fonts-style mb-4 display-7 animate__animated animate__delay-1s animate__fadeInUp">We value your feedback and insights on this post. Feel free to share your thoughts and suggestions in the comments section below.<br></p>
+                                        <h6 class="text-white mbr-fonts-style display-5 mb-5"><strong>Comments</strong></h6>
+                                        <p class="mbr-text mbr-fonts-style mb-4 display-7">We value your feedback and insights on this post. Feel free to share your thoughts and suggestions in the comments section below.<br></p>
                                         <div id="comments"></div>
                                        
 

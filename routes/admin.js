@@ -20,6 +20,7 @@ router.get('/users/json', ensureAuthenticated, ensurePermission('manage_users'),
 router.post('/users/edit/:id', ensureAuthenticated, ensurePermission('manage_users'), adminController.editUser);
 router.post('/users/delete/:id', ensureAuthenticated, ensurePermission('manage_users'), adminController.deleteUser);
 
+
 router.get('/users', ensureAuthenticated, ensureRole('admin'), (req, res) => {
     res.render('admin/admin-users', { title: 'Manage Users' });
 });

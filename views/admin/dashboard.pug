@@ -17,6 +17,28 @@ block content
           // end::Row
         // end::Container
     // end::App Content Header
+    .row.g-4.mb-4
+      // begin::Col
+      .col-md-12.connectedSortable#callout
+        .callout.callout-info#callout-info
+          if success_msg
+            p(style="color: green") #{success_msg}
+          if error_msg
+            p(style="color: red") #{error_msg}
+          if error
+            p(style="color: red") #{error}
+          if user
+            p
+              | Logged in as #{user.username}
+              | 
+              a(href='/users/logout') Logout
+          else
+            p
+              a(href='/users/login') Login
+              | 
+              a(href='/users/register') Register
+
+      // end::Col
     // begin::Row
     .row
       // Start col

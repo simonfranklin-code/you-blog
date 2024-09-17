@@ -33,7 +33,7 @@ exports.getReplies = (req, res) => {
                 var htmlReplies = "";
 
                 replies.forEach((reply) => {
-                    htmlReplies += '<h6 class="card-title mbr-fonts-style display-7 mt-1" id="commentTitle' + reply.CommentId + '"><strong>Reply from ' + reply.Author + ':</strong></h6>' +
+                    htmlReplies += '<h6 class="text-white mbr-fonts-style display-7 mt-1" id="commentTitle' + reply.CommentId + '"><strong>Reply from ' + reply.Author + ':</strong></h6>' +
                         '<p class="mbr-text mbr-fonts-style mb-4 display-7">' + reply.Text + '</p>' +
                         '<p class="mbr-text mbr-fonts-style mb-1 display-7">Date Created: ' + reply.DateCreated + '</p>' +
                         '<p class="mbr-text mbr-fonts-style mb-1 display-7">Website: <a href="' + reply.Url + '" target="_new">' + reply.Url + '</a></p>' +
@@ -41,7 +41,7 @@ exports.getReplies = (req, res) => {
 
                         '<a href = "javascript:OpenModal(\'modalReplyForm' + reply.CommentId + '\')" class="btn btn-primary btn-sm" >Reply</a >' +
 
-                        '<h6 class="card-title mbr-fonts-style display-7"><strong>Replies:</strong></h6>' +
+                        '<h6 class="text-white mbr-fonts-style display-7"><strong>Replies:</strong></h6>' +
 
                         '<hr style="border-top: 1px solid #fafafa;" />' +
                         '<div class="row ml-5"> ' +

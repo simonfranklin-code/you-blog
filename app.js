@@ -1,6 +1,6 @@
 
 require('dotenv').config();
-var debug = require('debug')('my express app');
+var debug = require('debug')('you blog express app');
 var express = require('express');
 const fileUpload = require('express-fileupload');
 const path = require('path');
@@ -24,6 +24,7 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const reviewLikeRoutes = require('./routes/reviewLikeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const followerRoutes = require('./routes/followerRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const http = require('http');
 const socketIo = require('socket.io');
 const passportSocketIo = require('passport.socketio');
@@ -151,6 +152,8 @@ app.use('/reviews', reviewRoutes);
 app.use('/reviewLikes', reviewLikeRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/followers', followerRoutes);
+app.use('/chat', chatRoutes);
+
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

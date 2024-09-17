@@ -70,7 +70,7 @@ exports.getComments = async (req, res) => {
             
             commentsSection += `
                 <div id="commentContainer${comment.CommentId}">
-                    <h6 class="card-title mbr-fonts-style display-7 mt-1" id="commentTitle${comment.CommentId}">
+                    <h6 class="text-white mbr-fonts-style display-7 mt-1" id="commentTitle${comment.CommentId}">
                         <strong>Comment from ${comment.Author}:</strong>
                     </h6>
                     <p class="mbr-text mbr-fonts-style mb-4 display-7">${comment.Text}</p>
@@ -82,7 +82,7 @@ exports.getComments = async (req, res) => {
                     <a href="javascript:likeComment(${comment.CommentId})"><i class="fas fa-thumbs-up"></i></a>
                     <a href="javascript:unlikeComment(${comment.CommentId})"><i class="fas fa-thumbs-down"></i></a>
                     <span class="mbr-text mbr-fonts-style display-7" id="commentLikesCount${comment.CommentId}">0</span>
-                    <h6 class="card-title mbr-fonts-style display-7"><strong>Replies:</strong></h6>
+                    <h6 class="text-white mbr-fonts-style display-7"><strong>Replies:</strong></h6>
                     <hr style="border-top: 1px solid #fafafa;">
                     <div class="row ml-5">
                         <div class="col-md-12">
