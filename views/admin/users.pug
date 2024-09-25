@@ -73,7 +73,7 @@ block content
         const sortField = document.getElementById('sortField').value;
         const sortOrder = document.getElementById('sortOrder').value;
 
-        fetch(`/admin/users/json?page=${page}&username=${username}&email=${email}&role=${role}&keyword=${keyword}&sortField=${sortField}&sortOrder=${sortOrder}`)
+        fetch(`/admin/users/json?page=${page}&username=${username}&email=${email}&role=${role}&keyword=${keyword}&sortField=${sortField}&sortOrder=${sortOrder}&limit=${limit}`)
           .then(response => response.json())
           .then(data => {
             const usersTableBody = document.getElementById('usersTableBody');

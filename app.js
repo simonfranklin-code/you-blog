@@ -128,6 +128,12 @@ app.use(fileUpload({
     createParentPath: true
 }));
 
+// Make io accessible via req.io in all routes and controllers
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 app.set('trust proxy', 1); // Trust first proxy
 
 // View engine setup

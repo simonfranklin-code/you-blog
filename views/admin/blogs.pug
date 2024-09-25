@@ -41,17 +41,17 @@ block content
             .card-body
               .row.g-4
                 .col-6
-                  .form-group.mb-3 
+                  .form-group.mb-2 
                     label(for='title') Title
                     input.form-control.form-control-sm#titleFilter(name='title' placeholder='Title')
-                  .form-group.mb-3 
+                  .form-group.mb-2 
                     label(for='owner') Owner
                     input.form-control.form-control-sm#OwnerFilter(name='owner' placeholder='Owner')
                 .col-6 
-                  .form-group.mb-3
+                  .form-group.mb-2
                     label(for='blogIdFilter') Blog ID
                     select#blogIdFilter.form-control.form-control-sm(type='text' name='blogId')
-                  .form-group.mb-3
+                  .form-group.mb-2
                     label(for='limit') Blogs limit
                     select.form-control.form-control-sm(name='limit' id='limit' required)
                       option(value=1) 1
@@ -68,7 +68,7 @@ block content
             .card-footer
               button.btn.btn-primary.btn-sm#filterButton Filter
               |  &nbsp;
-              button.btn.btn-primary.btn-sm.mb-3#newBlogBtn New Blog  
+              button.btn.btn-primary.btn-sm#newBlogBtn New Blog  
             // end::Footer
           // end::Form
         // end::Quick Example
@@ -83,7 +83,7 @@ block content
           // begin::Body
           .card-body
             .table-responsive
-                table.table.rounded#blogsTable(width='100%')
+                table.table.table-hover.table-striped.rounded
                   thead
                     tr
                       th
@@ -100,20 +100,18 @@ block content
                 
           // end::Body
           // begin::Footer
-          .card-footer.pb-0
+          .card-footer
             nav
               ul.pagination
                 li.page-item
-                  button.page-link(type='button' id='previousPage') Previous
+                  button.btn.btn-sm.page-link(type='button' id='previousPage') Previous
                 li.page-item
                   span.page-link(id='currentPage') 1
                 li.page-item
-                  button.page-link(type='button' id='nextPage') Next
-
-            .alert.alert-danger#logError(style='display: none;') Error fetching blogs
+                  button.btn.btn-sm.page-link(type='button' id='nextPage') Next
           // end::Footer
         // end::Blog Post Table
-    .alert.alert-danger#logError(style='display: none;') Error fetching blog posts
+
 
     //- button.btn.btn-primary.btn-sm.mb-3#newBlogBtn New Blog
     //- form#filterForm

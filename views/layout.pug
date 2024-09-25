@@ -169,7 +169,7 @@ head
                         .col-12.pt-2
                           p
                             | #{user.username} - Web Developer
-                            small Member since #{user.dateCreated}
+                            | small Member since #{user.dateCreated}
                     // end::User Image
                     // begin::Menu Body
                     li.user-body
@@ -216,7 +216,23 @@ head
           button.btn-close.btn-close-white(type='button' data-bs-dismiss='offcanvas' aria-label='Close')
         .offcanvas-body
           iframe.chatFrame(frameborder='0' src='/chat')
-          //- include ./admin/direct-chat.pug
+          .toast-container.position-static
+            .toast(role='alert' aria-live='assertive' aria-atomic='true')
+              .toast-header
+                img.rounded.me-2(src='...' alt='...')
+                strong.me-auto Bootstrap
+                small.text-muted just now
+                button.btn-close(type='button' data-bs-dismiss='toast' aria-label='Close')
+              .toast-body
+                  | See? Just like this.
+          .toast(role='alert' aria-live='assertive' aria-atomic='true')
+            .toast-header
+              img.rounded.me-2(src='...' alt='...')
+              strong.me-auto Bootstrap
+              small.text-muted 2 seconds ago
+              button.btn-close(type='button' data-bs-dismiss='toast' aria-label='Close')
+            .toast-body
+                | Heads up, toasts will stack automatically
             
   block blogHeader
   block content

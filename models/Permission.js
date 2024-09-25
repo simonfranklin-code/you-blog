@@ -79,7 +79,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.all(query, params, (err, rows) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve(rows);
@@ -104,7 +104,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.all(query, params, (err, rows) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve(rows);
@@ -124,7 +124,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.get(query, params, (err, row) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve(row.count);
@@ -136,7 +136,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.all('SELECT DISTINCT role FROM role_permissions', (err, rows) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve(rows.map(row => row.role));
@@ -148,7 +148,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.run('INSERT INTO permissions (name) VALUES (?)', [name], function (err) {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve({ id: this.lastID, name });
@@ -160,7 +160,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.get('SELECT id FROM permissions WHERE name = ?', [permissionName], (err, row) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 if (!row) {
@@ -168,7 +168,7 @@ class Permission {
                 }
                 db.run('INSERT OR IGNORE INTO role_permissions (role, permission_id) VALUES (?, ?)', [role, row.id], function (err) {
                     if (err) {
-                        this.logError(err);
+                        Permission.logError(err);
                         return reject(err);
                     }
                     resolve({ id: this.lastID, role, permission_id: row.id });
@@ -186,7 +186,7 @@ class Permission {
                 [role, permissionName],
                 (err, row) => {
                     if (err) {
-                        this.logError(err);
+                        Permission.logError(err);
                         return reject(err);
                     }
                     resolve(!!row);
@@ -218,7 +218,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.all(query, params, (err, rows) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve(rows);
@@ -244,7 +244,7 @@ class Permission {
         return new Promise((resolve, reject) => {
             db.get(query, params, (err, row) => {
                 if (err) {
-                    this.logError(err);
+                    Permission.logError(err);
                     return reject(err);
                 }
                 resolve(row.count);

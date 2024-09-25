@@ -16,65 +16,69 @@ block content
                li.breadcrumb-item
                  a(href='/admin/dashboard') Admin
                li.breadcrumb-item.active(aria-current='page')
-                 | Users
+                 | #{title}
     .row.g-4
       // begin::Col
       .col-12.connectedSortable
         .callout.callout-info
-          | For detailed documentation of Form visit 
-          a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
-          | Bootstrap Form
+          | Use the form to filter Users. To edit users use the Actions column
       // end::Col
       // begin::Col  
       .col-md-12.connectedSortable
-        .card.card-success.card-outline.mb-4
+        .card.card-success.card-outline.mb-2
           // begin::Header
           .card-header
             .card-title 
-              | Filter HTML Sections
+              | Filter Users
           // end::Header
           // begin::Body
           .card-body
+            .row.g-4
+              .col-md-6
 
-            .container.mt-5
-              //- button.btn.btn-primary.btn-sm.addUser.mb-3(data-toggle="modal", data-target="#userModal") Add User
-              .row.mb-3
-                .col-md-3
+                .form-group
+                  label(for='usernameFilter') User Name
                   input.form-control.form-control-sm#usernameFilter(placeholder="Filter by Username")
-                .col-md-3
+                .form-group
+                  label(for='emailFilter') Email
                   input.form-control.form-control-sm#emailFilter(placeholder="Filter by Email")
-                .col-md-3
-                  select.form-select.form-control-sm#roleFilter
-                    option(value="") All Roles
-                    option(value="user") User
-                    option(value="admin") Admin
-                    option(value="editor") Editor
-                .col-md-3
-                  button.btn.btn-secondary.btn-sm#applyFilters Apply Filters
+
+              .col-md-6
+                .form-group
+                   label(for='permissionsSortField') Sort By
+                   select.form-select.form-control-sm#roleFilter
+                     option(value="") All Roles
+                     option(value="user") User
+                     option(value="admin") Admin
+                     option(value="editor") Editor
+                .form-group
+                  label(for='limit') Set users limit
+                  select.form-control.form-control-sm(name='limit' id='limit' required)
+                    option(value=1) 1
+                    option(value=2) 2
+                    option(value=3) 3
+                    option(value=5 selected='true') 5
+                    option(value=10) 10
+                    option(value=15) 15
+                    option(value=20) 20
+                    option(value=25) 25
+                  
           // begin::Footer
-          .card-footer
-           
-            nav
-              ul.pagination
-                li.page-item
-                  button.page-link(type='button' id='previousPage') Previous
-                li.page-item
-                  span.page-link(id='currentPage') 1
-                li.page-item
-                  button.page-link(type='button' id='nextPage') Next
+          .card-footer 
+            button.btn.btn-secondary.btn-sm#applyFilters Apply Filters
           // end::Footer
       // begin::Col  
       .col-md-12.connectedSortable
-        .card.card-success.card-outline.mb-4
+        .card.card-success.card-outline.mb-2
           // begin::Header
           .card-header
-            .card-title Filter HTML Sections
+            .card-title Users Table
           // end::Header
         
           // begin::Body
           .card-body
 
-            table.table
+            table.table.table-striped.table-hover
               thead
                 tr
                   th(scope="col" class="sortable") ID
@@ -132,9 +136,11 @@ block content
         const $userTableBody = $('#userTableBody');
         const $pagination = $('#pagination');
         let currentPage = 1;
-        const limit = 10;
+        let limit = 5;
+        $('#manage-users').addClass('menu-open');
+        $('#manage-users-link').addClass('active');
 
-        function loadUsers(page = 1, filters = {}, sort = {}) {
+        function loadUsers(page = 1, filters = {}, sort = {}, limit) {
           $.ajax({
             url: '/admin/api/users',
             method: 'GET',
@@ -192,14 +198,14 @@ block content
           const formData = $userForm.serialize();
           const url = $userForm.find('#userId').val() ? '/admin/api/users' : '/admin/api/users';
           const method = $userForm.find('#userId').val() ? 'PUT' : 'POST';
-          
+          limit = $('#limit').val();
           $.ajax({
             url: url,
             method: method,
             data: formData,
             success: function(data) {
               if (data.success) {
-                loadUsers(currentPage, getFilters());
+                loadUsers(currentPage, getFilters(), {}, limit);
                 $userModal.hide();
                 $userForm[0].reset();
               } else {
@@ -237,7 +243,7 @@ block content
               data: { id: userId },
               success: function(data) {
                 if (data.success) {
-                  loadUsers(currentPage, getFilters());
+                  loadUsers(currentPage, getFilters(), {}, limit);
                 } else {
                   alert('Failed to delete user');
                 }
@@ -253,20 +259,23 @@ block content
           e.preventDefault();
           const page = $(this).text();
           currentPage = parseInt(page);
-          loadUsers(currentPage, getFilters());
+          limit = $('#limit').val();
+          loadUsers(currentPage, getFilters(), {}, limit);
         });
 
         $('#applyFilters').on('click', function() {
-          loadUsers(currentPage, getFilters());
+          limit = $('#limit').val();
+          loadUsers(currentPage, getFilters(), {}, limit);
         });
 
         $('.sortable').on('click', function() {
           const $header = $(this);
           const sortField = $header.text().toLowerCase();
           const sortOrder = $header.data('sortOrder') === 'asc' ? 'desc' : 'asc';
+          limit = $('#limit').val();
           $header.data('sortOrder', sortOrder);
 
-          loadUsers(currentPage, getFilters(), { field: sortField, order: sortOrder });
+          loadUsers(currentPage, getFilters(), { field: sortField, order: sortOrder }, limit);
         });
       });
 
@@ -287,3 +296,5 @@ block content
       cardHeaders.forEach((cardHeader) => {
       cardHeader.style.cursor = "move";
       });
+
+      

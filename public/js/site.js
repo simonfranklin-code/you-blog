@@ -108,7 +108,8 @@ $(document).ready(function () {
         $('#reviewForm [name="Rating"]').val(review.find('.review-rating').text());
         $('#reviewForm [name="Author"]').val(review.find('.review-author').text());
         $('#reviewForm [name="AuthorEmailAddress"]').val(review.find('.review-email').text());
-        $('#reviewForm [name="ReviewText"]').val(review.find('.review-text').text());
+        $('#reviewForm [name="ReviewText"]').val($(`#review-text${reviewId}`).html());
+
         $('#reviewModal').modal('show');
     });
 
@@ -284,7 +285,7 @@ function createReviewHtml(review) {
         <div class="review" data-review-id="${review.BlogPostReviewId}" id="ReviewId${review.BlogPostReviewId}">
             <p class="mbr-text mbr-fonts-style display-7 mb-2"><strong class="review-author">${review.Author}</strong> (Rating: <span class="review-rating">${review.Rating}</span>)</p>
             <p class="mbr-text mbr-fonts-style display-7 review-email mb-2">${review.AuthorEmailAddress}</p>
-            <p class="mbr-text mbr-fonts-style display-7 mb-2 review-text">${review.ReviewText}</p>
+            <div id="review-text${review.BlogPostReviewId}">${review.ReviewText}</div>
             <p class="mbr-text mbr-fonts-style display-7 mb-2">${review.ReviewDate}</p>
             <p class="mbr-text mbr-fonts-style display-7 mb-2">Likes: <span class="review-likes-count">${review.likesCount}</span></p>
             <button class="btn btn-primary btn-sm editReviewButton" data-review-id="${review.BlogPostReviewId}">Edit</button>

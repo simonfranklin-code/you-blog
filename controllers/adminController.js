@@ -394,7 +394,7 @@ exports.getUsers = async (req, res) => {
 
 exports.getUsersJSON = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    const limit = 5;
+    const limit = 2;
     const filters = {
         username: req.query.username || null,
         email: req.query.email || null,
@@ -467,7 +467,7 @@ exports.deleteUser = async (req, res) => {
 //};
 
 exports.getActivityLogs = (req, res) => {
-    res.render('admin/activity-logs', { filters: {}, sort: {} });
+    res.render('admin/activity-logs', { filters: {}, sort: {}, title: 'View Activity Logs' });
 };
 
 exports.getActivityLogsJSON = async (req, res) => {

@@ -3,7 +3,7 @@ const Notification = require('../models/Notification');
 const Follower = require('../models/Follower');
 
 exports.getBlogsPage = (req, res) => {
-    res.render('admin/blogs');
+    res.render('admin/blogs', {title: 'Manage Blogs'});
 };
 
 exports.getBlogs = async (req, res) => {

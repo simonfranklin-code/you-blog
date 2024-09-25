@@ -51,6 +51,27 @@ $(function () {
     function sendPrivateMessage(toSocketId, message) {
         socket.emit('privateMessage', { to: toSocketId, message: message });
     }
+    // Listen for flash messages
+    socket.on('flash', function (data) {
+        // Create a Bootstrap Toast dynamically
+        const toastHTML = `
+                <div class="toast show ${!data.isError ? 'text-bg-primary': 'text-bg-danger'}  border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">Notification</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${data.message}
+                    </div>
+                </div>
+            `;
+       $('#toast-container').html(toastHTML);
+
+        // Initialize and show the toast
+        const toastEl = document.querySelector('.toast');
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    });
 
     // Listen for incoming private messages
     socket.on('privateMessage', function (data) {
