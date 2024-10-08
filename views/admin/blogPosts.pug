@@ -163,7 +163,7 @@ block content
               .row.mt-2
                 .col-md-6
                   button.btn.btn-primary.btn-sm(type='submit') Save
-                .col-md-6
+                  | &nbsp;
                   button.btn.btn-primary.btn-sm.ml-3#importHtmlFile(type='buttom') Import
                   
           .modal-footer
@@ -187,7 +187,7 @@ block content
       $(document).ready(function () {
         let currentPage = 1;
         let sortField = 'CreatedAt';
-        let sortOrder = 'DESC';
+        let sortOrder = 'ASC';
 
         function fetchBlogPosts() {
             const title = $('#titleFilter').val();
@@ -211,7 +211,7 @@ block content
                         tbody.append(`
                             <tr>
                               <td>${blogPost.BlogPostId}</td>
-                              <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="BlogPost Title details" data-bs-container="body" data-bs-content="${blogPost.Title}">${blogPost.Title}</td>
+                              <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="BlogPost Title details" data-bs-container="body" data-bs-content="${blogPost.Title}"><a href="/blog/${data.blogSlug.Slug}/${blogPost.Slug}">${blogPost.Title}</a></td>
                               <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="BlogPost Slug details" data-bs-container="body" data-bs-content="${blogPost.Slug}">${blogPost.Slug}</td>
                               <td>${blogPost.Author}</td>
                               <td>${blogPost.CreatedAt}</td>

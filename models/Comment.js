@@ -1,30 +1,31 @@
-
 const db = require('../models/db');
 const fs = require('fs');
 const hljs = require('highlight.js');
 const { v4: uuidv4 } = require('uuid');
 const sanitizeHtml = require('sanitize-html');
 
-db.serialize(() => {
+db.serialize(() => { 
     db.run(`
-            CREATE TABLE IF NOT EXISTS "Comments" (
-	            "CommentId"	INTEGER NOT NULL,
-	            "Text"	TEXT NOT NULL,
-	            "DateCreated"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	            "DateModified"	DATETIME NOT NULL,
-	            "BlogPostId"	INTEGER NOT NULL,
-	            "BlogPostSlug"	TEXT,
-	            "ParentCommentId"	INTEGER,
-	            "Author"	TEXT,
-	            "Url"	TEXT,
-	            "Email"	TEXT,
-	            "DisplayName"	TEXT,
-	            "IsOpen"	INTEGER,
-                "UserId"	INTEGER,
-	            CONSTRAINT "PK_Comments" PRIMARY KEY("CommentId" AUTOINCREMENT),
-                CONSTRAINT "FK_Comments_users_id" FOREIGN KEY("UserId") REFERENCES "users"("id") ON DELETE CASCADE,
-	            CONSTRAINT "FK_Comments_BlogPosts_BlogPostId" FOREIGN KEY("BlogPostId") REFERENCES "BlogPosts"("BlogPostId") ON DELETE CASCADE
-            );
+        CREATE TABLE IF NOT EXISTS "Comments" (
+	        "CommentId"	INTEGER NOT NULL,
+	        "Text"	TEXT NOT NULL,
+	        "DateCreated"	DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	        "DateModified"	DATETIME NOT NULL,
+	        "BlogPostId"	INTEGER NOT NULL,
+	        "BlogPostSlug"	TEXT,
+	        "ParentCommentId"	INTEGER,
+	        "Author"	TEXT,
+	        "Url"	TEXT,
+	        "Email"	TEXT,
+	        "DisplayName"	TEXT,
+	        "IsOpen"	INTEGER,
+	        "UserId"	INTEGER,
+	        "Title"	TEXT,
+	        "CodeDescription"	TEXT,
+	        CONSTRAINT "PK_Comments" PRIMARY KEY("CommentId" AUTOINCREMENT),
+	        CONSTRAINT "FK_Comments_BlogPosts_BlogPostId" FOREIGN KEY("BlogPostId") REFERENCES "BlogPosts"("BlogPostId") ON DELETE CASCADE,
+	        CONSTRAINT "FK_Comments_users_id" FOREIGN KEY("UserId") REFERENCES "users"("id") ON DELETE CASCADE
+        );
     `);
 });
 
@@ -94,7 +95,7 @@ class Comment {
             let selectedCode = '';
             let textFieldValue = '';
             const guid = uuidv4();
-            const { Email, Author, DisplayName, Url, Text, DateModified, BlogPostSlug, ParentCommentId, IsOpen, BlogPostId, CodeLanguage, UserId } = commentData;
+            const { Title, CodeDescription, Email, Author, DisplayName, Url, Text, DateModified, BlogPostSlug, ParentCommentId, IsOpen, BlogPostId, CodeLanguage, UserId } = commentData;
             if (CodeLanguage !== 'undefined') {
                 if (CodeLanguage === "javascript") {
                     selectedCode = 'JavaScript code:';
@@ -149,8 +150,8 @@ class Comment {
             db.serialize(() => {
                 db.run('BEGIN TRANSACTION');
 
-                db.run("INSERT INTO Comments (Email, Author, DisplayName, Url, Text, DateModified, BlogPostSlug, ParentCommentId, IsOpen, BlogPostId, UserId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [Email, Author, DisplayName, Url, textFieldValue, DateModified, BlogPostSlug, ParentCommentId, IsOpen, BlogPostId, UserId], function (err) {
+                db.run("INSERT INTO Comments (Email, Author, DisplayName, Url, Text, DateModified, BlogPostSlug, ParentCommentId, IsOpen, BlogPostId, UserId, Title, CodeDescription) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [Email, Author, DisplayName, Url, textFieldValue, DateModified, BlogPostSlug, ParentCommentId, IsOpen, BlogPostId, UserId, Title, CodeDescription], function (err) {
                         if (err) {
                             db.run('ROLLBACK');
                             this.logError(err);
@@ -181,6 +182,24 @@ class Comment {
             });
         });
     }
+
+    static async updateComment({ title, codeDescription, email, author, displayName, url, text, blogPostId, userId, commentId }) {
+        return new Promise((resolve, reject) => {
+            const sql = `
+                UPDATE Comments 
+                SET Title = ?, CodeDescription = ?, Email = ?, Author = ?, DisplayName = ?, Url = ?, Text = ?, BlogPostId = ?, UserId = ?
+                WHERE CommentId = ?
+            `;
+            db.run(sql, [title, codeDescription, email, author, displayName, url, text, blogPostId, userId, commentId], function (err) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
+    }
+
+
 }
 
 module.exports = Comment;

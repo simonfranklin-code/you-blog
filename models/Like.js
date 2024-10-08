@@ -38,6 +38,18 @@ class Like {
         });
     }
 
+    static getLikesCountForUser(userId) {
+        return new Promise((resolve, reject) => {
+            db.get('SELECT COUNT(*) as count FROM comment_likes WHERE user_id = ?', [userId], (err, row) => {
+                if (err) {
+                    Like.logError(err);
+                    return reject(err);
+                }
+                resolve(row.count);
+            });
+        });
+    }
+
     static getCommentLikesCount(commentId) {
         return new Promise((resolve, reject) => {
             db.get('SELECT COUNT(*) as count FROM comment_likes WHERE comment_id = ?', [commentId], (err, row) => {

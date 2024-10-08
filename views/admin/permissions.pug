@@ -190,17 +190,17 @@ block content
                   .card-body
                     .row.g-4
                       .col-md-12
-                        .form-group
+                        .form-group.mb-2
                           label(for='rolePermissionsSortField') Sort By
                           select.form-control(name='rolePermissionsSortField' id='rolePermissionsSortField')
                             option(value='role') Role
                             option(value='permission') Permission
-                        .form-group
+                        .form-group.mb-2
                           label(for='rolePermissionsSortOrder') Order
                           select.form-control.form-control-sm(name='rolePermissionsSortOrder' id='rolePermissionsSortOrder')
                             option(value='ASC') Ascending
                             option(value='DESC') Descending
-                        .form-group
+                        .form-group.mb-2
                           label(for='rolePermissionsLimit') Role permissions limit
                           select.form-control.form-control-sm(name='rolePermissionsLimit' id='rolePermissionsLimit' required)
                             option(value=5) 5
@@ -221,7 +221,7 @@ block content
                 .card.card-success.card-outline
                   // begin::Header
                   .card-header
-                    .card-title Permissions list
+                    .card-title Permissions Table
                   // end::Header
                   // begin::Body
                   .card-body

@@ -72,6 +72,15 @@ class Blog {
         });
     }
 
+    static getBlogSlugByBlogId(id) {
+        return new Promise((resolve, reject) => {
+            db.get(`SELECT * FROM Blogs WHERE BlogId = ?`, [id], (err, row) => {
+                if (err) return reject(err);
+                resolve(row);
+            });
+        });
+    }
+
     static getAll(page = 1, limit = 5, sortField = 'DateCreated', sortOrder = 'DESC', filters = {}) {
         const offset = (page - 1) * limit;
         let whereClause = '';

@@ -120,7 +120,7 @@ exports.getBlogPost = (req, res) => {
                                    <div class="text-wrapper">
                                         <h6 class="text-white mbr-fonts-style display-5 mb-5"><strong>Comments</strong></h6>
                                         <p class="mbr-text mbr-fonts-style mb-4 display-7">We value your feedback and insights on this post. Feel free to share your thoughts and suggestions in the comments section below.<br></p>
-                                        <div id="comments"></div>
+                                        <div id="commentsArea"></div>
                                        
 
                                    </div>

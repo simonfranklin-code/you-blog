@@ -79,3 +79,14 @@ exports.getCommentLikesCount = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
+
+exports.getCommentLikesCountForUser = async (req, res) => {
+    const { userId } = req.body;
+    try {
+        const likesCount = await Like.getLikesCountForUser(userId);
+        res.json({ likesCount: likesCount });
+    } catch (err) {
+        Like.logError(err);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};

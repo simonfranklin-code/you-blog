@@ -11,17 +11,19 @@ const fs = require('fs');
 exports.getBlogPostsPage = async (req, res) => {
     const usersLookup = await User.findAll();
     const blogsLookup = await Blog.getAll(1, 1000, 'BlogId', 'ASC', {})
+    
     res.render('admin/blogPosts', { users: usersLookup, blogs: blogsLookup, title: 'Blog Post Manager' });
 };
 
 exports.getBlogPosts = async (req, res) => {
     const filters = {};
     const { page = 1, limit = 10, sortField = 'Id', sortOrder = 'ASC', title, author, blogId } = req.query;
+    const blogSlug = await Blog.getBlogSlugByBlogId(blogId);
     const blogs = await Blog.getAll(1, 1000, 'BlogId', 'DESC', {})
     const blogPosts = await BlogPost.getAll(page, parseInt(limit), sortField, sortOrder, { title, author, blogId });
     const totalBlogPosts = await BlogPost.getBlogPostsCount({ title });
     const totalPages = Math.ceil(totalBlogPosts / limit);
-    res.json({ blogs, blogPosts, totalPages, totalBlogPosts });
+    res.json({ blogs, blogPosts, totalPages, totalBlogPosts, blogSlug });
 };
 
 exports.createBlogPost = async (req, res) => {
@@ -81,7 +83,7 @@ exports.uploadHtmlFile = (req, res) => {
             console.error(err);
             return res.status(500).json({ success: false, message: 'Html file upload failed.' });
         }
-        const url = 'https://you-blog-ih2g.onrender.com/uploads/' + htmlFile.name;
+        const url = 'https://simonfranklin-code.github.io/' + htmlFile.name;
         const slug = htmlFile.name.replace('.html', '').toLowerCase();
         
         const htmlSections = HtmlSection.importHtml(url, req.body.blogPostId, slug);

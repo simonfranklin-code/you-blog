@@ -176,11 +176,11 @@ class HtmlSection {
             for (let i = 0; i < htmlSections.length; i++) {
 
                 const [htmlContent, anchor] = htmlSections[i]; // Destructure the outer HTML and id (anchor) from each sub-array
-                
+
                 await HtmlSection.add(htmlContent, blogPostId, i + 1, anchor, slug);
-                
+
                 try {
-                    
+
                     console.log(`HtmlSection ${slug} inserted successfully.`);
                 } catch (error) {
                     console.error(`Error updating HtmlSection ${i}`, error);
@@ -235,7 +235,16 @@ class HtmlSection {
             console.error('Error in main function', error);
         }
     }
-}
 
+    static logError(err) {
+        const errorMessage = `${new Date().toISOString()} - Error: ${err.message}\n`;
+        fs.appendFile('error.log', errorMessage, (fsErr) => {
+            if (fsErr) {
+                console.error('Failed to write to log file:', fsErr);
+            }
+        });
+    }
+
+}
 module.exports = HtmlSection;
 

@@ -23,9 +23,7 @@ block content
       // begin::Col
       .col-12.connectedSortable
         .callout.callout-info
-          | For detailed documentation of Form visit 
-          a.callout-link(href='https://getbootstrap.com/docs/5.3/forms/overview/' target='_blank' rel='noopener noreferrer')
-            | Bootstrap Form
+          | Use the filter form to filter Html Sections. To view and edit Html Sections use the Actions column.
       // end::Col
       // begin::Col
       .col-md-12.connectedSortable
@@ -41,14 +39,14 @@ block content
             .card-body
               .row.g-4
                 .col-6
-                  .form-group
+                  .form-group.mb-2
                     label(for='anchor') Anchor
                     input.form-control.form-control-sm#anchorFilter(name='anchor' placeholder='Anchor')
-                  .form-group
+                  .form-group.mb-2
                     label(for='blogPostId') Blog Post
                     select.form-control.form-control-sm#blogPostIdFilter( name='blogPostId')
                 .col-6 
-                  .form-group
+                  .form-group.mb-2
                     label(for='limit') Sections limit
                     select.form-control.form-control-sm(name='limit' id='limit' required)
                       option(value=1) 1
@@ -79,15 +77,15 @@ block content
     .row.g-4
       .col-md-12.connectedSortable
         // begin::Blog Post Table
-        .card.card-success.card-outline.mb-4
+        .card.card-success.card-outline.mb-2
           // begin::Header
           .card-header
-            .card-title Blog Posts list
+            .card-title Html Sections Table
           // end::Header
           // begin::Body
           .card-body
             .table-responsive
-              table.table#htmlSectionsTable
+              table.table.table-striped.table-hover#htmlSectionsTable(style='width: 1024px;')
                 thead
                   tr
                     th
@@ -116,7 +114,7 @@ block content
           // end::Footer
         // end::Blog Post Table
 
-    .alert.alert-danger#logError(style='display: none;') Error fetching HTML sections
+
 
     // Modals
     // Create/Edit Modal
@@ -130,19 +128,19 @@ block content
           .modal-body(id="editHtmlSectionBody")
             form#htmlSectionForm
               input(type='hidden' id='htmlSectionId' name='id')
-              .formgroup
+              .formgroup.mb-2
                 label(for='blogPostId') Blog Post
                 select.form-control.form-control-sm#addBlogPostId( name='blogPostId')
-              .form-group
+              .form-group.mb-2
                 label(for='htmlContent') HTML
                 textarea.form-control.form-control-sm#htmlContent(name='html' required)
-              .form-group
+              .form-group.mb-2
                 label(for='viewIndex') View Index
                 input.form-control.form-control-sm#viewIndex(name='viewIndex' type='number' required)
-              .form-group
+              .form-group.mb-2
                 label(for='anchor') Anchor
                 input.form-control.form-control-sm#anchor(name='anchor' required)
-              .form-group
+              .form-group.mb-2
                 label(for='slug') Slug
                 input.form-control.form-control-sm#slug(name='slug' required)
               
@@ -176,7 +174,7 @@ block content
               button.btn.btn-primary.btn-sm(type='button' id='font-color')
                 i.fas.fa-palette
               .btn-group.btn-group-sm(role='group')
-                button.btn.btn-primary.btn-sm.dropdown-toggle(type='button', data-toggle='dropdown', aria-expanded='false')
+                button.btn.btn-primary.btn-sm.dropdown-toggle(type='button', data-bs-toggle='dropdown', aria-expanded='false')
                   | Menu
                 .dropdown-menu
                   a.dropdown-item(href='#') Dropdown link
@@ -282,13 +280,13 @@ block content
             button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
           .modal-body
             form#findAndReplaceForm
-              .formgroup
+              .formgroup.mb-2
                 label(for="find-text") Find:
                 input.form-control.form-control-sm#find-text(type="text" name="find-text" required)
-              .formgroup
+              .formgroup.mb-2
                 label(for="replace-text") Replace with:
                 input.form-control.form-control-sm#replace-text(type="text" name="replace-text")
-              .formgroup
+              .formgroup.mb-2
                 label(for="replace-all") Replace all:
                 input#replace-all(type="checkbox" name="replace-all")
           
@@ -296,7 +294,7 @@ block content
             button.btn.btn-primary.btn-sm#buttonreplace(type="button") Replace
             |
             button.btn.btn-secondary.btn-sm(type='button', data-bs-dismiss='modal') Close
-    
+    #toast-container.position-fixed.top-0.end-0.p-3( style="z-index: 10000;")    
 
     script.
       $(document).ready(function () {
@@ -805,3 +803,5 @@ block content
       cardHeaders.forEach((cardHeader) => {
       cardHeader.style.cursor = "move";
       });
+
+    script(src='/js/chat.js').

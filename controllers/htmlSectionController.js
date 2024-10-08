@@ -38,12 +38,16 @@ exports.createHtmlSection = async (req, res) => {
 exports.editHtmlSection = async (req, res) => {
     const { html, viewIndex, anchor, slug } = req.body;
     await HtmlSection.edit(req.params.id, html, viewIndex, anchor, slug);
+    req.flash('success_msg', 'Successfully updated HtmlSection');
+    // Emit flash message to connected clients
+    const flashMessage = req.flash('success_msg');
+    req.io.emit('flash', { message: flashMessage, isError: false });
     await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been edited.`);
     // Notify followers
     const followers = await Follower.getFollowers(req.user.id);
     followers.forEach(async follower => {
         const username = await User.findById(req.user.id).username;
-        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
+        await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited.`);
     });
     res.json({ success: true });
 };
@@ -64,8 +68,17 @@ exports.updateHtmlSection = (req, res) => {
     db.run(`UPDATE HtmlSections SET Html = ?, DateUpdated = ? WHERE HtmlSectionID = ?`, [Html, new Date().toISOString(), HtmlSectionID], function (err) {
         if (err) {
             console.error(err);
+            HtmlSection.logError(err);
+            req.flash('error_msg', 'Error updating HtmlSection');
+            // Emit flash message to connected clients
+            const flashMessage = req.flash('error_msg');
+            req.io.emit('flash', { message: flashMessage, isError: true });
             res.json({ success: false });
         } else {
+            req.flash('success_msg', 'Successfully updated HtmlSection');
+            // Emit flash message to connected clients
+            const flashMessage = req.flash('success_msg');
+            req.io.emit('flash', { message: flashMessage, isError: false });
             res.json({ success: true });
         }
     });
@@ -77,8 +90,17 @@ exports.updateHtmlSectionByHtmlSectionId = (req, res) => {
     db.run(`UPDATE HtmlSections SET Html = ?, DateUpdated = ? WHERE HtmlSectionID = ? AND BlogPostId = ?`, [Html, new Date().toISOString(), HtmlSectionID, BlogPostId], function (err) {
         if (err) {
             console.error(err);
+            HtmlSection.logError(err);
+            req.flash('error_msg', 'Error updatng HtmlSection');
+            // Emit flash message to connected clients
+            const flashMessage = req.flash('error_msg');
+            req.io.emit('flash', { message: flashMessage, isError: true });
             res.json({ success: false });
         } else {
+            req.flash('success_msg', 'Successfully updated HtmlSection');
+            // Emit flash message to connected clients
+            const flashMessage = req.flash('success_msg');
+            req.io.emit('flash', { message: flashMessage, isError: false });
             res.json({ success: true });
         }
     });
@@ -112,7 +134,7 @@ exports.importHtml = async (req, res) => {
     try {
         const slug = req.params.slug;
         const blogPostId = parseInt(req.params.id);
-        const url = 'https://you-blog-ih2g.onrender.com/' + slug + '.html';
+        const url = 'https://simonfranklin-code.github.io/' + slug + '.html';
         const htmlSections = await HtmlSection.importHtml(url, blogPostId);
         if (htmlSections === null || htmlSections === 'undefined') {
             throw new Error('importHtml failed');
@@ -128,7 +150,7 @@ exports.importSingleHtmlSectionById = async (req, res) => {
     try {
         const slug = req.params.slug;
         const anchor = req.params.anchor;
-        const url = 'https://you-blog-ih2g.onrender.com/' + slug + '.html';
+        const url = 'https://simonfranklin-code.github.io/' + slug + '.html';
         const htmlSections = await HtmlSection.importSingleHtmlSection(url, anchor);
         if (htmlSections === null || htmlSections === 'undefined') {
             throw new Error('importSingleHtmlSectionById failed');

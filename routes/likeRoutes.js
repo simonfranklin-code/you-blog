@@ -12,4 +12,5 @@ router.post('/likeComment', ensureAuthenticated, ensurePermission('like_comments
 router.post('/unlikeComment', ensureAuthenticated, ensurePermission('unlike_comments'), likeController.unlikeComment);
 
 router.post('/getCommentLikesCount', ensureAuthenticated, ensurePermission('like_comments'), likeController.getCommentLikesCount);
+router.post('/getCommentLikesCountForUser', ensureAuthenticated, likeController.getCommentLikesCountForUser);
 module.exports = router;

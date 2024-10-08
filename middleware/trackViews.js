@@ -2,7 +2,7 @@ const BlogPostView = require('../models/BlogPostView');
 
 module.exports = async function trackViews(req, res, next) {
     const url = req.baseUrl;
-    const slug = url.split('/')[2];
+    const slug = url.split('/')[1];
     if (req.user && slug) {
         const  UserId = req.user.id;
         try {

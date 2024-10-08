@@ -1,4 +1,9 @@
 $(window).on("load", function () {
+    populateComments();
+
+});
+
+function populateComments() {
     var url = window.location.pathname;
     var slug = url.split("/")['3'].toLowerCase();
     var comments = {};
@@ -19,7 +24,7 @@ $(window).on("load", function () {
             },
             success: function (data) {
 
-                $('#comments').html(data.commentsSection);
+                $('#commentsArea').html(data.commentsSection);
                 comments = data.comments;
 
             },
@@ -46,8 +51,8 @@ $(window).on("load", function () {
             }
         });
     }
+}
 
-});
 
 function populateReviews() {
     // Fetch and display reviews
@@ -285,7 +290,7 @@ function createReviewHtml(review) {
         <div class="review" data-review-id="${review.BlogPostReviewId}" id="ReviewId${review.BlogPostReviewId}">
             <p class="mbr-text mbr-fonts-style display-7 mb-2"><strong class="review-author">${review.Author}</strong> (Rating: <span class="review-rating">${review.Rating}</span>)</p>
             <p class="mbr-text mbr-fonts-style display-7 review-email mb-2">${review.AuthorEmailAddress}</p>
-            <div id="review-text${review.BlogPostReviewId}">${review.ReviewText}</div>
+            <div id="review-text${review.BlogPostReviewId}"><p class="mbr-text mbr-fonts-style mb-4 display-7">${review.ReviewText}</p></div>
             <p class="mbr-text mbr-fonts-style display-7 mb-2">${review.ReviewDate}</p>
             <p class="mbr-text mbr-fonts-style display-7 mb-2">Likes: <span class="review-likes-count">${review.likesCount}</span></p>
             <button class="btn btn-primary btn-sm editReviewButton" data-review-id="${review.BlogPostReviewId}">Edit</button>
@@ -335,6 +340,8 @@ function getReplies(comment) {
 function submitReplyForm(CommentId, blogPostId) {
     try {
         var formData = {
+            Title: $("#Title" + CommentId).val(),
+            CodeDescription: $("#CodeDescription" + CommentId).val(),
             Email: $("#Email" + CommentId).val(),
             Author: $("#Author" + CommentId).val(),
             DisplayName: $("#DisplayName" + CommentId).val(),
@@ -360,7 +367,8 @@ function submitReplyForm(CommentId, blogPostId) {
                 var modal = bootstrap.Modal.getInstance(myModalEl)
                 modal.hide();
                 try {
-                    $('#' + data.comment.ParentCommentId).append(data.commentSection);
+                    populateComments();
+                    /*$('#' + data.comment.ParentCommentId).append(data.commentSection);*/
                     var url = window.location.pathname + '#commentTitle' + data.comment.CommentId;
                     window.location.href = url;
                 } catch (err) {
@@ -391,6 +399,8 @@ function submitCommentForm(CommentId) {
     try {
 
         var formData = {
+            Title: $("#Title0").val(),
+            CodeDescription: $("#CodeDescription0").val(),
             Email: $("#Email0").val(),
             Author: $("#Author0").val(),
             DisplayName: $("#DisplayName0").val(),
@@ -417,7 +427,8 @@ function submitCommentForm(CommentId) {
                 var myModalEl = $("#modalAddCommentForm0");
                 var modal = bootstrap.Modal.getInstance(myModalEl)
                 modal.hide();
-                $('#comments').append(data.commentSection);
+                populateComments();
+                //$('#commentsArea').append(data.commentSection);
                 var url = window.location.pathname + '#commentTitle' + data.comment.CommentId;
                 window.location.href = url;
             },
@@ -439,6 +450,123 @@ function submitCommentForm(CommentId) {
     } catch (e) {
         alert(JSON.stringify(e));
     }
+}
+
+function editCommentForm(commentId) {
+    // Make an AJAX call to fetch the existing comment data
+    $.ajax({
+        url: `/comments/getComment/${commentId}`,
+        method: 'GET',
+        success: function (data) {
+            // Populate the modal form with the fetched data
+            $("#editTitle" + commentId).val(data.Comment.Title);
+            $("#editCodeDescription" + commentId).val(data.Comment.CodeDescription);
+            $("#editEmail" + commentId).val(data.Comment.Email);
+            $("#editAuthor" + commentId).val(data.Comment.Author);
+            $("#editDisplayName" + commentId).val(data.Comment.DisplayName);
+            $("#editUrl" + commentId).val(data.Comment.Url);
+            $("#editText" + commentId).val(data.Comment.Text);
+            $("#editCodeLanguage" + commentId).val(data.Comment.CodeLanguage);
+            $("#editUserId" + commentId).val(data.Comment.UserId);
+            $("#editBlogPostId" + commentId).val(data.Comment.BlogPostId);
+            $("#editIsOpen" + commentId).val(data.Comment.IsOpen);
+
+            // Open the modal
+            $('#editModal' + commentId).modal('show');
+        },
+        error: function (err) {
+            alert('Error fetching comment data.');
+        }
+    });
+}
+
+function updateComment(commentId) {
+    const formData = {
+        Title: $("#editTitle" + commentId).val(),
+        CodeDescription: $("#editCodeDescription" + commentId).val(),
+        Email: $("#editEmail" + commentId).val(),
+        Author: $("#editAuthor" + commentId).val(),
+        DisplayName: $("#editDisplayName" + commentId).val(),
+        Url: $("#editUrl" + commentId).val(),
+        Text: $("#editText" + commentId).val(),
+        UserId: $("#editUserId" + commentId).val(),
+        BlogPostId: $("#editBlogPostId" + commentId).val(),
+        IsOpen: $("#editIsOpen" + commentId).val(),
+        CommentId: commentId
+    };
+
+    $.ajax({
+        url: '/comments/updateCommentReply',  // Update route
+        type: 'PUT',
+        data: formData,
+        success: function (data) {
+            // Update the comment on the page
+            populateComments();
+            //$('#commentsArea').append(data.commentSection);
+            $('#editModal' + data.comment.CommentId).modal('hide');  // Close modal
+        },
+        error: function (err) {
+            alert('Error updating comment.');
+        }
+    });
+}
+
+function editReplyForm(commentId) {
+    // Make an AJAX call to fetch the existing comment data
+    $.ajax({
+        url: `/comments/getComment/${commentId}`,
+        method: 'GET',
+        success: function (data) {
+            // Populate the modal form with the fetched data
+            $("#editReplyTitle" + commentId).val(data.Comment.Title);
+            $("#editReplyCodeDescription" + commentId).val(data.Comment.CodeDescription);
+            $("#editReplyEmail" + commentId).val(data.Comment.Email);
+            $("#editReplyAuthor" + commentId).val(data.Comment.Author);
+            $("#editReplyDisplayName" + commentId).val(data.Comment.DisplayName);
+            $("#editReplyUrl" + commentId).val(data.Comment.Url);
+            $("#editReplyText" + commentId).val(data.Comment.Text);
+            $("#editReplyCodeLanguage" + commentId).val(data.Comment.CodeLanguage);
+            $("#editReplyUserId" + commentId).val(data.Comment.UserId);
+            $("#editReplyBlogPostId" + commentId).val(data.Comment.BlogPostId);
+            $("#editReplyIsOpen" + commentId).val(data.Comment.IsOpen);
+
+            // Open the modal
+            $('#editReplyModal' + commentId).modal('show');
+        },
+        error: function (err) {
+            alert('Error fetching comment data.');
+        }
+    });
+}
+function updateEditReply(commentId) {
+    const formData = {
+        Title: $("#editReplyTitle" + commentId).val(),
+        CodeDescription: $("#editReplyCodeDescription" + commentId).val(),
+        Email: $("#editReplyEmail" + commentId).val(),
+        Author: $("#editReplyAuthor" + commentId).val(),
+        DisplayName: $("#editReplyDisplayName" + commentId).val(),
+        Url: $("#editReplyUrl" + commentId).val(),
+        Text: $("#editReplyText" + commentId).val(),
+        UserId: $("#editReplyUserId" + commentId).val(),
+        BlogPostId: $("#editReplyBlogPostId" + commentId).val(),
+        IsOpen: $("#editReplyIsOpen" + commentId).val(),
+        CommentId: commentId
+    };
+
+    $.ajax({
+        url: '/comments/updateCommentReply',  // Update route
+        type: 'PUT',
+        data: formData,
+        success: function (data) {
+            // Update the comment on the page
+            populateComments();
+            //$('#commentsArea').append(data.commentSection);
+            $('#editReplyModal' + data.comment.CommentId).modal('hide');  // Close modal
+        },
+        error: function (err) {
+            alert('Error updating comment.');
+        }
+    });
 }
 
 function deleteComment(commentId) {
