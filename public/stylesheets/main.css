@@ -94,7 +94,7 @@ form .btn {
 
 .card-header {
     background-color: #353535;
-    height: 80px;
+    height: auto;
     color: #fafafa;
 }
 .card-body {
@@ -393,7 +393,7 @@ code.hljs {
     }
 }
 
-.card {
+/*.card {
     --bs-card-spacer-y: 1rem;
     --bs-card-spacer-x: 1rem;
     --bs-card-title-spacer-y: 0.5rem;
@@ -425,10 +425,14 @@ code.hljs {
     border: var(--bs-card-border-width) solid var(--bs-card-border-color);
     border-radius: var(--bs-card-border-radius);
     box-shadow: var(--bs-card-box-shadow);
-}
+}*/
 
 .chatFrame{
     width:100%;
     height: 100%;
 }
 
+
+h6.card-title {
+    float: none;
+}
