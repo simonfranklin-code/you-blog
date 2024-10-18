@@ -1,6 +1,9 @@
 const User = require('../models/User');
 const ActivityLog = require('../models/ActivityLog');
 const userWithAvatar = require('../models/User');
+const FriendRequest = require('../models/FriendRequest');
+const Friend = require('../models/Friend');
+
 exports.dashboard = (req, res) => {
 
     const html = `
@@ -496,4 +499,9 @@ exports.getActivityLogsJSON = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+
+
+
+
 

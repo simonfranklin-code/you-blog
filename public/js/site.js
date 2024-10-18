@@ -263,7 +263,7 @@ $(document).ready(function () {
         $('#BlogPostReviewId').val('');
     });
 
-    
+
 });
 
 
@@ -299,7 +299,7 @@ function createReviewHtml(review) {
             <a class="unlikeReviewButton" data-review-id="${review.BlogPostReviewId}"><i class="fas fa-thumbs-down"></i></a>
             <hr style="border-top: 1px solid #fafafa"/>
           </div>
-    `; 
+    `;
 }
 
 
@@ -719,6 +719,53 @@ function unlikeComment(commentId) {
         }.bind(this),
         error: function (err) {
             alert('Error unliking comment: ' + JSON.stringify(err));
+        }
+    });
+}
+
+// Send friend request
+function sendFriendRequest(receiverId) {
+    $.ajax({
+        url: '/friends/sendFriendRequest',
+        type: 'POST',
+        data: { receiverId },
+        success: function (data) {
+            alert(data.message);
+        },
+        error: function (err) {
+            alert('Failed to send friend request');
+        }
+    });
+}
+
+// Accept friend request
+function acceptFriendRequest(senderId) {
+    $.ajax({
+        url: '/friends/acceptFriendRequest',
+        type: 'POST',
+        data: { senderId },
+        success: function (data) {
+            alert(data.message);
+            // Update UI to reflect the new friend status
+        },
+        error: function (err) {
+            alert('Failed to accept friend request');
+        }
+    });
+}
+
+// Reject friend request
+function rejectFriendRequest(senderId) {
+    $.ajax({
+        url: '/friends/rejectFriendRequest',
+        type: 'POST',
+        data: { senderId },
+        success: function (data) {
+            alert(data.message);
+            // Update UI to reflect the rejection
+        },
+        error: function (err) {
+            alert('Failed to reject friend request');
         }
     });
 }

@@ -88,6 +88,25 @@ class User {
         });
     }
 
+    static searchByUsernameOrEmail(searchTerm) {
+        return new Promise((resolve, reject) => {
+            const query = `
+        SELECT id, username, email, avatar 
+        FROM users 
+        WHERE username LIKE ? OR email LIKE ?
+        ORDER BY username ASC
+      `;
+            const params = [`%${searchTerm}%`, `%${searchTerm}%`];
+
+            db.all(query, params, (err, rows) => {
+                if (err) {
+                    return reject(new Error('Failed to search users'));
+                }
+                resolve(rows);
+            });
+        });
+    }
+
     static getUserWithAvatar(id) {
         return new Promise((resolve, reject) => {
             db.get('SELECT * FROM UserWithAvatar WHERE id = ?', [id], (err, row) => {

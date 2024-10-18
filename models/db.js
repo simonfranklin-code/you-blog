@@ -27,5 +27,26 @@ db.serialize(() => {
             FOREIGN KEY (UserId) REFERENCES users(id)
         );
     `);
+
+    db.run(`
+    CREATE TABLE IF NOT EXISTS friends (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      friend_id INTEGER NOT NULL,
+      FOREIGN KEY(user_id) REFERENCES users(id),
+      FOREIGN KEY(friend_id) REFERENCES users(id)
+    )
+  `);
+
+    db.run(`
+    CREATE TABLE IF NOT EXISTS friend_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      requester_id INTEGER NOT NULL,
+      receiver_id INTEGER NOT NULL,
+      status TEXT DEFAULT 'pending', -- 'pending', 'accepted', 'declined'
+      FOREIGN KEY(requester_id) REFERENCES users(id),
+      FOREIGN KEY(receiver_id) REFERENCES users(id)
+    )
+  `);
 });
 module.exports = db;
