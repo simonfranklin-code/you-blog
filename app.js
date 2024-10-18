@@ -25,6 +25,7 @@ const reviewLikeRoutes = require('./routes/reviewLikeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const followerRoutes = require('./routes/followerRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const friendRoutes = require('./routes/friendRoutes');
 const http = require('http');
 const socketIo = require('socket.io');
 const passportSocketIo = require('passport.socketio');
@@ -159,7 +160,7 @@ app.use('/reviewLikes', reviewLikeRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/followers', followerRoutes);
 app.use('/chat', chatRoutes);
-
+app.use('/friends', friendRoutes);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
