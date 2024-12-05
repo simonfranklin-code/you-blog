@@ -10,8 +10,8 @@ const fs = require('fs');
 
 exports.getBlogPostsPage = async (req, res) => {
     const usersLookup = await User.findAll();
-    const blogsLookup = await Blog.getAll(1, 1000, 'BlogId', 'ASC', {})
-    
+    const blogsLookup = await Blog.getAll(1, 1000, 'BlogId', 'DESC', {})
+
     res.render('admin/blogPosts', { users: usersLookup, blogs: blogsLookup, title: 'Blog Post Manager' });
 };
 
@@ -63,8 +63,15 @@ exports.getBlogPost = async (req, res) => {
     res.json(blogPost);
 };
 
-exports.uploadHtmlFile = (req, res) => {
-
+exports.uploadHtmlFile = async (req, res) => {
+    let blogPost = null;
+    let blogSlug = null;
+    if (req.body.blogPostId) {
+        
+        blogPost = await BlogPost.get(req.body.blogPostId);
+        let blogId = blogPost.BlogId;
+        blogSlug = await Blog.getBlogSlugByBlogId(blogId);
+    }
     if (!req.files || !req.files.html) {
         return res.status(400).json({ success: false, message: 'No html file uploaded.' });
     }
@@ -83,9 +90,10 @@ exports.uploadHtmlFile = (req, res) => {
             console.error(err);
             return res.status(500).json({ success: false, message: 'Html file upload failed.' });
         }
-        const url = 'https://simonfranklin-code.github.io/' + htmlFile.name;
         const slug = htmlFile.name.replace('.html', '').toLowerCase();
-        
+        const url = `https://simonfranklin-code.github.io/${blogSlug.Slug}/` + htmlFile.name;
+
+
         const htmlSections = HtmlSection.importHtml(url, req.body.blogPostId, slug);
 
 
@@ -96,3 +104,4 @@ exports.uploadHtmlFile = (req, res) => {
 
 
 };
+

@@ -15,4 +15,7 @@ router.get('/getfollowers', ensureAuthenticated, followerController.getFollowers
 // Route to get following
 router.get('/following', ensureAuthenticated, followerController.getFollowing);
 
+// Route to get following
+router.get('/followersDashboard', ensureAuthenticated, followerController.getFollowersDashboard);
+
 module.exports = router;

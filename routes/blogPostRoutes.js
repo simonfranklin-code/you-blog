@@ -7,4 +7,5 @@ const blogPostController = require('../controllers/blogPostController');
 router.get('/', trackViews, blogPostController.getBlogPost);
 // Route to get a blog post
 
+
 module.exports = router;

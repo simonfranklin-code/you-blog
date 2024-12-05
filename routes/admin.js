@@ -5,6 +5,8 @@ const permissionController = require('../controllers/permissionController');
 const blogController = require('../controllers/blogController');
 const blogPostAdminController = require('../controllers/blogPostAdminController');
 const htmlSectionController = require('../controllers/htmlSectionController');
+const fs = require('fs');
+
 const mobiriseData = require('../models/project.mobirise');
 const hljs = require('highlight.js');
 const db = require('../models/db');
@@ -61,7 +63,9 @@ router.post('/blogPosts/delete/:id', ensureAuthenticated, ensurePermission('dele
 router.get('/blogPosts/:id', ensureAuthenticated, ensurePermission('view_blogPosts'), blogPostAdminController.getBlogPost);
 router.post('/blogPosts/uploadHtmlFile', ensureAuthenticated, ensurePermission('add_blogPosts'), blogPostAdminController.uploadHtmlFile);
 
+
 // Manage HTML Sections
+
 router.get('/htmlSections', ensureAuthenticated, ensurePermission('manage_htmlSections'), htmlSectionController.getHtmlSectionsPage);
 router.get('/htmlSections/api', ensureAuthenticated, ensurePermission('view_htmlSections'), htmlSectionController.getHtmlSections);
 router.post('/htmlSections/create', ensureAuthenticated, ensurePermission('add_htmlSections'), htmlSectionController.createHtmlSection);
@@ -74,9 +78,12 @@ router.post('/htmlSections/uploadImage', ensureAuthenticated, ensurePermission('
 router.get('/htmlSections/importHtml/:slug/:id', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.importHtml);
 router.get('/htmlSections/importSingleHtmlSectionById/:slug/:anchor', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.importSingleHtmlSectionById);
 router.post('/htmlSections/findAndReplace', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.findAndReplace);
-
+// Route to retrieve blog Post Anchor
+router.get('/htmlSections/getIframeSrc/:blogSlug/:blogPostSlug/:anchor', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.getIframeSrc);
+router.get('/htmlSections/:blogSlug/:slug/:anchor', ensureAuthenticated, ensurePermission('edit_htmlSections'), htmlSectionController.getBlogPostSectionByAnchor);
 router.get('/mobirise', (req, res) => {
-    res.render('admin/mobirise', { title: 'You-Blog CMS', mobiriseData: mobiriseData, hljs: hljs });
+    const data = JSON.parse(fs.readFileSync('./public/ublog/project.mobirise', 'utf-8'));
+    res.render('admin/mobirise', { title: 'You-Blog CMS', mobiriseData: data, hljs: hljs });
 });
 
 

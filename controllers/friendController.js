@@ -65,7 +65,8 @@ module.exports = {
             // Render the 'admin/friends' Pug template
             const friends = await friendModel.getFriends(req.user.id);
             const pendingRequests = await friendRequestModel.getPendingRequests(req.user.id);
-            res.render('admin/friends', {
+
+            res.render(`${req.user.role === 'admin' ? 'admin' : 'user'}/friends`, {
                 title: 'Friends Management',
                 user: req.user, // Pass user information if needed
                 friends: friends,

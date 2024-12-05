@@ -431,8 +431,25 @@ code.hljs {
     width:100%;
     height: 100%;
 }
-
+.viewHtmlSectionFrame {
+    width: 100%;
+    height: 100%;
+}
 
 h6.card-title {
     float: none;
+}
+
+.btn {
+    font-weight: 600;
+    border-width: 1px;
+    font-style: normal;
+    margin: 0;
+    white-space: normal;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+    padding:8px;
 }

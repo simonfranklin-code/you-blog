@@ -11,6 +11,62 @@ $(function () {
         return false;
     });
 
+    // Listen for user online event
+    socket.on('user-online', (data) => {
+        console.log(`${data.username} is online`);
+        // Update your UI to show the user is online
+        msgCount += 1;
+        if (msgCount % 2 === 0) {
+            cls = '';
+        } else {
+            cls = 'end';
+        }
+        var msgTemplate = `
+            <div class="direct-chat-msg ${cls}">
+                <div class="direct-chat-infos clearfix">
+                    <span class="direct-chat-name float-end">${data.username}</span>
+                    <span class="direct-chat-timestamp float-start">${new Date().toISOString()}</span>
+                </div>
+                <!-- /.direct-chat-infos-->
+                <img class="direct-chat-img" src="${data.avatar}" alt="message user image" draggable="false">
+                <!-- /.direct-chat-img-->
+                <div class="direct-chat-text">
+                    ${data.username} is online
+                </div>
+                <!-- /.direct-chat-text-->
+            </div>
+        `
+        $('#messages').append(msgTemplate); // Append the message to the chat
+    });
+
+    // Listen for user offline event
+    socket.on('user-offline', (data) => {
+        console.log(`${data.username} is offline`);
+        // Update your UI to show the user is offline
+        sgCount += 1;
+        if (msgCount % 2 === 0) {
+            cls = '';
+        } else {
+            cls = 'end';
+        }
+        var msgTemplate = `
+            <div class="direct-chat-msg ${cls}">
+                <div class="direct-chat-infos clearfix">
+                    <span class="direct-chat-name float-end">${data.username}</span>
+                    <span class="direct-chat-timestamp float-start">${new Date().toISOString()}</span>
+                </div>
+                <!-- /.direct-chat-infos-->
+                <img class="direct-chat-img" src="${data.avatar}" alt="message user image" draggable="false">
+                <!-- /.direct-chat-img-->
+                <div class="direct-chat-text">
+                    ${data.username} is offline
+                </div>
+                <!-- /.direct-chat-text-->
+            </div>
+        `
+        $('#messages').append(msgTemplate); // Append the message to the chat
+    });
+
     // Listen for incoming messages
     socket.on('chatMessage', function (data) {
         msgCount += 1;
@@ -23,7 +79,7 @@ $(function () {
             <div class="direct-chat-msg ${cls}">
                 <div class="direct-chat-infos clearfix">
                     <span class="direct-chat-name float-end">${data.username}</span>
-                    <span class="direct-chat-timestamp float-start">${new Date()}</span>
+                    <span class="direct-chat-timestamp float-start">${new Date().toISOString()}</span>
                 </div>
                 <!-- /.direct-chat-infos-->
                 <img class="direct-chat-img" src="${data.avatar}" alt="message user image" draggable="false">
@@ -65,7 +121,7 @@ $(function () {
                     </div>
                 </div>
             `;
-       $('#toast-container').html(toastHTML);
+       $('#toast-container').append(toastHTML);
 
         // Initialize and show the toast
         const toastEl = document.querySelector('.toast');
@@ -85,7 +141,7 @@ $(function () {
             <div class="direct-chat-msg ${cls}">
                 <div class="direct-chat-infos clearfix">
                     <span class="direct-chat-name float-end">${data.from}</span>
-                    <span class="direct-chat-timestamp float-start">${new Date()}</span>
+                    <span class="direct-chat-timestamp float-start">${new Date().toISOString()}</span>
                 </div>
                 <!-- /.direct-chat-infos-->
                 <img class="direct-chat-img" src="${data.userWithAvatar.Avatar}" alt="message user image" draggable="false">

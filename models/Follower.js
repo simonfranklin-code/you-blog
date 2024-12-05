@@ -68,6 +68,7 @@ class Follower {
                         Follower.logError(err);
                         return reject(err);
                     }
+
                     resolve(rows);
                 }
             );

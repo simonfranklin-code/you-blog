@@ -1,0 +1,500 @@
+extends htmlSectionPreviewLayout.pug
+block baseDirectoryBlock
+  != blog.BaseDirectory
+block titleBlock
+  title #{title}
+block headStylesBlock
+   != blog.HeadStylesBlock
+block headScriptsBlock
+   != blog.HeadScriptsBlock
+
+
+block content
+   script.
+      const blog-slug = "#{blog.Slug}";
+      const blog-post-slug = "#{blogPost.Slug}"
+      const anchor = "#{anchor}"
+   .card.m-0(draggable='false', style='height: auto; width: auto; transition: 0.15s;')
+     // begin::Header
+     .card-header
+       .card-tools
+         button#edit-html.btn.btn-tool(type='button')
+           i.fas.fa-edit(aria-hidden='true')
+         button#save-html.btn.btn-tool(type='button')
+           i.fas.fa-save(aria-hidden='true')
+         button#image-html.btn.btn-tool(type='button')
+           i.fas.fa-image(aria-hidden='true')
+         button#insert-link.btn.btn-tool(type='button')
+           i.fas.fa-link(aria-hidden='true')
+         button#remove-link.btn.btn-tool(type='button')
+           i.fas.fa-unlink(aria-hidden='true')
+         button#font-size.btn.btn-tool(type='button')
+           i.fas.fa-text-height(aria-hidden='true')
+         button#font-family.btn.btn-tool(type='button')
+           i.fas.fa-font(aria-hidden='true')
+         button#font-color.btn.btn-tool(type='button')
+           i.fas.fa-palette(aria-hidden='true')
+         button.btn.btn-tool(type='button', data-lte-toggle='fullscreen', style='z-index: 10000;')
+           i.bi.bi-fullscreen(data-lte-icon='maximize')
+           i.bi.bi-fullscreen-exit(data-lte-icon='minimize')
+     .card-body
+       #editableHtmlContent( contenteditable="false")       
+         != htmlContent
+         input#imageUploadInput(type='file' name='imageUploadInput' accept='image/*' style='position: absolute; width: 0px; height: 0px; left: -3000px; top: -3000px;')
+     .card-footer
+
+
+
+
+   // Delete Confirmation Modal
+   .modal.fade#confirmDeleteModal(tabindex='-1' role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Confirm Delete
+            button.close(type='button' data-dismiss='modal' aria-label='Close')
+              span(aria-hidden='true') &times;
+          .modal-body
+            p Are you sure you want to delete this HTML section?
+          .modal-footer
+            button.btn.btn-secondary.btn-sm(type='button' data-dismiss='modal') Cancel
+            button.btn.btn-danger.btn-sm#confirmDeleteBtn(type='button') Delete
+   // Link Insertion Modal
+   .modal.fade#insertLinkModal(tabindex='-1' role='dialog' aria-labelledby='insertLinkModalLabel' aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title#insertLinkModalLabel Insert Link
+            button.close(type='button' data-dismiss='modal' aria-label='Close')
+              span(aria-hidden='true') &times;
+          .modal-body
+            form#insertLinkForm
+              .form-group
+                label(for='linkUrl') URL
+                input.form-control#linkUrl(type='text' name='linkUrl' required)
+              .form-group
+                label(for='linkText') Text
+                input.form-control#linkText(type='text' name='linkText' readonly)
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+            button.btn.btn-primary#insertLinkBtn(type='button') Insert Link
+   // Font Size Modal
+   .modal.fade(id='fontSizeModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Font Size
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') &times;
+          .modal-body
+            select#fontSizeSelect.form-control
+              option(value='12px') 12px
+              option(value='14px') 14px
+              option(value='16px') 16px
+              option(value='18px') 18px
+              option(value='20px') 20px
+              option(value='24px') 24px
+          .modal-footer
+            button.btn.btn-primary(type='button', id='applyFontSize') Apply
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+
+   // Font Family Modal
+   .modal.fade(id='fontFamilyModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Font Family
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') &times;
+          .modal-body
+            select#fontFamilySelect.form-control
+              option(value='Arial') Arial
+              option(value='Courier New') Courier New
+              option(value='Georgia') Georgia
+              option(value='Times New Roman') Times New Roman
+              option(value='Verdana') Verdana
+          .modal-footer
+            button.btn.btn-primary(type='button', id='applyFontFamily') Apply
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+
+   // Font Color Modal
+   .modal.fade(id='fontColorModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Font Color
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') &times;
+          .modal-body
+            input#fontColorInput(type='color', class='form-control')
+          .modal-footer
+            button.btn.btn-primary(type='button', id='applyFontColor') Apply
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+
+   // Find and replace Modal
+   .modal.fade(id='findAndReplaceModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Find and replace
+            button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+          .modal-body
+            form#findAndReplaceForm
+              .formgroup.mb-2
+                label(for="find-text") Find:
+                input.form-control.form-control-sm#find-text(type="text" name="find-text" required)
+              .formgroup.mb-2
+                label(for="replace-text") Replace with:
+                input.form-control.form-control-sm#replace-text(type="text" name="replace-text")
+              .formgroup.mb-2
+                label(for="replace-all") Replace all:
+                input#replace-all(type="checkbox" name="replace-all")
+          
+          .modal-footer
+            button.btn.btn-primary.btn-sm#buttonreplace(type="button") Replace
+            |
+            button.btn.btn-secondary.btn-sm(type='button', data-bs-dismiss='modal') Close
+   script.
+        $(document).ready(function () {
+
+            let currentHtmlSectionId = 0;
+            let currentHtmlSectionAnchor = '';
+            let selectedText = '';
+            let htmlSections = null;
+            let selectedBlogPostIndex;
+            
+
+            $('#buttonreplace').on('click', function (e) {
+                $('#findAndReplaceForm').submit();
+            });
+
+
+        
+            $('#edit-html').on('click', function () {
+                const contentDiv = $('#editableHtmlContent');
+                const isEditable = contentDiv.attr('contenteditable') === 'true';
+                contentDiv.attr('contenteditable', !isEditable);
+                $('#save-html').attr('disabled', isEditable);
+            });
+
+
+            $('#save-html').on('click', function() {
+                const updatedHtml = $('#editableHtmlContent').html();
+                const htmlSectionId = $("#HtmlSectionID").val();
+
+                $.ajax({
+                    url: '/admin/htmlSections/update',
+                    method: 'POST',
+                    data: {
+                        HtmlSectionID: htmlSectionId,
+                        Html: updatedHtml
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            //alert('Content saved successfully!');
+                        } else {
+                            alert('Failed to save content.');
+                        }
+                    
+                    },
+                    error: function(err) {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            });
+        
+            $('#findAdReplaceBtn').on('click', function(e) {
+                e.preventDefault();
+                $('#findAndReplaceModal').modal('show');
+            });
+
+
+            $('#findAndReplaceForm').on('submit', function (e) {
+                e.preventDefault();
+                const find = $('#find-text').val();
+                const replace = $('#replace-text').val();
+                let blogPostId = null;
+
+                if ($('#replace-all').is(':checked')) {
+                    blogPostId = null;
+                } else {
+                    blogPostId = $('#blogPostIdFilter').val();
+                }
+
+
+                $.ajax({
+                    url: '/admin/htmlSections/findAndReplace',
+                    method: 'POST',
+                    data: {
+                        find: find,
+                        replace: replace,
+                        blogPostId: blogPostId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#findAndReplaceModal').modal('hide');
+                            alert(response.message)
+                        } else {
+                            alert('Find And Replace Failed.');
+                        }
+                    },
+                    error: function(err) {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            });
+
+
+            $('#importHtmlSectionBtn').on('click', function () {
+
+                const htmlSectionsFromDb = htmlSections;
+
+                $.ajax({
+                    url: '/admin/htmlSections/importSingleHtmlSectionById/solid-foundation-knowledge-is-power-in-digital-marketing/2',
+                    method: 'GET',
+                
+                    success: function(htmlSectionsFromFile) {
+                    
+                        if (htmlSectionsFromDb !== 'undefined' && htmlSectionsFromDb.length > 0) {
+                            for (let i = 0; i < htmlSectionsFromFile.length; i++) {
+                                const htmlSectionId = htmlSectionsFromDb[i].HtmlSectionID;
+                                const dbAnchor = htmlSectionsFromDb[i].Anchor;
+                                const [htmlContent, anchor] = htmlSectionsFromFile[i];
+                                const blogPostId = $('#blogPostIdFilter').val();
+                                if (dbAnchor === anchor) {
+
+                                    $.ajax({
+                                        url: '/admin/htmlSections/updateBySectionId',
+                                        method: 'POST',
+                                        data: {
+                                            blogPostId,
+                                            htmlSectionId, 
+                                            htmlContent
+                                        },
+                                        success: function(data) {
+                                            console.log(JSON.stringify(data));
+                                        },
+                                        error: function(err) {
+                                            console.log(JSON.stringify(err));
+                                        }
+                                    });
+                                }
+                            }
+
+                        }
+                        ///alert(JSON.stringify(data));
+                    },
+                    error: function(err) {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            });
+
+            $('#image-html').on('click', function () {
+                $('#imageUploadInput').click();
+            });
+
+            $('.image-wrapper > img').on('click', function () {
+                $('#imageUploadInput').click();
+            });
+
+
+            $('#imageUploadInput').on('change', function () {
+                var url = window.location.pathname;
+                var anchor = url.split("/")['5'];
+
+                const file = this.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('image', file);
+
+                    $.ajax({
+                        url: '/admin/htmlSections/uploadImage',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.success) {
+                                const imageUrl = response.imageUrl;
+                                const section = $('#' + anchor);
+                                if(section.hasClass('header1')){
+                                    section.attr('style','background-image: url("'+ imageUrl + '")');
+                                }else{
+                                    $('.image-wrapper > img').attr('src', imageUrl);
+                                }
+                            
+                            } else {
+                                alert('Image upload failed.');
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while uploading the image.');
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', '.delete-btn', function () {
+                const htmlSectionId = $(this).data('id');
+                $('#confirmDeleteBtn').data('id', htmlSectionId);
+                $('#confirmDeleteModal').modal('show');
+            });
+
+            $('#confirmDeleteBtn').on('click', function () {
+                const htmlSectionId = $(this).data('id');
+                $.post(`/admin/htmlSections/delete/${htmlSectionId}`, function (response) {
+                    if (response.success) {
+                        $('#confirmDeleteModal').modal('hide');
+                        fetchHtmlSections();
+                    }
+                });
+            });
+
+
+        
+
+            // Function to get the selected text
+            function getSelectionText() {
+                let text = '';
+                if (window.getSelection) {
+                    text = window.getSelection().toString();
+                } else if (document.selection && document.selection.type != 'Control') {
+                    text = document.selection.createRange().text;
+                }
+                return text;
+            }
+
+            // Event handler for the Insert Link button
+            $('#insert-link').on('click', function () {
+                selectedText = getSelectionText();
+                if (selectedText.length > 0) {
+                    $('#linkText').val(selectedText);
+                    $('#insertLinkModal').modal('show');
+                } else {
+                    alert('Please select the text you want to hyperlink.');
+                }
+            });
+
+            // Event handler for the Insert Link button in the modal
+            $('#insertLinkBtn').on('click', function () {
+                const linkUrl = $('#linkUrl').val();
+                const linkText = $('#linkText').val();
+
+                if (linkUrl && linkText) {
+                    const anchorTag = `<a href="${linkUrl}" target="_blank">${linkText}</a>`;
+                    const contentDiv = $('#editableHtmlContent');
+                    const currentHtml = contentDiv.html();
+                    const newHtml = currentHtml.replace(linkText, anchorTag);
+                    contentDiv.html(newHtml);
+                    $('#insertLinkModal').modal('hide');
+                } else {
+                    alert('Please enter the URL.');
+                }
+            });
+
+            // Event handler for the Remove Link button
+            $('#remove-link').on('click', function () {
+                // Get the selected link
+                const selectedElement = window.getSelection().anchorNode.parentNode;
+    
+                if (selectedElement.tagName === 'A') {
+                    // Remove the link while preserving the text
+                    const linkText = selectedElement.innerText;
+                    $(selectedElement).replaceWith(linkText);
+                } else {
+                    alert('Please select a link to remove.');
+                }
+            });
+
+            // Function to get the selected text node
+            function getSelectedTextNode() {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    return range.commonAncestorContainer.nodeType === 3 ? range.commonAncestorContainer : range.commonAncestorContainer.firstChild;
+                }
+                return null;
+            }
+
+            // Event handler for the Font Size button
+            $('#font-size').on('click', function () {
+                selectedText = getSelectedTextNode();
+                if (selectedText) {
+                    $('#fontSizeModal').modal('show');
+                } else {
+                    alert('Please select the text you want to change.');
+                }
+            });
+
+            // Event handler for the Apply button in the Font Size modal
+            $('#applyFontSize').on('click', function () {
+                const fontSize = $('#fontSizeSelect').val();
+                if (selectedText) {
+                    $(selectedText).css('font-size', fontSize);
+                    $('#fontSizeModal').modal('hide');
+                }
+            });
+
+            // Event handler for the Font Family button
+            $('#font-family').on('click', function () {
+                selectedText = getSelectedTextNode();
+                if (selectedText) {
+                    $('#fontFamilyModal').modal('show');
+                } else {
+                    alert('Please select the text you want to change.');
+                }
+            });
+
+            // Event handler for the Apply button in the Font Family modal
+            $('#applyFontFamily').on('click', function () {
+                const fontFamily = $('#fontFamilySelect').val();
+                if (selectedText) {
+                    $(selectedText).css('font-family', fontFamily);
+                    $('#fontFamilyModal').modal('hide');
+                }
+            });
+
+            // Event handler for the Font Color button
+            $('#font-color').on('click', function () {
+                selectedText = getSelectedTextNode();
+                if (selectedText) {
+                    $('#fontColorModal').modal('show');
+                } else {
+                    alert('Please select the text you want to change.');
+                }
+            });
+
+            // Event handler for the Apply button in the Font Color modal
+            $('#applyFontColor').on('click', function () {
+                const fontColor = $('#fontColorInput').val();
+                if (selectedText) {
+                    $(selectedText).css('color', fontColor);
+                    $('#fontColorModal').modal('hide');
+                }
+            });
+
+        });
+block footer
+    #toast-container.position-fixed.top-0.end-0.p-3( style="z-index: 10000;")    
+
+
+    script(src='https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js' integrity='sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ=' crossorigin='anonymous')
+    // sortablejs
+    script.
+        const connectedSortables =
+        document.querySelectorAll(".connectedSortable");
+        connectedSortables.forEach((connectedSortable) => {
+        let sortable = new Sortable(connectedSortable, {
+        group: "shared",
+        handle: ".card-header",
+        });
+        });
+        const cardHeaders = document.querySelectorAll(
+        ".connectedSortable .card-header",
+        );
+        cardHeaders.forEach((cardHeader) => {
+        cardHeader.style.cursor = "move";
+        });
+
+    //- script(src='/js/chat.js').

@@ -2,6 +2,7 @@ extends layout
 
 block content    
     - var highlightedCode = ''
+
     - function highlightCode(component) {  return hljs.highlight(component._customHTML, { language: 'xml' }).value}
 
     - function highlightCodeLess(component) {  return hljs.highlight(JSON.stringify( component._styles).replace(/"/g,''), { language: 'less' }).value}
@@ -19,7 +20,7 @@ block content
     each page in mobiriseData.pages
         h2 #{page.settings.title}
 
-        if page.settings.title ==='Digital Marketing Guru'
+        
             
             each component in page.components
                 

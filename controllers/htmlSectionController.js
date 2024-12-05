@@ -1,4 +1,5 @@
 const HtmlSection = require('../models/HtmlSection');
+const Blog = require('../models/Blog');
 const BlogPost = require('../models/BlogPost');
 const db = require('../models/db');
 const Notification = require('../models/Notification');
@@ -6,7 +7,8 @@ const Follower = require('../models/Follower');
 const User = require('../models/User');
 var path = require('path');
 const fs = require('fs');
-
+let _BlogSlug = '';
+let _BlogPostSlug = '';
 
 exports.getHtmlSectionsPage = (req, res) => {
     res.render('admin/htmlSections', {title: 'Html Sections'});
@@ -15,11 +17,17 @@ exports.getHtmlSectionsPage = (req, res) => {
 exports.getHtmlSections = async (req, res) => {
     const filters = {};
     const { page = 1, limit = 5, sortField = 'ViewIndex', sortOrder = 'ASC', anchor, blogPostId } = req.query;
+    if (blogPostId != 'undefined' && blogPostId > 0) {
+        _BlogPost = await BlogPost.get(blogPostId);
+        _Blog = await Blog.get(_BlogPost.BlogId);
+        _BlogSlug = _Blog.Slug;
+        _BlogPostSlug = _BlogPost.Slug;
+    }
     const htmlSections = await HtmlSection.getAll(page, parseInt(limit), sortField, sortOrder, { anchor, blogPostId });
     const totalHtmlSections = await HtmlSection.getHtmlSectionsCount({ blogPostId });
     const totalPages = Math.ceil(totalHtmlSections / limit);
     const blogPosts = await BlogPost.getAll(1, parseInt(100), 'BlogPostId', 'ASC', filters);
-    res.json({ htmlSections, totalPages, totalHtmlSections, blogPosts });
+    res.json({ htmlSections, totalPages, totalHtmlSections, blogPosts, _BlogSlug, _BlogPostSlug });
 };
 
 exports.createHtmlSection = async (req, res) => {
@@ -38,7 +46,7 @@ exports.createHtmlSection = async (req, res) => {
 exports.editHtmlSection = async (req, res) => {
     const { html, viewIndex, anchor, slug } = req.body;
     await HtmlSection.edit(req.params.id, html, viewIndex, anchor, slug);
-    req.flash('success_msg', 'Successfully updated HtmlSection');
+    req.flash('success_msg', `Html Section "${anchor}" has been edited by. ${req.user.username}`);
     // Emit flash message to connected clients
     const flashMessage = req.flash('success_msg');
     req.io.emit('flash', { message: flashMessage, isError: false });
@@ -47,7 +55,7 @@ exports.editHtmlSection = async (req, res) => {
     const followers = await Follower.getFollowers(req.user.id);
     followers.forEach(async follower => {
         const username = await User.findById(req.user.id).username;
-        await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited.`);
+        await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited by. ${username}`);
     });
     res.json({ success: true });
 };
@@ -211,4 +219,46 @@ exports.findAndReplace = async (req, res) => {
     }
 };
 
+exports.getIframeSrc = async (req, res) => {
+    const blogSlug = req.params.blogSlug;
+    const blogPostSlug = req.params.blogPostSlug;
+    const anchor = req.params.anchor;
+    res.json({ src: `/admin/htmlSections/${blogSlug}/${blogPostSlug}/${anchor}`})
+}
 
+exports.getBlogPostSectionByAnchor = async (req, res) => {
+
+    const blogSlug = req.params.blogSlug;
+    const slug = req.params.slug;
+    const anchor = req.params.anchor;
+    const blogPostFromSlug = await BlogPost.getBlogPostBySlug(slug);
+    const blogPostTitle = blogPostFromSlug.Title;
+
+    const blogFromSlug = await Blog.getBlogBySlug(blogSlug);
+    const footer = blogPostFromSlug.Footer;
+
+    let sql = 'SELECT * FROM HtmlSections WHERE Slug = ? AND Anchor = ? ORDER BY ViewIndex ASC';
+    db.all(sql, [slug.toLowerCase(), anchor], (err, rows) => {
+        var htmlContent = ""
+        if (err) {
+            throw err;
+        }
+
+        rows.forEach(async (row) => {
+            htmlContent += row["Html"];
+            htmlContent += `<input type="hidden" id ="HtmlSectionID" name ="HtmlSectionID" value="${row['HtmlSectionID']}">`;
+        });
+
+
+        res.render('admin/htmlSection', {
+            htmlContent: htmlContent,
+            title: blogPostTitle,
+            blog: blogFromSlug,
+            blogPost: blogPostFromSlug,
+            anchor: anchor,
+            footer: footer
+        });
+    });
+
+
+}

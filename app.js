@@ -26,6 +26,7 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const followerRoutes = require('./routes/followerRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const friendRoutes = require('./routes/friendRoutes');
+const timelineRoutes = require('./routes/timelineRoutes')
 const http = require('http');
 const socketIo = require('socket.io');
 const passportSocketIo = require('passport.socketio');
@@ -42,46 +43,20 @@ const server = http.createServer(app);
 // Set up Socket.IO
 const io = socketIo(server);
 
-// Handle Socket.IO connections
-io.on('connection', (socket) => {
-    console.log('A user connected');
-    const user = socket.request.user; // Access authenticated user
-    // Join user-specific room
-    socket.join(user.id);  // Use the user's ID to join a room
-    
-    // Handle receiving a message from the client
-    socket.on('chatMessage', async (msg) => {
-        const user = socket.request.user; // Assuming Passport is available here
-
-        if (user) {
-            // Broadcast the message with user information to all clients
-            io.emit('chatMessage', { avatar: user.avatar, username: user.username, message: msg });
-        }
-    });
-
-    // Listen for private messages
-    socket.on('privateMessage', async (data) => {
-        const targetUserId = data.to;  // Target user's ID
-        const message = data.message;  // The message to be sent
-        const uwa = await userWithAvatar.getUserWithAvatar(targetUserId);
-        // Send message to the target user's room
-        io.to(targetUserId).emit('privateMessage', {
-            from: user.username,  // Send the username of the sender
-            message: message,
-            userWithAvatar: uwa 
-        });
-
-        console.log(`${user.username} sent a message to user ${targetUserId}: ${message}`);
-    });
-
-    // Handle user disconnecting
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
-});
-
 // Set up the session store
 const sessionStore = new SQLiteStore({ db: 'sessions.db', dir: './database' });
+// Express session middleware
+const sessionMiddleware = session({
+    store: sessionStore, // Use SQLite store for session persistence
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 7 } // 7 days
+});
+
+// Use session middleware in Express
+app.use(sessionMiddleware);
+
 
 // Express session
 app.use(session({
@@ -115,6 +90,61 @@ function onAuthorizeFail(data, message, error, accept) {
         accept(new Error(message)); // Deny connection
     }
 }
+
+
+// Store online users
+const onlineUsers = new Set();
+
+// Handle Socket.IO connections
+io.on('connection', (socket) => {
+    const user = socket.request.user; // Access authenticated user
+
+    if (user && user.id) {
+        console.log(`User connected: ${user.username} (${user.id})`);
+
+        // Add user to online users set
+        onlineUsers.add(user.id);
+
+        // Notify all clients that the user is online
+        io.emit('user-online', { userId: user.id, username: user.username, avatar: user.avatar });
+
+        // Join user-specific room
+        socket.join(user.id);  // Use the user's ID to join a room
+
+        // Handle receiving a chat message from the client
+        socket.on('chatMessage', (msg) => {
+            if (user) {
+                io.emit('chatMessage', { avatar: user.avatar, username: user.username, message: msg });
+            }
+        });
+
+        // Listen for private messages
+        socket.on('privateMessage', async (data) => {
+            const targetUserId = data.to;  // Target user's ID
+            const message = data.message;  // The message to be sent
+            const uwa = await userWithAvatar.getUserWithAvatar(targetUserId);
+            io.to(targetUserId).emit('privateMessage', {
+                from: user.username,  // Send the username of the sender
+                message: message,
+                userWithAvatar: uwa
+            });
+        });
+
+        // Handle user disconnecting
+        socket.on('disconnect', () => {
+            console.log(`User disconnected: ${user.username} (${user.id})`);
+
+            // Remove user from online users set
+            onlineUsers.delete(user.id);
+
+            // Notify all clients that the user has gone offline
+            io.emit('user-offline', { userId: user.id, username: user.username, avatar: user.avatar });
+        });
+    }
+});
+
+
+
 // Global variables for flash messages and user
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
@@ -161,6 +191,7 @@ app.use('/notifications', notificationRoutes);
 app.use('/followers', followerRoutes);
 app.use('/chat', chatRoutes);
 app.use('/friends', friendRoutes);
+app.use('/users/timeline', timelineRoutes);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

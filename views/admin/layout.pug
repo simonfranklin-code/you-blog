@@ -29,7 +29,7 @@ html(lang='en')
     script(src='/vendor/jquery/jquery.min.js').
   // end::Head
   // begin::Body
-  body.layout-fixed.sidebar-expand-lg.sidebar-mini.bg-body-tertiary
+  body.layout-fixed-complete.sidebar-expand-lg.bg-body-tertiary.sidebar-open.app-loaded
     // begin::App Wrapper
     .app-wrapper
       // begin::Header
@@ -291,7 +291,7 @@ html(lang='en')
                       i.nav-icon.bi.bi-circle
                       p Manage Friends
                   li.nav-item
-                    a.nav-link(href='/admin/followers')
+                    a.nav-link(href='/followers/followersDashboard')
                       i.nav-icon.bi.bi-circle
                       p Manage Followers
                   li.nav-item
@@ -353,6 +353,7 @@ html(lang='en')
     script(src='/js/socket.io.js')
     // end::Required Plugin(AdminLTE)
     script(src='/vendor/jquery/jquery.min.js').
+
     // begin::OverlayScrollbars Configure
     script.
       const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";

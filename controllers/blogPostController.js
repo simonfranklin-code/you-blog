@@ -29,31 +29,31 @@ exports.getBlogPost = (req, res) => {
     };
     async function getBlogPostSections() {
 
-        const url = req.baseUrl;
-        const blogSlug = url.split('/')[2];
-        const slug = url.split('/')[3];
-        
-        //const slug = req.params.slug;
-        console.log('Connected to the SQLite database.');
-        const blogPostFromSlug = await blogPost.getBlogPostBySlug(slug);
-        const blogPostTitle = blogPostFromSlug.Title;
-        const metaDescription = blogPostFromSlug.MetaDescription;
-        const metaKeywords = blogPostFromSlug.MetaKeywords;
-        const blogFromSlug = await blog.getBlogBySlug(blogSlug);
-        const footer = blogPostFromSlug.Footer;
-        const beforeEndOfBodyScript = blogPostFromSlug.beforeEndOfBodyScript;
-        let sql = 'SELECT * FROM HtmlSections WHERE Slug = ? ORDER BY ViewIndex ASC';
+        try {
+            const url = req.baseUrl;
+            const blogSlug = url.split('/')[2];
+            const slug = url.split('/')[3];
 
-        db.all(sql, [slug.toLowerCase()], (err, rows) => {
-            var htmlContent = ""
-            if (err) {
-                throw err;
-            }
-            rows.forEach(async (row) => {
-                htmlContent += row["Html"];
-            });
-            htmlContent +=
-                `<section data-bs-version="5.1" class="features16 cid-ubyiHIN383" id="Reviews">
+
+            const blogPostFromSlug = await blogPost.getBlogPostBySlug(slug);
+            const blogPostTitle = blogPostFromSlug.Title;
+            const metaDescription = blogPostFromSlug.MetaDescription;
+            const metaKeywords = blogPostFromSlug.MetaKeywords;
+            const blogFromSlug = await blog.getBlogBySlug(blogSlug);
+            const footer = blogPostFromSlug.Footer;
+            const beforeEndOfBodyScript = blogPostFromSlug.beforeEndOfBodyScript;
+            let sql = 'SELECT * FROM HtmlSections WHERE Slug = ? ORDER BY ViewIndex ASC';
+
+            db.all(sql, [slug.toLowerCase()], (err, rows) => {
+                var htmlContent = ""
+                if (err) {
+                    throw err;
+                }
+                rows.forEach(async (row) => {
+                    htmlContent += row["Html"];
+                });
+                htmlContent +=
+                    `<section data-bs-version="5.1" class="features16 cid-ubyiHIN383" id="Reviews">
                     <div class="container-fluid">
                         <div class="content-wrapper">
                             <div class="row align-items-center">
@@ -111,8 +111,8 @@ exports.getBlogPost = (req, res) => {
                 `
 
 
-            htmlContent +=
-                `<section data-bs-version="5.1" class="features16 cid-comments" id="comments-section">
+                htmlContent +=
+                    `<section data-bs-version="5.1" class="features16 cid-comments" id="comments-section">
                    <div class="container-fluid">
                        <div class="content-wrapper">
                            <div class="row align-items-center">
@@ -130,16 +130,22 @@ exports.getBlogPost = (req, res) => {
                    </div>
                 </section>`
 
-            res.render('blog-post', {
-                htmlContent: htmlContent,
-                title: blogPostTitle,
-                blog: blogFromSlug,
-                blogPost: blogPostFromSlug,
-                metaDescription: metaDescription,
-                metaKeywords: metaKeywords,
-                footer: footer
+                res.render('blog-post', {
+                    htmlContent: htmlContent,
+                    title: blogPostTitle,
+                    blog: blogFromSlug,
+                    blogPost: blogPostFromSlug,
+                    metaDescription: metaDescription,
+                    metaKeywords: metaKeywords,
+                    footer: footer
+                });
             });
-        });
+        } catch (e) {
+            req.flash('error_msg', e.message);
+            // Emit flash message to connected clients
+            const flashMessage = req.flash('error_msg');
+            req.io.emit('flash', { message: flashMessage, isError: true });
+        }
 
 
     }
@@ -149,3 +155,4 @@ exports.getBlogPost = (req, res) => {
 
 
 }
+

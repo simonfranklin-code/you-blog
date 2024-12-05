@@ -254,26 +254,27 @@ script(src='assets/witsec-search/search.js?v=1').
 script(type='text/plain' data-src='assets/theme/js/script.js').
 
 script.
-  $(window).on("load", function () {
-  $("#modal-add-comment").on("hidden.bs.modal", function () {
-  var html = $("#modal-add-comment_body").html();
-  $("#modal-add-comment_body").empty();
-  $("#modal-add-comment_body").append(html);
-  })
-  if (typeof OpenModal === 'undefined') {
-  OpenModal = function (modalName) {
-  if (typeof jQuery === "function") {
-  if ($('#' + modalName).length)
-  $('#' + modalName).modal('show');
-  else
-  alert("Sorry, but there is no modal for " + modalName);
-  } else {
-  let mdw = new bootstrap.Modal(document.getElementById(modalName), {});
-  mdw.show();
-  }
-  }
-  }
-  });
+    $(window).on("load", function () {
+
+        $("#modal-add-comment").on("hidden.bs.modal", function () {
+            var html = $("#modal-add-comment_body").html();
+            $("#modal-add-comment_body").empty();
+            $("#modal-add-comment_body").append(html);
+        })
+        if (typeof OpenModal === 'undefined') {
+            OpenModal = function (modalName) {
+                if (typeof jQuery === "function") {
+                    if ($('#' + modalName).length)
+                        $('#' + modalName).modal('show');
+                    else
+                        alert("Sorry, but there is no modal for " + modalName);
+                } else {
+                    let mdw = new bootstrap.Modal(document.getElementById(modalName), {});
+                    mdw.show();
+                }
+            }
+        }
+    });
 script.
   function modalSetCookie(cname, cvalue, exdays) {
   var d = new Date();
