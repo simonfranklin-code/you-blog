@@ -9,6 +9,9 @@ router.get('/', ensureAuthenticated, friendsController.listFriends);
 // Send a friend request
 router.post('/request', ensureAuthenticated, friendsController.sendFriendRequest);
 
+// Remove a friend request
+router.post('/remove', ensureAuthenticated, friendsController.removeFriend);
+
 // View pending requests
 router.get('/requests', ensureAuthenticated, friendsController.viewPendingRequests);
 

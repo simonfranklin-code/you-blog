@@ -1,16 +1,21 @@
 extends layout
-
+block titleBlock
+  title #{title}
 block content
-    // begin::Row
-    .row
-        .col-sm-6
-        h3.mb-0 Timeline
-        .col-sm-6
-        ol.breadcrumb.float-sm-end
-            li.breadcrumb-item
-            a(href='#') Home
-            li.breadcrumb-item.active(aria-current='page') Timeline
-    // end::Row
+    // begin::App Content Header
+    .app-content-header
+      // begin::Container
+      .container-fluid
+        // begin::Row
+        .row
+           .col-sm-6
+             h3.mb-0 #{title}
+           .col-sm-6
+             ol.breadcrumb.float-sm-end
+               li.breadcrumb-item
+                 a(href='/users/dashboard') Dashboard
+               li.breadcrumb-item.active(aria-current='page')
+                 | #{title}
     .row
       .col-md-12
         // The time line

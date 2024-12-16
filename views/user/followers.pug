@@ -14,14 +14,14 @@ block content
                 .col-sm-6
                     ol.breadcrumb.float-sm-end
                         li.breadcrumb-item
-                            a(href='/admin/dashboard') Admin
+                            a(href='/users/dashboard') Dashboard
                         li.breadcrumb-item.active(aria-current='page')
                             | #{title}
     .row.g-4
         // begin::Col
         .col-12.connectedSortable
             .callout.callout-info.mb-4
-                | Use the form to filter Users. To edit users use the Actions column
+                | Use the Follow Users form to find and follow Users.
         // end::Col
     .row.g-4
       .col-12.connectedSortable
@@ -57,14 +57,16 @@ block content
 
 
     .row.g-4
-      .col-6.connectedSortable
+      .col-12.connectedSortable
         .card.card-primary.card-outline.mb-4
           .card-header
             h4.card-title Followers List
           .card-body
             .row#followersList.text-center.m-1
             // Dynamically populated with followers using JavaScript
-      .col-6.connectedSortable
+
+    .row.g-4
+      .col-12.connectedSortable
         .card.card-primary.card-outline.mb-4
           .card-header
             h4.card-title Following List

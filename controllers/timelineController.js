@@ -18,7 +18,7 @@ exports.getTimeline = async (req, res) => {
             })
         );
 
-        res.render('user/timeline',{ timeline });
+        res.render('user/timeline',{ title: 'Timeline Manager', timeline });
     } catch (error) {
         res.status(500).json({ success: false, error: 'Failed to load timeline.' });
     }

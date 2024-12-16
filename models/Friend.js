@@ -5,7 +5,7 @@ class Friend {
     static getFriends(userId) {
         return new Promise((resolve, reject) => {
             db.all(
-                `SELECT u.id, u.username 
+                `SELECT u.id, u.username, u.avatar
                  FROM friends f 
                  JOIN users u ON u.id = f.friend_id 
                  WHERE f.user_id = ?`,

@@ -22,7 +22,7 @@ class FriendRequest {
     static getPendingRequests(userId) {
         return new Promise((resolve, reject) => {
             db.all(
-                `SELECT fr.id, u.username AS requester 
+                `SELECT fr.id, u.username AS requester, u.avatar
                  FROM friend_requests fr 
                  JOIN users u ON u.id = fr.requester_id 
                  WHERE fr.receiver_id = ? AND fr.status = 'pending'`,
