@@ -615,7 +615,8 @@ function deleteComment(commentId) {
                 });
             },
             error: function (err) {
-                console.log(err.errorMessage);
+                alert(JSON.stringify(err));
+                console.log(err);
             }
         });
 

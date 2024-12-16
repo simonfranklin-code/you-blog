@@ -18,11 +18,21 @@ $(document).ready(function () {
                 if (data.users && data.users.length > 0) {
                     data.users.forEach(user => {
                         const userItem = $(`
-                        <div class="col-3 p-2">
+                        <div class="col-sm-12 col-lg-3 mb-2">
+                          <div class="card p-2 mt-2">
                             <img class="img-fluid rounded-circle" src="${user.avatar}" alt="User Image">
-                            <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">${user.username}</a>
-                            <button class="btn btn-primary btn-sm" onclick="followUser(${user.id})">Follow</button>
+
+                            <div class="card-body">
+                              <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">${user.username}</a>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-tools">
+                                    <button class="btn btn-tool btn-sm" onclick="followUser(${user.id})">Follow</button>
+                                </div>
+                            </div>
+                          </div>
                         </div>
+
                         `);
                         resultsContainer.append(userItem);
                     });
@@ -36,26 +46,6 @@ $(document).ready(function () {
             }
         });
     });
-    // Function to unfollow a user
-    window.unfollowUser = function (userId) {
-        $.ajax({
-            url: '/followers/unfollow',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ UserId: userId }),
-            success: function (response) {
-                alert(response.message);
-                // Refresh the followers/following lists
-                loadFollowers();
-                loadFollowing();
-            },
-            error: function (xhr) {
-                alert('Failed to unfollow user: ' + xhr.responseJSON.message);
-            }
-        });
-    };
-
-
 
     // Initial load of followers and following lists
     loadFollowers();
@@ -73,11 +63,22 @@ function loadFollowers() {
             if (response.followers.length > 0) {
                 response.followers.forEach(follower => {
                     const userItem = $(`
-                        <div class="col-3 p-2">
+                        <div class="col-sm-12 col-lg-3 mb-2">
+                          <div class="card p-2 mt-2">
                             <img class="img-fluid rounded-circle" src="${follower.user.avatar}" alt="User Image">
-                            <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">${follower.user.username}</a>
-                            <button class="btn btn-danger btn-sm float-right" onclick="unfollowUser(${follower.user.id})">Unfollow</button>
+
+                            <div class="card-body">
+                              <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">${follower.user.username}</a>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-tools">
+                                    <button class="btn btn-tool btn-sm" onclick="followUser(${follower.user.id})">Follow</button>
+                                    <button class="btn btn-tool btn-sm" onclick="unfollowUser(${follower.user.id})">Unfollow</button>
+                                </div>
+                            </div>
+                          </div>
                         </div>
+
                         `);
                     followersList.append(userItem);
                 });
@@ -103,10 +104,21 @@ function loadFollowing() {
             if (response.following.length > 0) {
                 response.following.forEach(following => {
                     const userItem = $(`
-                        <div class="col-3 p-2">
+
+                        <div class="col-sm-12 col-lg-3 mb-2">
+                          <div class="card p-2 mt-2">
                             <img class="img-fluid rounded-circle" src="${following.user.avatar}" alt="User Image">
-                            <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">${following.user.username}</a>
-                            <button class="btn btn-danger btn-sm float-right" onclick="unfollowUser(${following.user.id})">Unfollow</button>
+
+                            <div class="card-body">
+                              <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">${following.user.username}</a>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-tools">
+                                    <button class="btn btn-tool btn-sm" onclick="followUser(${following.user.id})">Follow</button>
+                                    <button class="btn btn-tool btn-sm" onclick="unfollowUser(${following.user.id})">Unfollow</button>
+                                </div>
+                            </div>
+                          </div>
                         </div>
                         `);
                     followingList.append(userItem);
@@ -139,3 +151,22 @@ function followUser(userId) {
         }
     });
 }
+
+// Function to unfollow a user
+window.unfollowUser = function (userId) {
+    $.ajax({
+        url: '/followers/unfollow',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ UserId: userId }),
+        success: function (response) {
+            alert(response.message);
+            // Refresh the followers/following lists
+            loadFollowers();
+            loadFollowing();
+        },
+        error: function (xhr) {
+            alert('Failed to unfollow user: ' + xhr.responseJSON.message);
+        }
+    });
+};
