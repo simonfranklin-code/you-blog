@@ -1,0 +1,162 @@
+extends layout
+block titleBlock
+  title #{title}
+
+block content 
+    // begin::App Content Header
+    .app-content-header
+        // begin::Container
+        .container-fluid
+            // begin::Row
+            .row
+                .col-sm-6
+                    h3.mb-0 #{title}
+                .col-sm-6
+                    ol.breadcrumb.float-sm-end
+                        li.breadcrumb-item
+                            a(href='/users/dashboard') Dashboard
+                        li.breadcrumb-item.active(aria-current='page')
+                            | #{title}
+    .row.g-4
+        // begin::Col
+        .col-12.connectedSortable
+            .callout.callout-info.mb-4
+                | Use the Follow Users form to find and follow Users.
+        // end::Col
+
+
+
+    .row.g-4
+        // Filter and Sorting
+        .col-md-4
+            input#filterMessage.form-control(type="text", placeholder="Filter by message")
+        .col-md-4
+            select#sortColumn.form-control
+                option(value="CreatedAt") Sort by Date
+                option(value="Message") Sort by Message
+        .col-md-4
+            select#sortOrder.form-control
+                option(value="desc") Descending
+                option(value="asc") Ascending
+    .row.g-4
+        .col-md-12
+            // Notifications Table
+            table.table.table-dark.table-striped.table-hover.mt-3
+                thead
+                    tr
+                    th ID
+                    th Message
+                    th Created At
+                    th Status
+                    th Actions
+                tbody#notificationTable
+                    // Dynamic Rows Loaded Here
+
+            // Pagination
+            nav.mt-3
+                ul.pagination.justify-content-center#pagination
+
+
+    script(src="/js/socket.io.js")
+    script.
+      let currentPage = 1;
+      let filter = '';
+      let sortColumn = 'CreatedAt';
+      let sortOrder = 'desc';
+      const socket = io(); // Connect to Socket.IO server
+      // Load Notifications
+      function loadNotifications(page = 1) {
+        filter = $('#filterMessage').val();
+        sortColumn = $('#sortColumn').val();
+        sortOrder = $('#sortOrder').val();
+
+        $.ajax({
+          url: '/notifications/getNotifications',
+          method: 'POST',
+          data: { 
+            page, 
+            filter, 
+            sortColumn, 
+            sortOrder 
+          },
+          success: function(response) {
+            if (response.success) {
+              renderTable(response.notifications);
+              renderPagination(response.totalPages, page);
+            } else {
+              alert('Failed to load notifications');
+            }
+          },
+          error: function(err) {
+            alert(JSON.stringify(err));
+          }
+        });
+      }
+
+      // Render Table Rows
+      function renderTable(notifications) {
+        const table = $('#notificationTable');
+        table.empty();
+        notifications.forEach(notification => {
+          const status = notification.Read ? 'Read' : 'Unread';
+          const row = `
+            <tr>
+              <td>${notification.NotificationId}</td>
+              <td>${notification.Message}</td>
+              <td>${notification.CreatedAt}</td>
+              <td>${status}</td>
+              <td>
+                ${!notification.Read ? `<button class="btn btn-sm btn-primary" onclick="markAsRead(${notification.NotificationId})">Mark as Read</button>` : ''}
+              </td>
+            </tr>
+          `;
+          table.append(row);
+        });
+      }
+
+      // Render Pagination
+      function renderPagination(totalPages, currentPage) {
+        const pagination = $('#pagination');
+        pagination.empty();
+        for (let i = 1; i <= totalPages; i++) {
+          const active = i === currentPage ? 'active' : '';
+          const pageItem = `<li class="page-item ${active}"><a class="page-link" href="#" onclick="loadNotifications(${i})">${i}</a></li>`;
+          pagination.append(pageItem);
+        }
+      }
+
+      // Mark Notification as Read
+      function markAsRead(NotificationId) {
+        $.ajax({
+          url: '/notifications/markAsRead',
+          method: 'POST',
+          data: { NotificationId },
+          success: function(response) {
+            if (response.success) {
+              loadNotifications(currentPage);
+            } else {
+              alert('Failed to mark notification as read');
+            }
+          },
+          error: function() {
+            alert('Error marking notification as read');
+          }
+        });
+      }
+
+      // Event Listeners
+      $('#filterMessage, #sortColumn, #sortOrder').on('change keyup', function() {
+        loadNotifications();
+      });
+
+      // Initial Load
+      $(document).ready(function() {
+        loadNotifications();
+      });
+
+
+      // Listen for real-time notifications
+      socket.on('newNotification', (notification) => {
+        alert('New Notification: ' + notification.Message);
+        loadNotifications(); // Reload notifications dynamically
+      });

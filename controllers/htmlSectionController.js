@@ -33,12 +33,12 @@ exports.getHtmlSections = async (req, res) => {
 exports.createHtmlSection = async (req, res) => {
     const { html, blogPostId, viewIndex, anchor, slug } = req.body;
     await HtmlSection.add(html, blogPostId, viewIndex, anchor, slug);
-    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been created.`);
+    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been created.`, req.io);
     // Notify followers
     const followers = await Follower.getFollowers(req.user.id);
     followers.forEach(async follower => {
         const username = req.user.username;
-        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
+        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`, req.io);
     });
     res.json({ success: true });
 };
@@ -50,12 +50,12 @@ exports.editHtmlSection = async (req, res) => {
     // Emit flash message to connected clients
     const flashMessage = req.flash('success_msg');
     req.io.emit('flash', { message: flashMessage, isError: false });
-    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been edited.`);
+    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been edited.`, req.io);
     // Notify followers
     const followers = await Follower.getFollowers(req.user.id);
     followers.forEach(async follower => {
         const username = await User.findById(req.user.id).username;
-        await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited by. ${username}`);
+        await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited by. ${username}`, req.io);
     });
     res.json({ success: true });
 };

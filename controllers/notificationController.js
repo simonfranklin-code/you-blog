@@ -1,16 +1,44 @@
 const Notification = require('../models/Notification');
-
+const db = require('../models/db');
 exports.getNotifications = async (req, res) => {
-    const UserId = req.user.id;  // Assume req.user contains the authenticated user's information
+    const UserId = req.user.id;
+    const { page, filter, sortColumn, sortOrder } = req.body;
+    const pageSize = 5;
+    const offset = (page - 1) * pageSize;
 
     try {
-        const notifications = await Notification.getNotifications(UserId);
-        res.json({ success: true, notifications });
+        const query = `
+            SELECT * FROM Notifications
+            WHERE UserId = ? AND Message LIKE ?
+            ORDER BY ${sortColumn} ${sortOrder.toUpperCase()}
+            LIMIT ? OFFSET ?
+        `;
+
+        const notifications = await new Promise((resolve, reject) => {
+            db.all(query, [UserId, `%${filter}%`, pageSize, offset], (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows);
+            });
+        });
+
+        const totalNotifications = await new Promise((resolve, reject) => {
+            db.get(`SELECT COUNT(*) as count FROM Notifications WHERE UserId = ? AND Message LIKE ?`, [UserId, `%${filter}%`], (err, row) => {
+                if (err) return reject(err);
+                resolve(row.count);
+            });
+        });
+
+        res.json({
+            success: true,
+            notifications,
+            totalPages: Math.ceil(totalNotifications / pageSize)
+        });
     } catch (err) {
         Notification.logError(err);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
+
 
 exports.markAsRead = async (req, res) => {
     const { NotificationId } = req.body;

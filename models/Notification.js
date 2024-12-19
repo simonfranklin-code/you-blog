@@ -1,4 +1,4 @@
-const db = require('./db');
+const db = require('../models/db');
 const fs = require('fs');
 
 db.serialize(() => {
@@ -26,22 +26,25 @@ class Notification {
         });
     }
 
-    static createNotification(UserId, Message) {
+    static createNotification(UserId, Message, io) {
         return new Promise((resolve, reject) => {
             db.run(
                 `INSERT INTO Notifications (UserId, Message)
-                 VALUES (?, ?)`,
+             VALUES (?, ?)`,
                 [UserId, Message],
                 function (err) {
                     if (err) {
                         Notification.logError(err);
                         return reject(err);
                     }
-                    resolve(this.lastID);  // Return the ID of the newly inserted notification
+                    // Emit real-time event
+                    io.emit('newNotification', { NotificationId: this.lastID, UserId, Message });
+                    resolve(this.lastID);
                 }
             );
         });
     }
+
 
     static getNotifications(UserId) {
         return new Promise((resolve, reject) => {
