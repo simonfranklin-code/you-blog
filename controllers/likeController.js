@@ -42,11 +42,11 @@ exports.likeComment = async (req, res) => {
     try {
         await Like.likeComment(commentId, currentUserId);
         const likesCount = await Like.getCommentLikesCount(commentId);
-        await Notification.createNotification(currentUserId, `User ${currentUsername} liked User ${commentUsername}'s comment`);
+        await Notification.createNotification(currentUserId, `User ${currentUsername} liked User ${commentUsername}'s comment`, req.io);
         // Notify followers
         const followers = await Follower.getFollowers(req.user.id);
         followers.forEach(async follower => {
-            await Notification.createNotification(follower.FollowerUserId, `User ${currentUsername} liked User ${commentUsername}'s comment`);
+            await Notification.createNotification(follower.FollowerUserId, `User ${currentUsername} liked User ${commentUsername}'s comment`, req.io);
         });
         res.json({ success: true, message: 'Comment liked', likesCount: likesCount });
     } catch (err) {

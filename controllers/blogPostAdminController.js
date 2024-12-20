@@ -29,12 +29,12 @@ exports.getBlogPosts = async (req, res) => {
 exports.createBlogPost = async (req, res) => {
     const { title, slug, blogId, author, userId, content } = req.body;
     await BlogPost.add(title, slug, blogId, author, userId, content);
-    await Notification.createNotification(userId, `Your Blog post "${title}" has been created.`);
+    await Notification.createNotification(userId, `Your Blog post "${title}" has been created.`, req.io);
     // Notify followers
     const followers = await Follower.getFollowers(userId);
     followers.forEach(async follower => {
         const username = await User.findById(userId).username;
-        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new blog post "${title}".`);
+        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new blog post "${title}".`, req.io);
     });
     res.json({ success: true });
 };
@@ -42,12 +42,12 @@ exports.createBlogPost = async (req, res) => {
 exports.editBlogPost = async (req, res) => {
     const { title, slug, blogId, author, userId, content, metaDescription, metaKeywords, footer } = req.body;
     await BlogPost.edit(req.params.id, title, slug, blogId, author, userId, content, metaDescription, metaKeywords, footer);
-    await Notification.createNotification(userId, `Your Blog post "${title}" has been updated.`);
+    await Notification.createNotification(userId, `Your Blog post "${title}" has been updated.`, req.io);
     // Notify followers
     const followers = await Follower.getFollowers(userId);
     followers.forEach(async follower => {
         const username = await User.findById(userId).username;
-        await Notification.createNotification(follower.FollowerUserId, `User ${username} has updated blog post "${title}".`);
+        await Notification.createNotification(follower.FollowerUserId, `User ${username} has updated blog post "${title}".`, req.io);
     });
     res.json({ success: true });
 };
