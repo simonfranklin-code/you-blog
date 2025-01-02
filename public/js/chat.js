@@ -318,12 +318,12 @@ $(function () {
         // Add local stream to the peer connection
         localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
 
-        // Handle ICE candidates
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
                 socket.emit('ice-candidate', {
-                    to: data.from,
-                    candidate: event.candidate,
+                    to: targetUserId,        // The recipient's ID
+                    from: socket.id,         // Your socket ID (the sender's ID)
+                    candidate: event.candidate, // The ICE candidate
                 });
             }
         };
@@ -352,7 +352,10 @@ $(function () {
 
     // Handle ICE candidates
     socket.on('ice-candidate', (data) => {
-        peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+        console.log(`ICE Candidate received from: ${data.from}`);
+        peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate))
+            .then(() => console.log('ICE candidate added successfully'))
+            .catch((error) => console.error('Error adding ICE candidate:', error));
     });
 
     // End call
