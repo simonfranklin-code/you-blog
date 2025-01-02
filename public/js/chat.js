@@ -262,7 +262,7 @@ $(function () {
 
     const servers = {
         iceServers: [
-            { urls: 'stun:stun01.sipphone.com' }, // Public STUN server
+            { urls: 'stun:stun.l.google.com:19302' }, // Public STUN server
         ],
     };
 
@@ -325,6 +325,7 @@ $(function () {
                     from: socket.id,         // Your socket ID (the sender's ID)
                     candidate: event.candidate, // The ICE candidate
                 });
+                console.log('Emitting ICE candidate:', { to: targetUserId, from: socket.id });
             }
         };
 

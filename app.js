@@ -133,7 +133,7 @@ const users = {};
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
     const user = socket.request.user; // Access authenticated user
-
+    console.log('User connected:', socket.id);
     // Emit the updated user list to all clients
     if (user && user.id) {
         if (onlineUsers.has(user.id)) {
