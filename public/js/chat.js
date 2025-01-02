@@ -73,7 +73,7 @@ $(function () {
                 <img class="direct-chat-img" src="${data.avatar}" alt="message user image" draggable="false">
                 <!-- /.direct-chat-img-->
                 <div class="direct-chat-text">
-                    ${data.username} is online
+                    ${data.username} is online : Socket Id:${data.socketId}
                 </div>
                 <!-- /.direct-chat-text-->
             </div>

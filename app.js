@@ -164,7 +164,7 @@ io.on('connection', (socket) => {
 
 
         // Notify all clients that the user is online
-        io.emit('user-online', { userId: user.id, username: user.username, avatar: user.avatar });
+        io.emit('user-online', { userId: user.id, username: user.username, avatar: user.avatar, socketId: socket.id });
 
         // Join user-specific room
         socket.join(user.id);  // Use the user's ID to join a room
@@ -244,6 +244,9 @@ io.on('connection', (socket) => {
 
         socket.on('ice-candidate', (data) => {
             console.log('ICE candidate received from:', data.from);
+            console.log('ICE candidate details:', data.candidate);
+
+            // Relay the ICE candidate to the intended recipient
             socket.to(data.to).emit('ice-candidate', data);
         });
     }
