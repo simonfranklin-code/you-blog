@@ -288,9 +288,16 @@ $(function () {
         // Handle ICE candidates
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
+                console.log('Sending ICE candidate:', {
+                    to: targetUserId,
+                    from: socket.id,
+                    candidate: event.candidate,
+                });
+
                 socket.emit('ice-candidate', {
                     to: targetUserId,
-                    from: event.candidate,
+                    from: socket.id, // Ensure this is the sender's ID
+                    candidate: event.candidate,
                 });
             }
         };
