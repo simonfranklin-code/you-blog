@@ -14,96 +14,34 @@
                 i.bi.bi-x-lg
     // /.card-header
     .card-body
+        .video-container
+            video#local-video(autoplay muted playsinline style='width: 45%; margin-right: 10px;')
+            video#remote-video(autoplay playsinline style='width: 45%;')
         // Conversations are loaded here
         .direct-chat-messages#messages
 
         // /.direct-chat-messages
         // Contacts are loaded here
         .direct-chat-contacts
-            ul.contacts-list
-                li
-                    a(href='#')
-                    img.contacts-list-img(src='/dist/assets/img/user1-128x128.jpg' alt='User Avatar')
-                    .contacts-list-info
-                        span.contacts-list-name
-                        | Count Dracula
-                        small.contacts-list-date.float-end
-                            | 2/28/2023
-                        span.contacts-list-msg
-                        | How have you been? I was...
-                    // /.contacts-list-info
-                // End Contact Item
-                li
-                    a(href='#')
-                    img.contacts-list-img(src='/dist/assets/img/user7-128x128.jpg' alt='User Avatar')
-                    .contacts-list-info
-                        span.contacts-list-name
-                        | Sarah Doe
-                        small.contacts-list-date.float-end
-                            | 2/23/2023
-                        span.contacts-list-msg
-                        | I will be waiting for...
-                    // /.contacts-list-info
-                // End Contact Item
-                li
-                    a(href='#')
-                    img.contacts-list-img(src='/dist/assets/img/user3-128x128.jpg' alt='User Avatar')
-                    .contacts-list-info
-                        span.contacts-list-name
-                        | Nadia Jolie
-                        small.contacts-list-date.float-end
-                            | 2/20/2023
-                        span.contacts-list-msg
-                        | I&apos;ll call you back at...
-                    // /.contacts-list-info
-                // End Contact Item
-                li
-                    a(href='#')
-                    img.contacts-list-img(src='/dist/assets/img/user5-128x128.jpg' alt='User Avatar')
-                    .contacts-list-info
-                        span.contacts-list-name
-                        | Nora S. Vans
-                        small.contacts-list-date.float-end
-                            | 2/10/2023
-                        span.contacts-list-msg
-                        | Where is your new...
-                    // /.contacts-list-info
-                // End Contact Item
-                li
-                    a(href='#')
-                    img.contacts-list-img(src='/dist/assets/img/user6-128x128.jpg' alt='User Avatar')
-                    .contacts-list-info
-                        span.contacts-list-name
-                        | John K.
-                        small.contacts-list-date.float-end
-                            | 1/27/2023
-                        span.contacts-list-msg
-                        | Can I take a look at...
-                    // /.contacts-list-info
-                // End Contact Item
-                li
-                    a(href='#')
-                    img.contacts-list-img(src='/dist/assets/img/user8-128x128.jpg' alt='User Avatar')
-                    .contacts-list-info
-                        span.contacts-list-name
-                        | Kenneth M.
-                        small.contacts-list-date.float-end
-                            | 1/4/2023
-                        span.contacts-list-msg
-                        | Never mind I found...
-                    // /.contacts-list-info
-                // End Contact Item
+            ul.contacts-list#user-list
+
                 // /.contacts-list
             // /.direct-chat-pane
     // /.card-body
     .card-footer
         form#chat-form(action='/' method='post')
-            
             .input-group
+                span.input-group-text#send-btn(onclick="$('#chat-form').submit();")
+                    span(class="bi bi-chat-text")   
                 input.form-control#message-input(type='text' name='message' placeholder='Type Message ...')
+                input.form-control#file-input(type='file' style='display: none;')
+                span.input-group-text(type='button' onclick="$('#file-input').click();")
+                    span(class="material material-attach-file mbr-iconfont mbr-iconfont-btn") 
+            .input-group
+                input.form-control#call-target(type='text' placeholder='Enter User ID to Call')
                 span.input-group-append
-                    button.btn.btn-warning#send-btn(type='submit')
-                        | Send
+                    button.btn.btn-secondary(type='button' id='start-call') Start Call
+                    button.btn.btn-danger(type='button' id='end-call') End Call
     // /.card-footer
-
+script(src='/js/socket.io.js')
 script(src='/js/chat.js')

@@ -48,5 +48,8 @@ db.serialize(() => {
       FOREIGN KEY(receiver_id) REFERENCES users(id)
     )
   `);
+
+
+
 });
 module.exports = db;

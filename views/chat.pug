@@ -2,12 +2,13 @@ doctype html
 html(lang='en')
   // begin::Head
   head
+    base(href='/digital-marketing-dreams/')
     meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
     block titleBlock
     // begin::Primary Meta Tags
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    meta(name='title', content='Color Mode | AdminLTE 4')
-    meta(name='author', content='ColorlibHQ')
+    meta(name='title', content='uBlog Chat')
+    meta(name='author', content='SMF')
     meta(name='description', content='AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS.')
     meta(name='keywords', content='bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard')
     // end::Primary Meta Tags
@@ -24,7 +25,7 @@ html(lang='en')
     // begin::Required Plugin(AdminLTE)
     link(rel='stylesheet', href='/css/adminlte.css')
     link(rel='stylesheet', href='/css/bs-additional.css')
-    
+    link( rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css")
     // end::Required Plugin(AdminLTE)
     script(src='/vendor/jquery/jquery.min.js').
   // end::Head
@@ -46,101 +47,101 @@ html(lang='en')
     script(src='/vendor/jquery/jquery.min.js').
     // begin::OverlayScrollbars Configure
     script.
-      const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
-      const Default = {
-      scrollbarTheme: "os-theme-light",
-      scrollbarAutoHide: "leave",
-      scrollbarClickScroll: true,
-      };
-      document.addEventListener("DOMContentLoaded", function() {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (
-      sidebarWrapper &&
-      typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
-      ) {
-      OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-      scrollbars: {
-      theme: Default.scrollbarTheme,
-      autoHide: Default.scrollbarAutoHide,
-      clickScroll: Default.scrollbarClickScroll,
-      },
-      });
-      }
-      });
+        const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
+        const Default = {
+            scrollbarTheme: "os-theme-dark",
+            scrollbarAutoHide: "leave",
+            scrollbarClickScroll: true,
+        };
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+            if (
+                sidebarWrapper &&
+                typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
+            ) {
+                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+                    scrollbars: {
+                        theme: Default.scrollbarTheme,
+                        autoHide: Default.scrollbarAutoHide,
+                        clickScroll: Default.scrollbarClickScroll,
+                    },
+                });
+            }
+        });
     // end::OverlayScrollbars Configure
     script.
-      // Color Mode Toggler
-      (() => {
-      "use strict";
-      const storedTheme = localStorage.getItem("theme");
-      const getPreferredTheme = () => {
-      if (storedTheme) {
-      return storedTheme;
-      }
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ?
-      "dark" :
-      "light";
-      };
-      const setTheme = function(theme) {
-      if (
-      theme === "auto" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-      document.documentElement.setAttribute("data-bs-theme", "dark");
-      } else {
-      document.documentElement.setAttribute("data-bs-theme", theme);
-      }
-      };
-      setTheme(getPreferredTheme());
-      const showActiveTheme = (theme, focus = false) => {
-      const themeSwitcher = document.querySelector("#bd-theme");
-      if (!themeSwitcher) {
-      return;
-      }
-      const themeSwitcherText = document.querySelector("#bd-theme-text");
-      const activeThemeIcon = document.querySelector(
-      ".theme-icon-active i"
-      );
-      const btnToActive = document.querySelector(
-      `[data-bs-theme-value="${theme}"]`
-      );
-      const svgOfActiveBtn = btnToActive
-      .querySelector("i")
-      .getAttribute("class");
-      for (const element of document.querySelectorAll(
-      "[data-bs-theme-value]"
-      )) {
-      element.classList.remove("active");
-      element.setAttribute("aria-pressed", "false");
-      }
-      btnToActive.classList.add("active");
-      btnToActive.setAttribute("aria-pressed", "true");
-      activeThemeIcon.setAttribute("class", svgOfActiveBtn);
-      const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`;
-      themeSwitcher.setAttribute("aria-label", themeSwitcherLabel);
-      if (focus) {
-      themeSwitcher.focus();
-      }
-      };
-      window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", () => {
-      if (storedTheme !== "light" || storedTheme !== "dark") {
-      setTheme(getPreferredTheme());
-      }
-      });
-      window.addEventListener("DOMContentLoaded", () => {
-      showActiveTheme(getPreferredTheme());
-      for (const toggle of document.querySelectorAll(
-      "[data-bs-theme-value]"
-      )) {
-      toggle.addEventListener("click", () => {
-      const theme = toggle.getAttribute("data-bs-theme-value");
-      localStorage.setItem("theme", theme);
-      setTheme(theme);
-      showActiveTheme(theme, true);
-      });
-      }
-      });
-      })();
+        // Color Mode Toggler
+        (() => {
+            "use strict";
+            const storedTheme = localStorage.getItem("theme");
+            const getPreferredTheme = () => {
+                if (storedTheme) {
+                    return storedTheme;
+                }
+                return window.matchMedia("(prefers-color-scheme: dark)").matches ?
+                    "dark" :
+                    "light";
+            };
+            const setTheme = function (theme) {
+                if (
+                    theme === "auto" &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches
+                ) {
+                    document.documentElement.setAttribute("data-bs-theme", "dark");
+                } else {
+                    document.documentElement.setAttribute("data-bs-theme", theme);
+                }
+            };
+            setTheme(getPreferredTheme());
+            const showActiveTheme = (theme, focus = false) => {
+                const themeSwitcher = document.querySelector("#bd-theme");
+                if (!themeSwitcher) {
+                    return;
+                }
+                const themeSwitcherText = document.querySelector("#bd-theme-text");
+                const activeThemeIcon = document.querySelector(
+                    ".theme-icon-active i"
+                );
+                const btnToActive = document.querySelector(
+                    `[data-bs-theme-value="${theme}"]`
+                );
+                const svgOfActiveBtn = btnToActive
+                    .querySelector("i")
+                    .getAttribute("class");
+                for (const element of document.querySelectorAll(
+                    "[data-bs-theme-value]"
+                )) {
+                    element.classList.remove("active");
+                    element.setAttribute("aria-pressed", "false");
+                }
+                btnToActive.classList.add("active");
+                btnToActive.setAttribute("aria-pressed", "true");
+                activeThemeIcon.setAttribute("class", svgOfActiveBtn);
+                const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`;
+                themeSwitcher.setAttribute("aria-label", themeSwitcherLabel);
+                if (focus) {
+                    themeSwitcher.focus();
+                }
+            };
+            window
+                .matchMedia("(prefers-color-scheme: dark)")
+                .addEventListener("change", () => {
+                    if (storedTheme !== "light" || storedTheme !== "dark") {
+                        setTheme(getPreferredTheme());
+                    }
+                });
+            window.addEventListener("DOMContentLoaded", () => {
+                showActiveTheme(getPreferredTheme());
+                for (const toggle of document.querySelectorAll(
+                    "[data-bs-theme-value]"
+                )) {
+                    toggle.addEventListener("click", () => {
+                        const theme = toggle.getAttribute("data-bs-theme-value");
+                        localStorage.setItem("theme", theme);
+                        setTheme(theme);
+                        showActiveTheme(theme, true);
+                    });
+                }
+            });
+        })();
     // end::Script

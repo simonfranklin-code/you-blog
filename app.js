@@ -3,6 +3,7 @@ require('dotenv').config();
 var debug = require('debug')('you blog express app');
 var express = require('express');
 const fileUpload = require('express-fileupload');
+const multer = require('multer');
 const path = require('path');
 const lessMiddleware = require('less-middleware');
 var favicon = require('serve-favicon');
@@ -27,10 +28,12 @@ const followerRoutes = require('./routes/followerRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const friendRoutes = require('./routes/friendRoutes');
 const timelineRoutes = require('./routes/timelineRoutes')
+const messageRoutes = require('./routes/messageRoutes');
 const http = require('http');
 const socketIo = require('socket.io');
 const passportSocketIo = require('passport.socketio');
 const userWithAvatar = require('./models/User');
+const Message = require('./models/Message');
 var app = express();
 
 // Passport config
@@ -64,7 +67,7 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 7 } // 7 days
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 14 } // 14 days
 }));
 
 // Passport middleware
@@ -80,6 +83,37 @@ io.use(passportSocketIo.authorize({
     fail: onAuthorizeFail             // Callback on failure
 }));
 
+// Configure multer for file uploads
+const upload = multer({
+    dest: 'uploads/', // Directory to store uploaded files
+    limits: { fileSize: 10 * 1024 * 1024 }, // Max file size: 10MB
+    fileFilter: (req, file, cb) => {
+        // Accept only certain file types
+        const fileTypes = /jpeg|jpg|png|gif|webp|pdf/;
+        const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = fileTypes.test(file.mimetype);
+        if (extname && mimetype) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only images and PDFs are allowed'));
+        }
+    },
+});
+
+// Handle file uploads
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const fileUrl = `/uploads/${req.file.filename}`; // File URL for serving
+    res.json({ fileUrl });
+});
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 function onAuthorizeSuccess(data, accept) {
     console.log('successful connection to socket.io');
     accept(); // Allow connection
@@ -92,18 +126,42 @@ function onAuthorizeFail(data, message, error, accept) {
 }
 
 
-// Store online users
-const onlineUsers = new Set();
-
+// Store online users and their details
+const onlineUsers = new Map(); // Key: userId, Value: { username, avatar, socketId }
+// Store connected clients and their socket IDs
+const users = {};
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
     const user = socket.request.user; // Access authenticated user
 
+    // Emit the updated user list to all clients
     if (user && user.id) {
+        if (onlineUsers.has(user.id)) {
+            console.log(`User ${user.username} (${user.id}) already connected.`);
+            return;
+        }
+
+
         console.log(`User connected: ${user.username} (${user.id})`);
 
-        // Add user to online users set
-        onlineUsers.add(user.id);
+        // Register a username to a socket ID
+        users[user.id] = socket.id;
+
+        // Add the user to the map
+        onlineUsers.set(user.id, {
+            username: user.username,
+            avatar: user.avatar,
+            socketId: socket.id
+        });
+
+        // Emit the updated user list to all clients
+        const userList = Array.from(onlineUsers.entries()).map(([userId, details]) => ({
+            userId,
+            username: details.username,
+            avatar: details.avatar
+        }));
+        io.emit('updateUserList', userList);
+
 
         // Notify all clients that the user is online
         io.emit('user-online', { userId: user.id, username: user.username, avatar: user.avatar });
@@ -114,20 +172,29 @@ io.on('connection', (socket) => {
         // Handle receiving a chat message from the client
         socket.on('chatMessage', (msg) => {
             if (user) {
-                io.emit('chatMessage', { avatar: user.avatar, username: user.username, message: msg });
+                io.emit('chatMessage', { avatar: user.avatar, username: user.username, message: msg, id: user.id });
             }
         });
 
-        // Listen for private messages
-        socket.on('privateMessage', async (data) => {
-            const targetUserId = data.to;  // Target user's ID
-            const message = data.message;  // The message to be sent
-            const uwa = await userWithAvatar.getUserWithAvatar(targetUserId);
-            io.to(targetUserId).emit('privateMessage', {
-                from: user.username,  // Send the username of the sender
-                message: message,
-                userWithAvatar: uwa
-            });
+        // Handle receiving a private message
+        socket.on('privateMessage', ({ to, message }) => {
+            const targetSocketId = users[to]; // Get the recipient's socket ID
+            if (targetSocketId) {
+                // Send the private message to the target user
+                io.to(targetSocketId).emit('privateMessage', {
+                    from: user.id,
+                    avatar: user.avatar,
+                    username: user.username,
+                    message,
+                });
+                // Emit acknowledgment back to the sender
+                socket.emit('messageDelivered', { to, message });
+                console.log(`Private message from ${user.username} to ${to}: ${message}`);
+            } else {
+                // Notify sender that the recipient is offline or unavailable
+                socket.emit('messageFailed', { to, message });
+                console.log(`User ${to} not found or offline.`);
+            }
         });
 
         // Handle user disconnecting
@@ -136,9 +203,48 @@ io.on('connection', (socket) => {
 
             // Remove user from online users set
             onlineUsers.delete(user.id);
-
+            delete users[user.id];
             // Notify all clients that the user has gone offline
             io.emit('user-offline', { userId: user.id, username: user.username, avatar: user.avatar });
+            // Emit the updated user list to all clients
+            const userList = Array.from(onlineUsers.entries()).map(([userId, details]) => ({
+                userId,
+                username: details.username,
+                avatar: details.avatar
+            }));
+            io.emit('updateUserList', userList);
+        });
+
+
+        // Handle user joining a specific room
+        socket.on('joinRoom', (userId) => {
+            socket.join(userId); // Join a room named after the userId
+            console.log(`User ${userId} joined room`);
+        });
+
+        socket.on('sendFile', (data) => {
+            // Broadcast file link to all users
+            io.emit('fileMessage', {
+                username: data.username,
+                fileUrl: data.fileUrl,
+                fileName: data.fileName,
+            });
+        });
+
+        // Relay signaling data
+        socket.on('offer', (data) => {
+            console.log('Offer received from:', data.from);
+            socket.to(data.to).emit('offer', data);
+        });
+
+        socket.on('answer', (data) => {
+            console.log('Answer received from:', data.from);
+            socket.to(data.to).emit('answer', data);
+        });
+
+        socket.on('ice-candidate', (data) => {
+            console.log('ICE candidate received from:', data.from);
+            socket.to(data.to).emit('ice-candidate', data);
         });
     }
 });
@@ -192,6 +298,7 @@ app.use('/followers', followerRoutes);
 app.use('/chat', chatRoutes);
 app.use('/friends', friendRoutes);
 app.use('/users/timeline', timelineRoutes);
+app.use('/messages', messageRoutes);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
