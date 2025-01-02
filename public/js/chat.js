@@ -290,7 +290,7 @@ $(function () {
             if (event.candidate) {
                 socket.emit('ice-candidate', {
                     to: targetUserId,
-                    candidate: event.candidate,
+                    from: event.candidate,
                 });
             }
         };
