@@ -177,9 +177,9 @@ $(function () {
 
     // Listen for incoming private messages
     socket.on('privateMessage', function (data) {
-        appendMessage(data.username, data.message, data.avatar, data.from, true);
+        appendMessage(data.username, data.message, data.avatar, data.from, data.socketId, true);
     });
-    function appendMessage(username, message, avatar, userId, isPrivate) {
+    function appendMessage(username, message, avatar, userId, socketId, isPrivate) {
         msgCount++;
         cls = msgCount % 2 === 0 ? '' : 'end';
 
@@ -187,10 +187,10 @@ $(function () {
             <div class="direct-chat-msg ${cls}">
                 <div class="direct-chat-infos clearfix">
                     <span class="direct-chat-name float-end">${username}&nbsp;<i class="bi bi-chat-text private_btn" data-privateId="${userId}"></i></span>
-                    <span class="direct-chat-timestamp float-start">${new Date().toISOString()}</span>
+                    <span class="direct-chat-timestamp float-start">${new Date().toLocaleTimeString() }</span>
                 </div>
                 <img class="direct-chat-img" src="${avatar}" alt="message user image">
-                <div class="direct-chat-text">${isPrivate === true ? "Private message from ": ''}${username}: ${message}</div>
+                <div class="direct-chat-text">${isPrivate === true ? "Private message from " : ''}${username}: ${message} (${socketId})</div>
             </div>`;
         $('#messages').prepend(msgTemplate);
     }
@@ -278,7 +278,7 @@ $(function () {
 
     // Start a call
     $('#start-call').click(async function () {
-        const targetUserId = $('#call-target').val(); // Target user ID
+        const targetUserId = $('#call-target').val(); // Target SocketId
 
         peerConnection = new RTCPeerConnection(servers);
 

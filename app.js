@@ -186,6 +186,7 @@ io.on('connection', (socket) => {
                     from: user.id,
                     avatar: user.avatar,
                     username: user.username,
+                    socketid: targetSocketId,
                     message,
                 });
                 // Emit acknowledgment back to the sender
