@@ -158,7 +158,8 @@ io.on('connection', (socket) => {
         const userList = Array.from(onlineUsers.entries()).map(([userId, details]) => ({
             userId,
             username: details.username,
-            avatar: details.avatar
+            avatar: details.avatar,
+            socketId: details.socketId
         }));
         io.emit('updateUserList', userList);
 

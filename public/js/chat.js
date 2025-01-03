@@ -247,8 +247,8 @@ $(function () {
                     <img class="contacts-list-img" src="${onlineUser.avatar}" alt="${onlineUser.username}" draggable="false">
                     <div class="contacts-list-info">
                         <span class="contacts-list-name"></span>
-                        ${onlineUser.username}<small class="contacts-list-date float-end">${new Date().toISOString()}</small>
-                        <span class="contacts-list-msg"></span>User ${onlineUser.username} is online... 
+                        ${onlineUser.username}<small class="contacts-list-date float-end">${new Date().toLocaleTimeString()}</small>
+                        <span class="contacts-list-msg">User ${onlineUser.username} is online...(${onlineUser.socketId})</span> 
                    </div>
                 </li>`;
                 userList.append(userItem);
