@@ -15,8 +15,11 @@
     // /.card-header
     .card-body
         .video-container
-            video#local-video(autoplay muted playsinline style='width: 45%; margin-right: 10px;')
-            video#remote-video(autoplay playsinline style='width: 45%;')
+            .row.g-4.mb-4
+                .col-md-6
+                    video#local-video(autoplay muted playsinline style='width: 45%; margin-right: 10px;')
+                .col-md-6
+                    video#remote-video(autoplay playsinline style='width: 45%;')
         // Conversations are loaded here
         .direct-chat-messages#messages
 
