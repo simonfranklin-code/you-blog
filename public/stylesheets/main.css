@@ -473,3 +473,8 @@ h6.card-title {
     --bs-offcanvas-transition: transform 0.3s ease-in-out;
     --bs-offcanvas-title-line-height: 1.5;
 }
+
+.cid-ujKOPj0Zn9 .navbar .navbar-collapse {
+    justify-content: flex-start;
+    z-index: 1;
+}
