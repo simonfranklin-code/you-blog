@@ -1,20 +1,21 @@
 extends layout.pug
 block baseDirectoryBlock
-  != blog.BaseDirectory
-
+    != blog.BaseDirectory
 block titleBlock
-  title #{title}
+    title #{blogPost.Title}
 block headStylesBlock
-   != blog.HeadStylesBlock
+    != blog.HeadStylesBlock
 block headScriptsBlock
-   != blog.HeadScriptsBlock
+    != blog.HeadScriptsBlock
 block metaDescriptionBlock
-   meta(name='description' content=`${metaDescription}`)
+    != blogPost.MetaDescription
 block metaKewordsBlock
-   meta(name='keywords' content=`${metaKeywords}`)
+    != blogPost.MetaKeywords
 block blogHeader
     != blog.BlogHeader
 block content
     != htmlContent
 block footer
     != blog.BlogFooter
+    script.
+        const _blogPostId = #{blogPost.BlogPostId};

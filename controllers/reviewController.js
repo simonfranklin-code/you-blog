@@ -28,7 +28,7 @@ exports.getReviewsByPostId = async (req, res) => {
 };
 
 exports.getReviewsBySlug = async (req, res) => {
-    const { slug } = req.params;
+    const slug = req.params.slug;
 
     try {
         

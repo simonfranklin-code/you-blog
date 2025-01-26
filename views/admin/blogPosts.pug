@@ -201,7 +201,7 @@ block content
                 success: function (data) {
                     const tbody = $('#blogPostsTableBody');
                     tbody.empty();
-
+                    $('#blogIdFilter').empty();
                     data.blogs.forEach(blog => {
                         let option = `<option value="${blog.BlogId}" name="${blog.Title}">${blog.Title}</option>`;
                         $('#blogIdFilter').append(option);

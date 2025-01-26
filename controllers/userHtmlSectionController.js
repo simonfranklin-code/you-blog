@@ -15,49 +15,67 @@ exports.getHtmlSectionsPage = (req, res) => {
 };
 
 exports.getHtmlSections = async (req, res) => {
-    const filters = {};
-    const { page = 1, limit = 5, sortField = 'ViewIndex', sortOrder = 'ASC', anchor, blogPostId } = req.query;
-    if (blogPostId != 'undefined' && blogPostId > 0) {
-        _BlogPost = await BlogPost.get(blogPostId);
-        _Blog = await Blog.get(_BlogPost.BlogId);
-        _BlogSlug = _Blog.Slug;
-        _BlogPostSlug = _BlogPost.Slug;
+    try {
+        const filters = {};
+        const { page = 1, limit = 5, sortField = 'ViewIndex', sortOrder = 'ASC', anchor, blogPostId } = req.query;
+        if (blogPostId != 'undefined' && blogPostId > 0) {
+            _BlogPost = await BlogPost.get(blogPostId);
+            _Blog = await Blog.get(_BlogPost.BlogId);
+            _BlogSlug = _Blog.Slug;
+            _BlogPostSlug = _BlogPost.Slug;
+        }
+        const htmlSections = await HtmlSection.getAll(page, parseInt(limit), sortField, sortOrder, { anchor, blogPostId });
+        const totalHtmlSections = await HtmlSection.getHtmlSectionsCount({ blogPostId });
+        const totalPages = Math.ceil(totalHtmlSections / limit);
+        const blogPosts = await BlogPost.getAll(1, parseInt(100), 'BlogPostId', 'ASC', filters);
+        res.json({ htmlSections, totalPages, totalHtmlSections, blogPosts, _BlogSlug, _BlogPostSlug });
+    } catch (e) {
+        req.io.emit('flash', { message: `An error occured :` + e.message, isError: true });
     }
-    const htmlSections = await HtmlSection.getAll(page, parseInt(limit), sortField, sortOrder, { anchor, blogPostId });
-    const totalHtmlSections = await HtmlSection.getHtmlSectionsCount({ blogPostId });
-    const totalPages = Math.ceil(totalHtmlSections / limit);
-    const blogPosts = await BlogPost.getAll(1, parseInt(100), 'BlogPostId', 'ASC', filters);
-    res.json({ htmlSections, totalPages, totalHtmlSections, blogPosts, _BlogSlug, _BlogPostSlug });
 };
 
 exports.createHtmlSection = async (req, res) => {
-    const { html, blogPostId, viewIndex, anchor, slug } = req.body;
-    await HtmlSection.add(html, blogPostId, viewIndex, anchor, slug);
-    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been created.`);
-    // Notify followers
-    const followers = await Follower.getFollowers(req.user.id);
-    followers.forEach(async follower => {
-        const username = req.user.username;
-        await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
-    });
-    res.json({ success: true });
+    try {
+        const { html, blogPostId, viewIndex, anchor, slug, page, header, body } = req.body;
+        await HtmlSection.add(html, blogPostId, viewIndex, anchor, slug, page, header, body);
+        req.flash('success_msg', `Html Section "${anchor}" has been created. by. ${req.user.username}`);
+        // Emit flash message to connected clients
+        const flashMessage = req.flash('success_msg');
+        req.io.emit('flash', { message: flashMessage, isError: false });
+        await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been created.`);
+        // Notify followers
+        const followers = await Follower.getFollowers(req.user.id);
+        followers.forEach(async follower => {
+            const username = req.user.username;
+            await Notification.createNotification(follower.FollowerUserId, `User ${username} has created a new html section "${anchor}".`);
+        });
+        res.json({ success: true });
+    } catch (e) {
+        req.io.emit('flash', { message: `An error occured :` + e.message, isError: true });
+        res.json({ success: false });
+    }
 };
 
 exports.editHtmlSection = async (req, res) => {
-    const { html, viewIndex, anchor, slug } = req.body;
-    await HtmlSection.edit(req.params.id, html, viewIndex, anchor, slug);
-    req.flash('success_msg', `Html Section "${anchor}" has been edited by. ${req.user.username}`);
-    // Emit flash message to connected clients
-    const flashMessage = req.flash('success_msg');
-    req.io.emit('flash', { message: flashMessage, isError: false });
-    await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been edited.`);
-    // Notify followers
-    const followers = await Follower.getFollowers(req.user.id);
-    followers.forEach(async follower => {
-        const username = await User.findById(req.user.id).username;
-        await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited by. ${username}`);
-    });
-    res.json({ success: true });
+    try {
+        const { html, viewIndex, anchor, slug, page, header, body } = req.body;
+        await HtmlSection.edit(req.params.id, html, viewIndex, anchor, slug, page, header, body);
+        req.flash('success_msg', `Html Section "${anchor}" has been edited by. ${req.user.username}`);
+        // Emit flash message to connected clients
+        const flashMessage = req.flash('success_msg');
+        req.io.emit('flash', { message: flashMessage, isError: false });
+        await Notification.createNotification(req.user.id, `Html Section "${anchor}" has been edited.`);
+        // Notify followers
+        const followers = await Follower.getFollowers(req.user.id);
+        followers.forEach(async follower => {
+            const username = await User.findById(req.user.id).username;
+            await Notification.createNotification(follower.FollowerUserId, `Html Section "${anchor}" has been edited by. ${username}`);
+        });
+        res.json({ success: true });
+    } catch (e) {
+        req.io.emit('flash', { message: `An error occured :` + e.message, isError: true });
+        res.json({ success: false });
+    }
 };
 
 exports.deleteHtmlSection = async (req, res) => {
@@ -73,7 +91,7 @@ exports.getHtmlSection = async (req, res) => {
 exports.updateHtmlSection = (req, res) => {
     const { HtmlSectionID, Html } = req.body;
 
-    db.run(`UPDATE HtmlSections SET Html = ?, DateUpdated = ? WHERE HtmlSectionID = ?`, [Html, new Date().toISOString(), HtmlSectionID], function (err) {
+    db.run(`UPDATE HtmlSections SET Html = ?, DateUpdated = ? WHERE HtmlSectionID = ?`, [Html, new Date().toLocaleDateString(), HtmlSectionID], function (err) {
         if (err) {
             console.error(err);
             HtmlSection.logError(err);
@@ -261,4 +279,9 @@ exports.getBlogPostSectionByAnchor = async (req, res) => {
     });
 
 
+}
+
+exports.getWitsecSearchDb = async (req, res) => {
+    let htmlSections = await HtmlSection.getWitsecSearchDb();
+    res.json(htmlSections);
 }

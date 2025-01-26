@@ -74,9 +74,9 @@ class Blog {
 
     static getBlogSlugByBlogId(id) {
         return new Promise((resolve, reject) => {
-            db.get(`SELECT * FROM Blogs WHERE BlogId = ?`, [id], (err, row) => {
+            db.get(`SELECT Slug FROM Blogs WHERE BlogId = ?`, [id], (err, slug) => {
                 if (err) return reject(err);
-                resolve(row);
+                resolve(slug);
             });
         });
     }

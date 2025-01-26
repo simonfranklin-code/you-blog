@@ -9,11 +9,11 @@ block content
         // begin::Row
         .row
           .col-sm-6
-            h3.mb-0 #{_BlogSlug}
+            h3.mb-0 #{title}
           .col-sm-6
             ol.breadcrumb.float-sm-end
               li.breadcrumb-item
-                a(href='/admin/dashboard') Admin
+                a(href='/users/dashboard') Dashboard
               li.breadcrumb-item.active(aria-current='page')
                 | #{title}
           // end::Row
@@ -98,6 +98,8 @@ block content
                       a(href='#' class='sort' data-field='DateCreated') Date Created
                     th
                       a(href='#' class='sort' data-field='Slug') Slug
+                    th
+                      a(href='#' class='sort' data-field='Body') Body
                     th Actions
 
                 tbody#htmlSectionsTableBody
@@ -113,7 +115,7 @@ block content
                   button.page-link(type='button' id='nextPage') Next
           // end::Footer
         // end::Blog Post Table
-
+    #toast-container.position-fixed.top-0.end-0.p-3( style="z-index: 10000;")  
 
 
     // Modals
@@ -122,7 +124,7 @@ block content
       .modal-dialog(role='document')
         .modal-content
           .modal-header
-            h5.modal-title#htmlSectionModalTitle New HTML Section
+            h5.modal-title#htmlSectionModalTitle (New / Edit) HTML Section
             button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
               
           .modal-body(id="editHtmlSectionBody")
@@ -143,7 +145,15 @@ block content
               .form-group.mb-2
                 label(for='slug') Slug
                 input.form-control.form-control-sm#slug(name='slug' required)
-              
+              .form-group.mb-2
+                label(for='page') Page
+                input.form-control.form-control-sm#page(name='page')  
+              .form-group.mb-2
+                label(for='header') Header
+                input.form-control.form-control-sm#header(name='header') 
+              .form-group.mb-2
+                label(for='body') Body
+                input.form-control.form-control-sm#body(name='body')                 
           .modal-footer
             button.btn.btn-primary.btn-sm#saveHtmlSection(type='button') Save 
             |
@@ -274,11 +284,28 @@ block content
             button.btn.btn-primary.btn-sm#buttonreplace(type="button") Replace
             |
             button.btn.btn-secondary.btn-sm(type='button', data-bs-dismiss='modal') Close
+    // Find Modal
+    .modal.fade(id='findModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Find in this blog:
+            button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+          .modal-body
+            form#findAndReplaceForm
+              .formgroup.mb-2
+                label(for="find-text") Find:
+                input.form-control.form-control-sm#find-text(type="text" name="find-text" required)     
+          .modal-footer
+            button.btn.btn-primary.btn-sm#buttonreplace(type="button") Find
+            |
+            button.btn.btn-secondary.btn-sm(type='button', data-bs-dismiss='modal') Close
     #toast-container.position-fixed.top-0.end-0.p-3( style="z-index: 10000;")    
-
+    script(src='/js/socket.io.js').
     script.
        
       $(document).ready(function () {
+        var socket = io();
         let currentPage = 1;
         let sortField = 'DateCreated';
         let sortOrder = 'DESC';
@@ -287,14 +314,33 @@ block content
         let selectedText = '';
         let htmlSections = null;
         let selectedBlogPostIndex;
+        socket.on('flash', function (data) {
+            // Create a Bootstrap Toast dynamically
+            const toastHTML = `
+                    <div class="toast show ${!data.isError ? 'text-bg-primary': 'text-bg-danger'}  border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Notification</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            ${data.message}
+                        </div>
+                    </div>
+                `;
+           $('#toast-container').append(toastHTML);
 
+            // Initialize and show the toast
+            const toastEl = document.querySelector('.toast');
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
         function fetchHtmlSections() {
             const anchor = $('#anchorFilter').val();
             const blogPostId = $('#blogPostIdFilter').val();
             const limit = $('#limit').val();
             
             $.ajax({
-                url: '/admin/htmlSections/api',
+                url: '/users/htmlSections/api',
                 data: { page: currentPage, limit, sortField, sortOrder, anchor, blogPostId },
                 success: function (data) {
                     blogSlug = data._BlogSlug;
@@ -324,6 +370,7 @@ block content
                               <td>${section.ViewIndex}</td>
                               <td>${section.DateCreated}</td>
                               <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="HtmlSection Slug details" data-bs-content="${section.Slug}">${section.Slug}</td>
+                              <td class="admin-blogs-ellipsis" data-bs-toggle="popover" data-bs-title="HtmlSection Body details" data-bs-content="${section.Body}">${section.Body}</td>
                               <td>
                                 
                                 <i class="fas fa-file-import mbr-iconfont mbr-iconfont-btn import-btn" data-anchor="${section.Anchor}" data-slug="${section.Slug}"></i>
@@ -403,12 +450,15 @@ block content
 
         $(document).on('click', '.edit-btn', function () {
             const htmlSectionId = $(this).data('id');
-            $.get(`/admin/htmlSections/${htmlSectionId}`, function (section) {
+            $.get(`/users/htmlSections/${htmlSectionId}`, function (section) {
                 $('#htmlSectionModalTitle').text('Edit HTML Section');
                 $('#htmlContent').val(section.Html);
                 $('#viewIndex').val(section.ViewIndex);
                 $('#anchor').val(section.Anchor);
                 $('#slug').val(section.Slug);
+                $('#page').val(section.Page);
+                $('#header').val(section.Header);
+                $('#body').val(section.Body);
                 $('#htmlSectionId').val(section.HtmlSectionID);
                 $('#htmlSectionModal').modal('show');
             });
@@ -421,7 +471,7 @@ block content
             //blogPostSlug = $(this).data('blogPostSlug');
             const htmlSectionId = $(this).data('id');
             currentHtmlSectionId = htmlSectionId;
-            let iframeSrc = `/admin/htmlSections/${blogSlug}/${blogPostSlug}/${currentHtmlSectionAnchor}`;
+            let iframeSrc = `/users/htmlSections/${blogSlug}/${blogPostSlug}/${currentHtmlSectionAnchor}`;
             
 
             $('#viewHtmlSectionFrame').attr('src', iframeSrc);
@@ -432,7 +482,7 @@ block content
         $(document).on('click', '.import-btn', function () {
             const slug = $(this).data('slug');
             const anchor = $(this).data('anchor');
-            $.get(`/admin/htmlSections/importSingleHtmlSectionById/${slug}/${anchor}`, function (section) {
+            $.get(`/users/htmlSections/importSingleHtmlSectionById/${slug}/${anchor}`, function (section) {
 
                 $('#editableHtmlContent').html(section[0]);
                 $('#viewHtmlSectionModal').modal('show');
@@ -442,7 +492,7 @@ block content
         $('#htmlSectionForm').on('submit', function (e) {
             e.preventDefault();
             const htmlSectionId = $('#htmlSectionId').val();
-            const url = htmlSectionId ? `/admin/htmlSections/edit/${htmlSectionId}` : '/admin/htmlSections/create';
+            const url = htmlSectionId ? `/users/htmlSections/edit/${htmlSectionId}` : '/users/htmlSections/create';
             $.post(url, $(this).serialize(), function (response) {
                 if (response.success) {
                     $('#htmlSectionModal').modal('hide');
@@ -456,7 +506,7 @@ block content
             const saveHtmlSectionId = $('#saveHtmlSectionId').val();
             $('#saveHtmlSectionHtml').val($('#htmlSectionHtml').html());
 
-            const url = saveHtmlSectionId ? `/admin/htmlSections/edit/${saveHtmlSectionId}` : '/admin/htmlSections/create';
+            const url = saveHtmlSectionId ? `/users/htmlSections/edit/${saveHtmlSectionId}` : '/users/htmlSections/create';
             $.post(url, $(this).serialize(), function (response) {
                 if (response.success) {
                     $('#viewHtmlSectionModal').modal('hide');
@@ -481,7 +531,7 @@ block content
             const htmlSectionId = currentHtmlSectionId;
 
             $.ajax({
-                url: '/admin/htmlSections/update',
+                url: '/users/htmlSections/update',
                 method: 'POST',
                 data: {
                     HtmlSectionID: htmlSectionId,
@@ -521,7 +571,7 @@ block content
 
 
             $.ajax({
-                url: '/admin/htmlSections/findAndReplace',
+                url: '/users/htmlSections/findAndReplace',
                 method: 'POST',
                 data: {
                     find: find,
@@ -548,7 +598,7 @@ block content
             const htmlSectionsFromDb = htmlSections;
 
             $.ajax({
-                url: '/admin/htmlSections/importSingleHtmlSectionById/solid-foundation-knowledge-is-power-in-digital-marketing/2',
+                url: '/users/htmlSections/importSingleHtmlSectionById/solid-foundation-knowledge-is-power-in-digital-marketing/2',
                 method: 'GET',
                 
                 success: function(htmlSectionsFromFile) {
@@ -562,7 +612,7 @@ block content
                             if (dbAnchor === anchor) {
 
                                 $.ajax({
-                                    url: '/admin/htmlSections/updateBySectionId',
+                                    url: '/users/htmlSections/updateBySectionId',
                                     method: 'POST',
                                     data: {
                                         blogPostId,
@@ -605,7 +655,7 @@ block content
                 formData.append('image', file);
 
                 $.ajax({
-                    url: '/admin/htmlSections/uploadImage',
+                    url: '/users/htmlSections/uploadImage',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -639,7 +689,7 @@ block content
 
         $('#confirmDeleteBtn').on('click', function () {
             const htmlSectionId = $(this).data('id');
-            $.post(`/admin/htmlSections/delete/${htmlSectionId}`, function (response) {
+            $.post(`/users/htmlSections/delete/${htmlSectionId}`, function (response) {
                 if (response.success) {
                     $('#confirmDeleteModal').modal('hide');
                     fetchHtmlSections();
@@ -790,4 +840,3 @@ block content
       cardHeader.style.cursor = "move";
       });
 
-    script(src='/js/chat.js').

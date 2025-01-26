@@ -1,7 +1,10 @@
 const db = require('../models/db');
 const axios = require('axios');
 const cheerio = require('cheerio');
-
+const fs = require('fs').promises;
+const path = require('path');
+const BlogPost = require('../models/BlogPost');
+const Blog = require('../models/Blog');
 db.serialize(() => {
     db.run(`
 
@@ -14,8 +17,10 @@ db.serialize(() => {
 	        "ViewIndex"	INTEGER,
 	        "Anchor"	TEXT NOT NULL,
 	        "Slug"	TEXT,
-	        "UserId"	INTEGER NOT NULL,
-	        CONSTRAINT "FK_HtmlSections_users_id" FOREIGN KEY("UserId") REFERENCES "users"("id") ,
+	        "UserId"	INTEGER,
+	        "Page"	TEXT,
+	        "Header"	TEXT,
+	        "Body"	TEXT,
 	        PRIMARY KEY("HtmlSectionID" AUTOINCREMENT),
 	        CONSTRAINT "FK_HtmlSections_BlogPosts_BlogPostId" FOREIGN KEY("BlogPostId") REFERENCES "BlogPosts"("BlogPostId") ON DELETE CASCADE
         );
@@ -24,22 +29,22 @@ db.serialize(() => {
 
 class HtmlSection {
 
-    static add(html, blogPostId, viewIndex, anchor, slug) {
-        const dateCreated = new Date().toISOString();
+    static add(html, blogPostId, viewIndex, anchor, slug, page, header, body) {
+        const dateCreated = new Date().toLocaleString();
         return new Promise((resolve, reject) => {
-            db.run(`INSERT INTO HtmlSections (Html, BlogPostId, ViewIndex, Anchor, Slug) VALUES (?, ?, ?, ?, ?)`,
-                [html, blogPostId, viewIndex, anchor, slug], function (err) {
+            db.run(`INSERT INTO HtmlSections (Html, BlogPostId, ViewIndex, Anchor, Slug, Page, Header, Body) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [html, blogPostId, viewIndex, anchor, slug, page, header, body], function (err) {
                     if (err) return reject(err);
                     resolve(this.lastID);
                 });
         });
     }
 
-    static edit(htmlSectionId, html, viewIndex, anchor, slug) {
+    static edit(htmlSectionId, html, viewIndex, anchor, slug, page, header, body) {
         const dateUpdated = new Date().toISOString();
         return new Promise((resolve, reject) => {
-            db.run(`UPDATE HtmlSections SET Html = ?, ViewIndex = ?, Anchor = ?, Slug = ?, DateUpdated = ? WHERE HtmlSectionID = ?`,
-                [html, viewIndex, anchor, slug, dateUpdated, htmlSectionId], function (err) {
+            db.run(`UPDATE HtmlSections SET Html = ?, ViewIndex = ?, Anchor = ?, Slug = ?, Page = ?, Header = ?, Body = ?, DateUpdated = ? WHERE HtmlSectionID = ?`,
+                [html, viewIndex, anchor, slug, page, header, body, dateUpdated, htmlSectionId], function (err) {
                     if (err) return reject(err);
                     resolve(this.changes);
                 });
@@ -95,6 +100,17 @@ class HtmlSection {
         });
     }
 
+    static async getWitsecSearchDb() {
+
+        const query = `SELECT Page AS page, Anchor AS anchor, Header AS header, Body AS body FROM HtmlSections`;
+        return new Promise((resolve, reject) => {
+            db.all(query, [], (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows);
+            });
+        });
+    }
+
     static async getAllInternal(blogPostId) {
 
         const query = `SELECT * FROM HtmlSections WHERE BlogPostId = ? ORDER BY ViewIndex ASC`;
@@ -132,14 +148,17 @@ class HtmlSection {
     }
 
     // Fetch HTML content from the given URL
-    static async fetchHTML(url) {
+    static async fetchHTML(htmlFilePath) {
         try {
-            const { data } = await axios.get(url);
-            return data;
+            // Read the file content
+            const html = await fs.readFile(htmlFilePath, 'utf-8');
+            //console.log('HTML Content:', html);
+            return html;
         } catch (error) {
-            console.error(`Error fetching the URL: ${url}`, error);
+            console.error(`Error fetching the file: ${htmlFilePath}:`, error);
             throw error;
         }
+
     }
 
     // Extract a single HTML section based on its id attribute using cheerio
@@ -167,23 +186,31 @@ class HtmlSection {
     }
 
     // Update HTML sections in the database
-    static async insertHtmlSections(blogPostId, htmlSections, slug) {
+    static async insertHtmlSections(blogPostId, htmlSections, blogSlug, slug) {
 
         await HtmlSection.deleteBySlug(slug);
-
+        let data = [];
         if (htmlSections !== 'undefined' && htmlSections.length > 0) {
+            data = JSON.parse(await fs.readFile(`./public/${blogSlug.Slug}/assets/witsec-search/search.json`, 'utf-8'));
+            let i = 0;
+            for (const section of htmlSections) {
+                i += 1;
+                const [htmlContent, anchor] = section; // Destructure the outer HTML and id (anchor) from each sub-array
 
-            for (let i = 0; i < htmlSections.length; i++) {
+                
+                for (const item of data) {
 
-                const [htmlContent, anchor] = htmlSections[i]; // Destructure the outer HTML and id (anchor) from each sub-array
+                    if (item.page.toLowerCase() === slug + '.html' && item.anchor === anchor) {
 
-                await HtmlSection.add(htmlContent, blogPostId, i + 1, anchor, slug);
-
-                try {
-
-                    console.log(`HtmlSection ${slug} inserted successfully.`);
-                } catch (error) {
-                    console.error(`Error updating HtmlSection ${i}`, error);
+                        try {
+                            await HtmlSection.add(htmlContent, blogPostId, i, item.anchor, slug, item.page, item.header, item.body);
+                            console.log(`HtmlSection ${slug} inserted successfully.`);
+                            ;
+                            break;
+                        } catch (error) {
+                            console.error(`Error updating HtmlSection ${item.anchor}`, error);
+                        }
+                    }
                 }
 
             }
@@ -193,11 +220,11 @@ class HtmlSection {
     }
 
     // Main function to execute the steps
-    static async importHtml(url, blogPostId, slug) {
+    static async importHtml(url, blogPostId, blogSlug, slug) {
         try {
             const html = await HtmlSection.fetchHTML(url);
             const htmlSections = await HtmlSection.extractHtmlSections(html);
-            await HtmlSection.insertHtmlSections(blogPostId, htmlSections, slug);
+            await HtmlSection.insertHtmlSections(blogPostId, htmlSections, blogSlug, slug);
             return new Promise((resolve, reject) => {
                 if (htmlSections === 'undefined') {
                     reject(new Error('htmlSections is undefined'));

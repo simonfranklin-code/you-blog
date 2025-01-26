@@ -52,7 +52,8 @@ router.get('/blogPosts/:id', ensureAuthenticated, ensurePermission('view_blogPos
 router.post('/blogPosts/uploadHtmlFile', ensureAuthenticated, ensurePermission('add_blogPosts'), userBlogPostController.uploadHtmlFile);
 
 // Manage HTML Sections
-
+router.get('/witsecDb', ensureAuthenticated, ensurePermission('manage_htmlSections'), userHtmlSectionController.getWitsecSearchDb);
+//router.get('/witsecDb/:slug', ensureAuthenticated, ensurePermission('manage_htmlSections'), userHtmlSectionController.getWitsecSearchDb);
 router.get('/htmlSections', ensureAuthenticated, ensurePermission('manage_htmlSections'), userHtmlSectionController.getHtmlSectionsPage);
 router.get('/htmlSections/api', ensureAuthenticated, ensurePermission('view_htmlSections'), userHtmlSectionController.getHtmlSections);
 router.post('/htmlSections/create', ensureAuthenticated, ensurePermission('add_htmlSections'), userHtmlSectionController.createHtmlSection);

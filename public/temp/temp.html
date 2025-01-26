@@ -1,88 +1,103 @@
+"
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <style>
-        .btn {
-            font-weight: 600;
-            border-width: 1px;
-            font-style: normal;
-            /* margin: 0.6rem 0.6rem; */
-            white-space: normal;
-            transition: all 0.2s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            word-break: break-word;
-        }
-    </style>
+    <meta charset=\"UTF-8\">
+    <meta http-equiv=\"X-UA-Compatible\" content=\"IE =edge\">
+    <meta name=\"viewport\" content=\"width =device-width, initial-scale=1, minimum-scale=1\">
+    <link rel=\"shortcut icon\" href=\"assets/images/0d0cde80-aa01-4a83-9246-2b6d2bb0ccd5-128x128.png\" type=\"image/x-icon\">
+    <link rel=\"stylesheet\" href=\"/css/adminlte.css\">
+    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>
+    <script src=\"https://kit.fontawesome.com/4defe9e4da.js\" crossorigin=\"anonymous\"></script>
+    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css\" integrity=\"sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q =\" crossorigin=\"anonymous\"><!-- end::Fonts--><!-- begin::Third Party Plugin(OverlayScrollbars)-->
+    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/styles/overlayscrollbars.min.css\" integrity=\"sha256-dSokZseQNT08wYEWiz5iLI8QPlKxG+TswNRD8k35cpg =\" crossorigin=\"anonymous\"><!-- end::Third Party Plugin(OverlayScrollbars)--><!-- begin::Third Party Plugin(Bootstrap Icons)-->
+    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css\" integrity=\"sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI =\" crossorigin=\"anonymous\"><!-- end::Third Party Plugin(Bootstrap Icons)-->
+    <link rel=\"stylesheet\" href=\"/stylesheets/main.css\">
 </head>
-<body contenteditable="true">
-    <section data-bs-version="5.1" class="article4 cid-umgsOt2GOR" id="article">
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-12 col-lg">
-                    <div class="text-wrapper align-left">
-                        <h1 class="mbr-section-title mbr-fonts-style mb-4 display-2">
-                            <strong>Get Started with uBlog</strong>
-                        </h1>
-                        <p class="mbr-text mbr-fonts-style mb-4 display-7">
-                            uBlog empowers individuals to express themselves through blogging. Our platform, built on cutting-edge technology like Node.js and Express, enables users to create unlimited blogs and posts effortlessly. With features like comments, reviews, and social media integration, you can engage with your audience like never before. Import your existing Mobirise 5 sites and customize your mobile-friendly blocks with ease. Join our community and start sharing your story today!<br>
-                            <br>Here's how to get started:<br><strong>1. Create an Account: </strong><br>Click on the "Register Account" button and fill out a few simple details.<br><strong>2. Explore: </strong><br>Once your account is set up, you can explore blogs by other creators or start building your own.<br><strong>3. Write &amp; Share:</strong> <br>With your account, you're ready to create your first post and share it with the community!<br>Join today, and let’s bring your ideas to life on uBlog!<br>
-                        </p>
+<body class=\"bg-body-tertiary\">
 
-                    </div>
+    <section data-bs-version="5.1" class="menu menu3 cid-ujKOPj0Zn9" once="menu" id="menu3-2uy">
+
+        <nav class="navbar navbar-dropdown navbar-expand-lg">
+            <div class="container-fluid">
+                <div class="navbar-brand">
                 </div>
-                <div class="col-12 col-md-12 col-lg">
-                    <div class="container">
-                        <div class="card o-hidden border-0 shadow-lg my-5">
-                            <div class="card-body p-0">
-                                <!-- Nested Row within Card Body-->
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="p-5">
-                                            <div class="text-center">
-                                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
-                                            </div>
-                                            <form class="user" action="/users/register" method="POST">
-                                                <div class="form-group row">
-                                                    <div class="col-sm-12 mb-3 mb-sm-0">
-                                                        <input class="form-control form-control-user" id="username" type="text" name="username" placeholder="User Name">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input class="form-control form-control-user" id="exampleInputEmail" type="email" name="email" placeholder="Email Address">
-                                                </div>
-                                                <div class="form-group row">
-                                                    <div class="col-sm-12 mb-3 mb-sm-0">
-                                                        <input class="form-control form-control-user" id="exampleInputPassword" type="password" name="password" placeholder="Password">
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-primary btn-user btn-block" type="submit">Register Account</button>
-                                                <span class="gdpr-block">
-                                                    <label>
-                                                        <span class="textGDPR display-7" style="color: #a7a7a7"><input type="checkbox" name="gdpr" id="gdpr-input" required="">By continuing you agree to our <a style="color: #149dcc; text-decoration: none;" href="terms.html">Terms of Service</a> and <a style="color: #149dcc; text-decoration: none;" href="policy.html">Privacy Policy</a>.</span>
-                                                    </label>
-                                                </span>
-                                            </form>
-                                            <hr>
-                                            <div class="text-center" style="color: #232323;"><a class="small" style="color: #232323;" href="/users/password-reset-request">Forgot Password?</a></div>
-                                            <div class="text-center"><a class="small" style="color: #232323;" href="/users/login">Already have an account? Login!</a></div>
-                                        </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent" style="float:left;">
+                    <ul class="navbar-nav nav-dropdown navbar-nav-top-padding" data-app-modern-menu="true">
+                        <li class="nav-item">
+                            <a class="nav-link link text-info show text-primary display-4" href="/blog/digital-marketing-dreams/Digital-Marketing-Dreams">
+                                <span class="socicon socicon-homeadvisor mbr-iconfont mbr-iconfont-btn" style="color: rgb(34, 165, 229);"></span>
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link link dropdown-toggle text-info display-4" href="#" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="true">
+                                <span class="fas fa-blog mbr-iconfont mbr-iconfont-btn" style="color: rgb(34, 165, 229);"></span>Blog Post Series
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown-300">
+                                <div class="dropdown">
+                                    <a class="dropdown-item dropdown-toggle text-info display-4" href="#" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><span class="fas fa-hat-wizard mbr-iconfont mbr-iconfont-btn"></span>Digital Marketing Guru</a>
+                                    <div class="dropdown-menu dropdown-submenu" aria-labelledby="dropdown-208">
+                                        <a class="dropdown-item text-info text-primary display-4" href="/blog/digital-marketing-dreams/Digital-Marketing-Guru">Digital Marketing Guru</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Solid-Foundation-Knowledge-is-Power-in-Digital-Marketing">Solid Foundation:</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Continuous-Learning">Continuous Learning:</a>
+                                        <a class="dropdown-item text-info text-primary display-4" href="/blog/digital-marketing-dreams/Analytical-Acumen-Decode-the-Data-in-Digital-Marketing">Analytical Acumen:</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Creativity-and-Content-Creation">Creativity and Content Creation:</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Strategic-Approach">Strategic Approach:</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Adaptability-Embracing-Change-in-Digital-Marketing">Adaptability:</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Networking-and-Collaboration">Networking and Collaboration:</a>
+                                        <a class="dropdown-item text-info display-4" href="/blog/digital-marketing-dreams/Becoming-a-Digital-Marketing-Guru">Becoming a Digital Marketing Guru:</a>
                                     </div>
                                 </div>
-
+                                <div class="dropdown">
+                                    <a class="text-info dropdown-item dropdown-toggle display-4" href="#" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                        <span class="fas fa-dice-six mbr-iconfont mbr-iconfont-btn" style="color: rgb(34, 165, 229);"></span>Six Things You Should Know
+                                    </a>
+                                    <div class="dropdown-menu dropdown-submenu" aria-labelledby="dropdown-169">
+                                        <a class="text-info show dropdown-item text-primary display-4" href="/blog/digital-marketing-dreams/Six-Things-That-You-Should-know-as-a-Digital-Marketing-Guru">Six Things You Should Know</a>
+                                    </div>
+                                </div><div class="dropdown"><a class="text-info dropdown-item dropdown-toggle display-4" href="#" data-toggle="dropdown-submenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"><span class="mbri-search mbr-iconfont mbr-iconfont-btn" style="color: rgb(34, 165, 229);"></span>Search Engine Optimization</a><div class="dropdown-menu dropdown-submenu" aria-labelledby="dropdown-520"><a class="text-info show dropdown-item text-primary display-4" href="/blog/digital-marketing-dreams/Understanding-Search-Engine-Optimization-(SEO)-in-Digital-Marketing">Understanding Search Engine Optimization</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/Introduction-to-SEO-and-Digital-Marketing">Introduction to SEO and Digital Marketing</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/On-Page-SEO-Techniques">On-Page-SEO-Techniques</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/Off-Page-SEO-Strategies">Off-Page SEO Strategies</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/Technical-SEO-Fundamentals">Technical SEO Fundamentals</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/Advanced-SEO-Strategies">Advanced SEO Strategies</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/SEO-Analytics-and-Performance-Measurement">SEO Analytics and Performance Measurement</a><a class="text-info dropdown-item show text-primary display-4" href="/blog/digital-marketing-dreams/SEO-Trends-and-Future-Considerations">SEO Trends and Future Considerations</a></div></div>
                             </div>
-                        </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link text-info display-4" href="#">
+
+                                Services
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link link text-info display-4" href="javascript:">Contacts</a>
+                        </li>
+                    </ul>
+                    <div class="icons-menu">
+                        <a class="iconfont-wrapper" href="#" target="_blank">
+                            <span class="p-2 mbr-iconfont devicon-facebook-original" style="color: rgb(34, 165, 229); fill: rgb(34, 165, 229); font-size: 24px;"></span>
+                        </a>
+                        <a class="iconfont-wrapper" href="#" target="_blank">
+                            <span class="p-2 mbr-iconfont socicon-twitter socicon" style="color: rgb(34, 165, 229); fill: rgb(34, 165, 229);"></span>
+                        </a>
+                        <a class="iconfont-wrapper" href="#" target="_blank">
+                            <span class="p-2 mbr-iconfont socicon-instagram socicon" style="color: rgb(34, 165, 229); fill: rgb(34, 165, 229);"></span>
+                        </a>
+                        <a class="iconfont-wrapper" href="#" target="_blank">
+                            <span class="p-2 mbr-iconfont socicon-linkedin socicon" style="color: rgb(34, 165, 229); fill: rgb(34, 165, 229);"></span>
+                        </a>
                     </div>
+                    <div class="navbar-buttons mbr-section-btn"><a class="display-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasScrolling"><span class="far fa-edit mbr-iconfont mbr-iconfont-btn"></span></a></div>
                 </div>
-
             </div>
+        </nav>
+        
 
-        </div>
     </section>
 
+
 </body>
-</html>
+

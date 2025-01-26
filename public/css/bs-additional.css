@@ -18,10 +18,10 @@ a {
     text-decoration: none;
 }
 
-a:hover {
-    color: #224abe;
-    text-decoration: none;
-}
+    a:hover {
+        color: #224abe;
+        text-decoration: none;
+    }
 
 /*.table {
     --bs-table-bg: transparent;
@@ -272,7 +272,7 @@ tr {
 }*/
 
 .topbar {
-    width:100%;
+    width: 100%;
     height: 2.375rem;
 }
 
@@ -309,7 +309,6 @@ tr {
     text-align: left;
     list-style: none;
     color: #b7b9cc;
-
     /*background-clip: padding-box;*/
     border: 1px solid #232323;
     border-radius: .30rem;
@@ -367,7 +366,7 @@ dropdown-item > a:hover {
 }
 
 b, strong {
-    font-weight:bold;
+    font-weight: bold;
 }
 
 .btn-circle {
@@ -380,11 +379,11 @@ b, strong {
     justify-content: center;
 }
 
-.btn-circle.btn-sm, .btn-group-sm > .btn-circle.btn {
-    height: 1.8rem;
-    width: 1.8rem;
-    font-size: .75rem;
-}
+    .btn-circle.btn-sm, .btn-group-sm > .btn-circle.btn {
+        height: 1.8rem;
+        width: 1.8rem;
+        font-size: .75rem;
+    }
 
 .wrap-text {
     width: 100%; /* Set a fixed width for demonstration */
@@ -400,7 +399,6 @@ b, strong {
     width: 32px;
     height: 32px;
 }
-
 
 }
 
@@ -473,5 +471,24 @@ b, strong {
     color: var(--bs-nav-tabs-link-active-color);
     background-color: var(--bs-nav-tabs-link-active-bg);
     border-color: var(--bs-nav-tabs-link-active-border-color);
-    border-bottom-color:transparent;
+    border-bottom-color: transparent;
+}
+
+.video-container {
+    width: 100%;
+    height: 180px;
+}
+
+    .video-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensure the video content scales properly */
+        border: none;
+        border-radius: 8px; /* Optional: Add rounded corners */
+        margin:5px;
+    }
+
+.app-header .nav-link {
+    position: relative;
+    height: 1.5rem;
 }

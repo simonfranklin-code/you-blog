@@ -38,7 +38,7 @@ class Notification {
                         return reject(err);
                     }
                     // Emit real-time event
-                    io.emit('newNotification', { NotificationId: this.lastID, UserId, Message });
+                    //io.emit('newNotification', { NotificationId: this.lastID, UserId, Message });
                     resolve(this.lastID);
                 }
             );

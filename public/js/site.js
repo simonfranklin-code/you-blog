@@ -410,7 +410,7 @@ function submitCommentForm(CommentId) {
             BlogPostSlug: $("#BlogPostSlug0").val(),
             ParentCommentId: CommentId,
             IsOpen: $("#IsOpen0").val(),
-            BlogPostId: $("#BlogPostId0").val(),
+            BlogPostId: _blogPostId,
             CodeLanguage: $("#CodeLanguage0").val(),
             UserId: $("#UserId0").val(),
         };

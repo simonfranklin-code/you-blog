@@ -6,7 +6,7 @@ const User = require('../models/User')
 exports.getComments = async (req, res) => {
     try {
         const slug = req.params.slug;
-        const blogPostId = await Comment.getBlogPostId(slug);
+        const blogPostId = await Comment.getBlogPostId (slug);
         const comments = await Comment.getComments(slug);
 
         let commentsSection = `
@@ -65,7 +65,7 @@ exports.getComments = async (req, res) => {
                                 <input type="hidden" id="BlogPostSlug0" name="BlogPostSlug0" value="${slug}">
                                 <input type="hidden" id="ParentCommentId0" name="ParentCommentId0" value="0">
                                 <input type="hidden" id="IsOpen0" name="IsOpen0" value="true">
-                                <input type="hidden" id="BlogPostId0" name="BlogPostId0" value="${blogPostId}">
+                                <input type="hidden" id="BlogPostId0" name="BlogPostId0" value="${blogPostId ? blogPostId : null}">
                                 <input type="hidden" id="UserId0" name="UserId0" value="${req.user.id}">
                             </form>
                         </div>

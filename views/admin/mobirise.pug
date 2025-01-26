@@ -5,7 +5,7 @@ block content
 
     - function highlightCode(component) {  return hljs.highlight(component._customHTML, { language: 'xml' }).value}
 
-    - function highlightCodeLess(component) {  return hljs.highlight(JSON.stringify( component._styles).replace(/"/g,''), { language: 'less' }).value}
+    - function highlightCodeLess(component) {  return hljs.highlight(JSON.stringify( component._styles), { language: 'less' }).value}
     
     h1 #{title}
     h2 Current Page: #{mobiriseData.settings.currentPage}
